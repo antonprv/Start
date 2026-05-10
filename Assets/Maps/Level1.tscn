@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://cc8uji4toi0gy"]
+
+[ext_resource type="PackedScene" uid="uid://cd7surfpvo8ox" path="res://Assets/Prefabs/Static/Floor.tscn" id="1_xmpr2"]
+[ext_resource type="PackedScene" uid="uid://bkj0tnt11xvlx" path="res://Assets/Prefabs/Dynamic/Player/Player.tscn" id="2_57bvl"]
+
+[node name="Level1" type="Node3D" unique_id=1650388261]
+
+[node name="Player" parent="." unique_id=1218174859 instance=ExtResource("2_57bvl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.26333666, 1.1250002, 1.9654682)
+
+[node name="Lights" type="Node3D" parent="." unique_id=121140794]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Lights" unique_id=1912362598]
+transform = Transform3D(1, 0, 0, 0, 0.9269156, 0.37527, 0, -0.37527, 0.9269156, 0, 4.1431065, 6.548331)
+
+[node name="Static" type="Node3D" parent="." unique_id=649507346]
+
+[node name="Floor" parent="Static" unique_id=1531038324 instance=ExtResource("1_xmpr2")]

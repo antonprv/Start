@@ -1,0 +1,31 @@
+[gd_scene format=3 uid="uid://bkj0tnt11xvlx"]
+
+[ext_resource type="Script" uid="uid://b6v8lgfexmp54" path="res://Code/Components/Mover.cs" id="1_tcdex"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_s3j7c"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_tcdex"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_s3j7c"]
+
+[node name="Player" type="CharacterBody3D" unique_id=1218174859]
+script = ExtResource("1_tcdex")
+
+[node name="PlayerMesh" type="MeshInstance3D" parent="." unique_id=521465016]
+mesh = SubResource("CapsuleMesh_s3j7c")
+
+[node name="PlayerCollision" type="CollisionShape3D" parent="." unique_id=1810335408]
+shape = SubResource("CapsuleShape3D_tcdex")
+
+[node name="CameraRoot" type="Node3D" parent="." unique_id=697449312]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+
+[node name="SpringArm" type="SpringArm3D" parent="CameraRoot" unique_id=1254659250]
+spring_length = 1.5
+
+[node name="Camera3D" type="Camera3D" parent="CameraRoot/SpringArm" unique_id=470799468]
+transform = Transform3D(1, 0, 0, 0, 0.9396927, 0.34202015, 0, -0.34202015, 0.9396927, 0, 0, 0)
+
+[node name="ForwardMarkerMesh" type="MeshInstance3D" parent="." unique_id=804262131]
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 1, 0, 0, -0.5)
+mesh = SubResource("BoxMesh_s3j7c")

@@ -1,0 +1,15 @@
+﻿namespace Code.Services.Input
+{
+    public static class InputNames
+    {
+        // Movement
+        public const string MoveForward = "MoveForward";
+        public const string MoveLeft = "MoveLeft";
+        public const string MoveRight = "MoveRight";
+        public const string MoveBack = "MoveBack";
+        public const string MoveJump = "MoveJump";
+
+        // Jumping
+        public const string Jump = "Jump";
+    }
+}

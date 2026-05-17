@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://bkj0tnt11xvlx"]
 
-[ext_resource type="Script" uid="uid://b6v8lgfexmp54" path="res://Code/Components/Mover.cs" id="1_tcdex"]
+[ext_resource type="Script" uid="uid://c0o6x1jpgu8xj" path="res://Code/Components/Mover/MoverComponent.cs" id="1_tcdex"]
+[ext_resource type="Resource" uid="uid://y8nvjlo1dhl7" path="res://Assets/Prefabs/Dynamic/Player/MP_Default.tres" id="2_ioby2"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_s3j7c"]
 
@@ -10,6 +11,8 @@
 
 [node name="Player" type="CharacterBody3D" unique_id=1218174859 node_paths=PackedStringArray("_playerMesh")]
 script = ExtResource("1_tcdex")
+Profile = ExtResource("2_ioby2")
+InitialMode = 2
 _playerMesh = NodePath("PlayerMesh")
 
 [node name="PlayerMesh" type="MeshInstance3D" parent="." unique_id=521465016]

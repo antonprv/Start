@@ -16,8 +16,8 @@ namespace Code.Services.Input
 			InputNames.MoveForward,
 			InputNames.MoveBack
 			);
-
-		public bool GetJumpState( InputEvent inputEvent ) =>
-		  GInput.IsActionJustPressedByEvent( InputNames.Jump, inputEvent );
+		
+		public bool IsJumpPressed() =>
+			GInput.IsActionJustPressed( InputNames.Jump );
 	}
 }

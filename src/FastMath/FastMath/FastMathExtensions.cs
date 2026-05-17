@@ -175,6 +175,10 @@ namespace FastMath
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe bool IsNearlyZero(this in Vector3 vec3,
+            float epsilon = FMath.KINDA_SMALL_NUMBER) => vec3.IsNearlyEqual(Vector3.Zero, epsilon);
+
         #endregion
 
         #region Vector3 - ClampLength / MoveTowards / Lerp

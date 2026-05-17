@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Setup", "Setup.csproj", "{2
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FastMath", "..\FastMath\FastMath.csproj", "{50BE1FE4-5D3C-402A-BA5D-1C9CB3BC1522}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Components", "..\Components\Components.csproj", "{2C64E772-484D-4C3E-AB2B-5CD364368EC1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,6 +28,12 @@ Global
 		{50BE1FE4-5D3C-402A-BA5D-1C9CB3BC1522}.ExportDebug|Any CPU.Build.0 = Release|Any CPU
 		{50BE1FE4-5D3C-402A-BA5D-1C9CB3BC1522}.ExportRelease|Any CPU.ActiveCfg = Release|Any CPU
 		{50BE1FE4-5D3C-402A-BA5D-1C9CB3BC1522}.ExportRelease|Any CPU.Build.0 = Release|Any CPU
+		{2C64E772-484D-4C3E-AB2B-5CD364368EC1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C64E772-484D-4C3E-AB2B-5CD364368EC1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2C64E772-484D-4C3E-AB2B-5CD364368EC1}.ExportDebug|Any CPU.ActiveCfg = Release|Any CPU
+		{2C64E772-484D-4C3E-AB2B-5CD364368EC1}.ExportDebug|Any CPU.Build.0 = Release|Any CPU
+		{2C64E772-484D-4C3E-AB2B-5CD364368EC1}.ExportRelease|Any CPU.ActiveCfg = Release|Any CPU
+		{2C64E772-484D-4C3E-AB2B-5CD364368EC1}.ExportRelease|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

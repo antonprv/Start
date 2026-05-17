@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("FastMath")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5e6be2b08507e696c8ced4a1cb854b9c744661eb")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f3206d79e9057dab8db5b60fecdf6dcab9e80467")]
 [assembly: System.Reflection.AssemblyProductAttribute("FastMath")]
 [assembly: System.Reflection.AssemblyTitleAttribute("FastMath")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

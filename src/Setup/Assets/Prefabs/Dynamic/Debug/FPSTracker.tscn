@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://crvrwpolm8bgu"]
 
-[ext_resource type="Script" uid="uid://b7skxlauobx7h" path="res://Code/UI/FpsTracker.cs" id="1_06fea"]
+[ext_resource type="Script" uid="uid://drjw1peyjwc0b" path="res://Code/Common/Debug/UI/FpsTracker.cs" id="1_06fea"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_0bd0u"]
 font_size = 30

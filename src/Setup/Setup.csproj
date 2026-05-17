@@ -3,6 +3,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <TargetFramework Condition=" '$(GodotTargetPlatform)' == 'android' ">net9.0</TargetFramework>
     <EnableDynamicLoading>true</EnableDynamicLoading>
+    <RootNamespace>Game</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="addons\ZenjexGodot.Generator\**" />
@@ -11,10 +12,10 @@
     <EmbeddedResource Remove="Code\Model\**" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Code\Common\" />
     <Folder Include="Code\Gameplay\" />
     <Folder Include="Code\Components\" />
     <Folder Include="Code\Models\" />
+    <Folder Include="Code\UI\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FastMath\FastMath.csproj" />

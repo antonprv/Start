@@ -1,8 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "yO1dxPUN8wo=",
+  "dgSpecHash": "sjITHcBz2y8=",
   "success": true,
   "projectFilePath": "C:\\Users\\User\\Godot\\Projects\\Setup\\src\\FastMath\\FastMath.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\User\\.nuget\\packages\\godotsharp\\4.6.2\\godotsharp.4.6.2.nupkg.sha512"
+  ],
   "logs": []
 }

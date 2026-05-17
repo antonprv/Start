@@ -1,8 +1,7 @@
-using Code.Common.FastMath;
 using Code.Services.Input;
 
+using FastMath;
 using Godot;
-using System;
 using ZenjexGodot;
 
 namespace Code.Components
@@ -14,7 +13,7 @@ namespace Code.Components
         [Export] private float _rotationSpeed = 6f;
 
         [ExportGroup("References")]
-        [Export] private Node3D _playerModel;
+        [Export] private MeshInstance3D _playerMesh;
 
         [Inject] private IInputService _inputService;
 
@@ -22,28 +21,28 @@ namespace Code.Components
         private Vector2 _inputDirection;
         private bool _wantsToJump;
 
-        public override void _Ready() => DiContainer.Instance.Inject(this);
+        public override void _EnterTree() => DiContainer.Instance.Inject(this);
 
-        public override void _UnhandledKeyInput(InputEvent @event)
+        public override void _UnhandledKeyInput(InputEvent inputEvent)
         {
-            BindInputs(@event);
+            BindInputs(inputEvent);
             HandleInputs();
         }
 
         public override void _PhysicsProcess(double delta)
         {
             HandleMovement();
-            HandleRotation();
+            HandleRotation(delta);
             MoveAndSlide();
         }
 
-        private void BindInputs(InputEvent @event)
+        private void BindInputs(InputEvent inputEvent)
         {
             _inputDirection = _inputService.GetInputVector();
-            _wantsToJump = _inputService.GetJumpState(@event);
+            _wantsToJump = _inputService.GetJumpState(inputEvent);
         }
 
-        private void HandleInputs() => 
+        private void HandleInputs() =>
             _moveDirection = new Vector3(_inputDirection.X, 0, _inputDirection.Y).Normalized();
 
         private void HandleMovement()
@@ -57,9 +56,18 @@ namespace Code.Components
             Velocity = _moveDirection * _moveSpeed;
         }
 
-        private void HandleRotation()
+        private void HandleRotation(double delta)
         {
-            // stub
+            if (_playerMesh == null || _moveDirection.IsNearlyEqual(Vector3.Zero))
+                return;
+
+            float targetAngle = FMath.FastAtan2(-_moveDirection.X, -_moveDirection.Z);
+
+            Quaternion targetRotation = new Quaternion(Vector3.Up, targetAngle);
+            Quaternion currentRotation = _playerMesh.Quaternion;
+            Quaternion smoothRotation = currentRotation.FastSlerp(targetRotation, (float)(_rotationSpeed * delta));
+
+            _playerMesh.Quaternion = smoothRotation;
         }
     }
 }

@@ -5,10 +5,13 @@
     <EnableDynamicLoading>true</EnableDynamicLoading>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="addons\ZenjexGodot.Generator\**" />
     <Compile Remove="Code\Model\**" />
+    <EmbeddedResource Remove="addons\ZenjexGodot.Generator\**" />
     <EmbeddedResource Remove="Code\Model\**" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Code\Common\" />
     <Folder Include="Code\Gameplay\" />
     <Folder Include="Code\Components\" />
     <Folder Include="Code\Models\" />

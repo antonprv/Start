@@ -1,35 +1,41 @@
 // Created by Anton Piruev in 2026.
 // Any direct commercial use of derivative work is strictly prohibited.
 
-using Code.Common.Extensions.Logging;
-using Code.Services.Input;
-
-using System.Collections.Generic;
-
 using Components.Mover.Core;
-using Components.Mover.Presets;
+using Components.Mover.Core.Interfaces;
+using Components.Mover.Core.Resources;
 using Components.Mover.Debug;
-
+using Components.Mover.Presets;
 using FastMath;
+using Game.Code.Components.Mover.Resources;
+using Game.Code.Services.Input;
 using Godot;
+using Logger;
+using System.Collections.Generic;
 using ZenjexGodot;
 
-namespace Code.Components.Mover
+namespace Game.Code.Components.Mover
 {
 	public partial class MoverComponent : CharacterBody3D
 	{
 		[ExportGroup( "Rotation" )]
 		[Export] private float _rotationSpeed = 6f;
 
-		[ExportGroup("Data Objects")]
-		[Export] public MovementProfile Profile { get; set; }
+		[ExportGroup( "Data Objects" )]
+		[Export] public MProfile Profile { get; set; }
 		[Export] public MovementMode InitialMode { get; set; } = MovementMode.Quake;
 
 		[ExportGroup( "References" )]
 		[Export] private MeshInstance3D _playerMesh;
 
-		[ExportGroup("Debug")]
+		[ExportGroup( "Debug" )]
 		[Export] private bool _showDebug = false;
+
+		#region InternalFields
+
+		private IMovementProfile _internalProfile;
+
+		#endregion
 
 		#region Private state
 
@@ -43,19 +49,11 @@ namespace Code.Components.Mover
 		#region Services
 
 		private IInputService _inputService;
-		private IGameLog _logger;
 		private Vector3 _inputDirection;
 		private bool _jumpInput;
 
 		[Inject]
-		private void Construct( 
-			IInputService inputService,
-			IGameLog logger
-		)
-		{
-			_inputService = inputService;
-			_logger = logger;
-		}
+		private void Construct( IInputService inputService ) => _inputService = inputService;
 
 		public override void _EnterTree() => DiContainer.Instance.Inject( this );
 
@@ -66,7 +64,7 @@ namespace Code.Components.Mover
 		public override void _Ready()
 		{
 			if ( Profile == null )
-				Profile = QuakePreset.DefaultProfile();
+				Profile = QuakePreset.DefaultProfile().Convert();
 
 			_currentMode = InitialMode;
 			_motor = new MovementMotor( BuildTraitsForMode( _currentMode ) );
@@ -84,7 +82,7 @@ namespace Code.Components.Mover
 
 			SimulateMovement( delta );
 			DisplayRotation( delta );
-			
+
 			MoveAndSlide();
 
 			ShowDebugOverlay();
@@ -166,7 +164,7 @@ namespace Code.Components.Mover
 			_currentMode = mode;
 			_motor.SetTraits( BuildTraitsForMode( mode ) );
 
-			_logger.LogInfo( $"Mode → {mode}" );
+			GameLogger.LogInfo( $"Mode -> {mode}" );
 		}
 
 		/// <summary>Current active movement mode.</summary>

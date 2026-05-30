@@ -1,4 +1,4 @@
-<Project Sdk="Godot.NET.Sdk/4.6.2">
+<Project Sdk="Godot.NET.Sdk/4.6.3">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <TargetFramework Condition=" '$(GodotTargetPlatform)' == 'android' ">net9.0</TargetFramework>
@@ -14,11 +14,13 @@
     <EmbeddedResource Remove="Code\UI\**" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Code\Common\" />
     <Folder Include="Code\Gameplay\" />
     <Folder Include="Code\Models\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Components\Components.csproj" />
     <ProjectReference Include="..\FastMath\FastMath.csproj" />
+    <ProjectReference Include="..\Logger\Logger.csproj" />
   </ItemGroup>
 </Project>

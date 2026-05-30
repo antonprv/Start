@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FastMath", "..\FastMath\Fas
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Components", "..\Components\Components.csproj", "{2C64E772-484D-4C3E-AB2B-5CD364368EC1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logger", "..\Logger\Logger.csproj", "{0B9B536D-4233-4602-A7A5-58AE618CB2E0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -34,6 +36,12 @@ Global
 		{2C64E772-484D-4C3E-AB2B-5CD364368EC1}.ExportDebug|Any CPU.Build.0 = Release|Any CPU
 		{2C64E772-484D-4C3E-AB2B-5CD364368EC1}.ExportRelease|Any CPU.ActiveCfg = Release|Any CPU
 		{2C64E772-484D-4C3E-AB2B-5CD364368EC1}.ExportRelease|Any CPU.Build.0 = Release|Any CPU
+		{0B9B536D-4233-4602-A7A5-58AE618CB2E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B9B536D-4233-4602-A7A5-58AE618CB2E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B9B536D-4233-4602-A7A5-58AE618CB2E0}.ExportDebug|Any CPU.ActiveCfg = Release|Any CPU
+		{0B9B536D-4233-4602-A7A5-58AE618CB2E0}.ExportDebug|Any CPU.Build.0 = Release|Any CPU
+		{0B9B536D-4233-4602-A7A5-58AE618CB2E0}.ExportRelease|Any CPU.ActiveCfg = Release|Any CPU
+		{0B9B536D-4233-4602-A7A5-58AE618CB2E0}.ExportRelease|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

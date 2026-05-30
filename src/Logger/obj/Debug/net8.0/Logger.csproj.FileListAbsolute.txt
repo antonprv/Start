@@ -1,0 +1,13 @@
+C:\Users\User\Godot\Projects\Setup\src\Logger\bin\Debug\net8.0\Logger.deps.json
+C:\Users\User\Godot\Projects\Setup\src\Logger\bin\Debug\net8.0\Logger.dll
+C:\Users\User\Godot\Projects\Setup\src\Logger\bin\Debug\net8.0\Logger.pdb
+C:\Users\User\Godot\Projects\Setup\src\Logger\obj\Debug\net8.0\Logger.csproj.AssemblyReference.cache
+C:\Users\User\Godot\Projects\Setup\src\Logger\obj\Debug\net8.0\Logger.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\User\Godot\Projects\Setup\src\Logger\obj\Debug\net8.0\Logger.AssemblyInfoInputs.cache
+C:\Users\User\Godot\Projects\Setup\src\Logger\obj\Debug\net8.0\Logger.AssemblyInfo.cs
+C:\Users\User\Godot\Projects\Setup\src\Logger\obj\Debug\net8.0\Logger.csproj.CoreCompileInputs.cache
+C:\Users\User\Godot\Projects\Setup\src\Logger\obj\Debug\net8.0\Logger.sourcelink.json
+C:\Users\User\Godot\Projects\Setup\src\Logger\obj\Debug\net8.0\Logger.dll
+C:\Users\User\Godot\Projects\Setup\src\Logger\obj\Debug\net8.0\refint\Logger.dll
+C:\Users\User\Godot\Projects\Setup\src\Logger\obj\Debug\net8.0\Logger.pdb
+C:\Users\User\Godot\Projects\Setup\src\Logger\obj\Debug\net8.0\ref\Logger.dll

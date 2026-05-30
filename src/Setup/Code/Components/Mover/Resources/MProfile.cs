@@ -1,22 +1,18 @@
-// Created by Anton Piruev in 2026.
+﻿// Created by Anton Piruev in 2026. 
 // Any direct commercial use of derivative work is strictly prohibited.
 
+using Components.Mover.Core.Interfaces;
 using Godot;
 
-namespace Components.Mover.Core
+namespace Game.Code.Components.Mover.Resources
 {
-	/// <summary>
-	/// ScriptableObject-style data asset for movement tuning.
-	/// Create via Godot inspector: New Resource → MovementProfile.
-	/// Save as .tres and reuse across scenes.
-	/// </summary>
 	[GlobalClass]
-	public partial class MovementProfile : Resource
+	public partial class MProfile : Resource, IMovementProfile
 	{
 		// ── Ground ──────────────────────────────────────────────────
 		[Export] public float GroundAcceleration { get; set; } = 20f;
-		[Export] public float MaxSpeed           { get; set; } = 7f;
-		[Export] public float GroundFriction     { get; set; } = 12f;
+		[Export] public float MaxSpeed { get; set; } = 7f;
+		[Export] public float GroundFriction { get; set; } = 12f;
 
 		// ── Air ─────────────────────────────────────────────────────
 		/// <summary>How fast velocity can grow in air per second.</summary>
@@ -33,12 +29,12 @@ namespace Components.Mover.Core
 		[Export] public float AirControl { get; set; } = 3f;
 
 		// ── Jump ─────────────────────────────────────────────────────
-		[Export] public float JumpSpeed      { get; set; } = 6f;
+		[Export] public float JumpSpeed { get; set; } = 6f;
 
 		/// <summary>Time window after pressing jump before landing where jump still fires.</summary>
 		[Export] public float JumpBufferTime { get; set; } = 0.15f;
 
 		/// <summary>Time after leaving ground during which a jump can still fire.</summary>
-		[Export] public float CoyoteTime     { get; set; } = 0.12f;
+		[Export] public float CoyoteTime { get; set; } = 0.12f;
 	}
 }

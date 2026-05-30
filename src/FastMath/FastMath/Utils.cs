@@ -146,7 +146,7 @@ namespace FastMath
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float FastDeg2Rad(float deg) => deg * Deg2Rad;
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float FastRad2Deg(float deg) => deg * Rad2Deg;
 

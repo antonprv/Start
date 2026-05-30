@@ -3,7 +3,7 @@
 
 using Godot;
 
-namespace Code.Services.Input
+namespace Game.Code.Services.Input
 {
 	public interface IInputService
 	{

@@ -3,10 +3,10 @@
 
 namespace Components.Mover.Core
 {
-	public enum MovementMode
-	{
-		Quake,
-		Realistic,
-		Hybrid
-	}
+    public enum MovementMode
+    {
+        Quake,
+        Realistic,
+        Hybrid
+    }
 }

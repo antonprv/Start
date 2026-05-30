@@ -3,7 +3,7 @@
 
 using Godot;
 
-namespace Code.Common.Debug.UI
+namespace Game.Code.Common.Debug.UI
 {
 	public partial class FpsTracker : Label
 	{

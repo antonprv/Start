@@ -30,7 +30,7 @@ project/assembly_name="Setup"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/ZenjexGodot/plugin.cfg")
+enabled=PackedStringArray("res://addons/Zenjex/plugin.cfg")
 
 [input]
 

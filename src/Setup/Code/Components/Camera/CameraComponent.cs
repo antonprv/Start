@@ -2,7 +2,10 @@
 // Any direct commercial use of derivative work is strictly prohibited.
 
 using FastMath;
+using Game.Code.Services.Input;
 using Godot;
+using Logger;
+using Zenjex;
 
 namespace Game.Code.Components.Camera
 {
@@ -15,6 +18,9 @@ namespace Game.Code.Components.Camera
 	{
 		#region Inspector Properties
 
+		[ExportGroup( "Camera Input" )]
+		[Export] public float MouseSensitivity = 0.1f;
+
 		[ExportGroup( "Camera Parameters" )]
 		[Export] public float PositionLagSpeed = 10f;
 		[Export] public float RotationLagSpeed = 15f;
@@ -22,7 +28,7 @@ namespace Game.Code.Components.Camera
 		[Export] public float MinPitch = -90f;
 		[Export] public float MaxPitch = 90f;
 		[Export] public float SpringArmLength = 5f;
-		[Export] public bool EnableCollisionAvoidance = true;
+		[Export] public float VerticalOffset = 1.6f;
 
 		[ExportGroup( "References" )]
 		[Export] private Camera3D _camera;
@@ -31,14 +37,28 @@ namespace Game.Code.Components.Camera
 
 		#endregion
 
+		#region Injection
+
+		IInputService _inputService;
+
+		[Inject]
+		private void Construct( IInputService inputService ) =>
+			_inputService = inputService;
+
+		public override void _EnterTree() => DiContainer.Instance.Inject( this );
+
+		#endregion
+
 		#region Private Fields
 
 		private Vector3 _targetPosition;
-		private Vector3 _currentVelocity = Vector3.Zero;
-		private Quaternion _targetRotation = Quaternion.Identity;
-		private float _currentPitch = 0f;
-		private float _currentYaw = 0f;
+		private Vector2 _cameraInput;
 
+		private float _targetYaw;
+		private float _targetPitch;
+
+		private float _currentYaw;
+		private float _currentPitch;
 
 		#endregion
 
@@ -48,7 +68,13 @@ namespace Game.Code.Components.Camera
 		{
 			InitializeReferences();
 			_targetPosition = GlobalPosition;
-			_targetRotation = Quaternion;
+
+			if ( _springArm != null )
+			{
+				Vector3 euler = _springArm.RotationDegrees;
+				_currentYaw = _targetYaw = euler.Y;
+				_currentPitch = _targetPitch = euler.X;
+			}
 		}
 
 		public override void _Process( double delta )
@@ -56,8 +82,18 @@ namespace Game.Code.Components.Camera
 			if ( _followTarget != null )
 				UpdateTargetPosition();
 
+			HandleInput();
+
 			UpdateCameraPosition( delta );
 			UpdateCameraRotation( delta );
+		}
+
+		private void HandleInput()
+		{
+			Vector2 input = _inputService.GetCameraVector();
+
+			_targetYaw += -input.X * MouseSensitivity;
+			_targetPitch = FMath.Clamp( _targetPitch - input.Y * MouseSensitivity, MinPitch, MaxPitch );
 		}
 
 		/// <summary>
@@ -66,23 +102,12 @@ namespace Game.Code.Components.Camera
 		public void SetFollowTarget( Node3D target ) => _followTarget = target;
 
 		/// <summary>
-		/// Instantly set camera rotation (yaw and pitch in degrees)
-		/// </summary>
-		public void SetRotation( float yaw, float pitch )
-		{
-			_currentYaw = yaw;
-			_currentPitch = FMath.Clamp( pitch, MinPitch, MaxPitch );
-			UpdateRotationQuaternion();
-		}
-
-		/// <summary>
 		/// Add to current rotation (relative input)
 		/// </summary>
 		public void AddRotation( float deltaYaw, float deltaPitch )
 		{
 			_currentYaw += deltaYaw;
 			_currentPitch = FMath.Clamp( _currentPitch + deltaPitch, MinPitch, MaxPitch );
-			UpdateRotationQuaternion();
 		}
 
 		/// <summary>
@@ -116,12 +141,12 @@ namespace Game.Code.Components.Camera
 		/// <summary>
 		/// Get current camera forward direction
 		/// </summary>
-		public Vector3 GetForwardDirection() => -GlobalTransform.Basis.Z;
+		public Vector3 GetForwardDirection() => -_camera.GlobalTransform.Basis.Z;
 
 		/// <summary>
 		/// Get current camera right direction
 		/// </summary>
-		public Vector3 GetRightDirection() => GlobalTransform.Basis.X;
+		public Vector3 GetRightDirection() => _camera.GlobalTransform.Basis.X;
 
 		/// <summary>
 		/// Get current yaw rotation in degrees
@@ -154,7 +179,10 @@ namespace Game.Code.Components.Camera
 		private void UpdateTargetPosition()
 		{
 			if ( _followTarget != null )
+			{
 				_targetPosition = _followTarget.GlobalPosition;
+				_targetPosition.Y += VerticalOffset;
+			}
 		}
 
 		private void UpdateCameraPosition( double delta )
@@ -174,20 +202,35 @@ namespace Game.Code.Components.Camera
 		{
 			if ( RotationLagSpeed <= 0 )
 			{
-				// Прямое присваивание кватерниона (градусы → кватернион)
-				Quaternion = FMath.FromEulerYXZDegrees( _currentPitch, _currentYaw, 0f );
+				_currentYaw = _targetYaw;
+				_currentPitch = _targetPitch;
+				ApplyRotation();
 				return;
 			}
 
-			float lerpFactor = FMath.Clamp( (float)delta * RotationLagSpeed, 0f, 1f );
-			Quaternion targetQuat = FMath.FromEulerYXZDegrees( _currentPitch, _currentYaw, 0f );
-			Quaternion smoothedQuat = Quaternion.FastSlerp( targetQuat, lerpFactor );
-			Quaternion = smoothedQuat;
+			float t = FMath.Clamp( (float)delta * RotationLagSpeed, 0f, 1f );
+
+			_currentYaw = FMath.LerpAngle( _currentYaw, _targetYaw, t );
+			_currentPitch = FMath.Lerp( _currentPitch, _targetPitch, t );
+
+			ApplyRotation();
 		}
 
-		// This ensures target rotation is updated for next frame interpolation
-		private void UpdateRotationQuaternion() =>
-			_targetRotation = FMath.FromEulerYXZDegrees( _currentPitch, _currentYaw, 0f );
+		private void ApplyRotation()
+		{
+			if ( _springArm == null ) return;
+
+			Vector3 scale = _springArm.Scale;
+
+			Vector3 eulerRad = new Vector3(
+				_currentPitch * FMath.Deg2Rad,
+				_currentYaw * FMath.Deg2Rad,
+				0f
+			);
+			_springArm.Basis = Basis.FromEuler( eulerRad, EulerOrder.Yxz );
+
+			_springArm.Scale = scale;
+		}
 
 		#endregion
 	}

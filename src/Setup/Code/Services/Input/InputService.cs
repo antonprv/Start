@@ -2,13 +2,29 @@
 // Any direct commercial use of derivative work is strictly prohibited.
 
 using Godot;
-
+using Logger;
 using GInput = Godot.Input;
 
 namespace Game.Code.Services.Input
 {
-	public partial class InputService : GodotObject, IInputService
+	public partial class InputService : Node, IInputService
 	{
+		private Vector2 _mouseDelta;
+
+		public override void _Input( InputEvent inputEvent )
+		{
+			GInput.MouseMode = GInput.MouseModeEnum.Captured;
+			if ( inputEvent is InputEventMouseMotion eventMouseMotion )
+				_mouseDelta += eventMouseMotion.Relative;
+		}
+
+		public Vector2 GetCameraVector()
+		{
+			Vector2 delta = _mouseDelta;
+			_mouseDelta = Vector2.Zero;
+			return delta;
+		}
+
 		public Vector2 GetInputVector() =>
 		  GInput.GetVector(
 			InputNames.MoveLeft,

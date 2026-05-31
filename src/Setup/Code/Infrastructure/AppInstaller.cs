@@ -2,7 +2,7 @@
 // Any direct commercial use of derivative work is strictly prohibited.
 
 using Game.Code.Services.Input;
-using ZenjexGodot;
+using Zenjex;
 
 namespace Game.Code.Infrastructure
 {

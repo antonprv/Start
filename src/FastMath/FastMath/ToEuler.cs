@@ -52,7 +52,8 @@ namespace FastMath
             float sinp = 2f * (w * y - z * x);
             // Clamp to [-1, 1] to handle numerical errors (gimbal lock region)
             sinp = sinp > 1f ? 1f : (sinp < -1f ? -1f : sinp);
-            float pitch = System.MathF.Asin(sinp);  // Use Asin for pitch (it's defined, we need precision here)
+            float cosp = FMath.FastSqrt(1f - sinp * sinp);
+            float pitch = FMath.FastAtan2(sinp, cosp, precise: true);
 
             // Yaw (Z rotation)
             float siny_cosp = 2f * (w * z + x * y);
@@ -98,7 +99,8 @@ namespace FastMath
             // Roll (X rotation)
             float sinr = 2f * (w * x - y * z);
             sinr = sinr > 1f ? 1f : (sinr < -1f ? -1f : sinr);
-            float roll = System.MathF.Asin(sinr);
+            float cosr = FMath.FastSqrt(1f - sinr * sinr);
+            float roll = FMath.FastAtan2(sinr, cosr, precise: true);
 
             // Pitch (Y rotation)
             float siny_cosp = 2f * (w * y + x * z);
@@ -148,7 +150,8 @@ namespace FastMath
             // Pitch (Y rotation — applied first in YXZ)
             float sinp = 2f * (w * y - z * x);
             sinp = sinp > 1f ? 1f : (sinp < -1f ? -1f : sinp);
-            float pitch = System.MathF.Asin(sinp);
+            float cosp = FMath.FastSqrt(1f - sinp * sinp);
+            float pitch = FMath.FastAtan2(sinp, cosp, precise: true);
 
             // Roll (X rotation — applied second)
             float sinr_cosp = 2f * (w * x + y * z);

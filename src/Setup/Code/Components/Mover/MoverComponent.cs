@@ -3,16 +3,16 @@
 
 using Components.Mover.Core;
 using Components.Mover.Core.Interfaces;
-using Components.Mover.Core.Resources;
 using Components.Mover.Debug;
 using Components.Mover.Presets;
 using FastMath;
+using Game.Code.Components.Camera;
 using Game.Code.Components.Mover.Resources;
 using Game.Code.Services.Input;
 using Godot;
 using Logger;
 using System.Collections.Generic;
-using ZenjexGodot;
+using Zenjex;
 
 namespace Game.Code.Components.Mover
 {
@@ -27,15 +27,10 @@ namespace Game.Code.Components.Mover
 
 		[ExportGroup( "References" )]
 		[Export] private MeshInstance3D _playerMesh;
+		[Export] private CameraComponent _cameraComponent;
 
 		[ExportGroup( "Debug" )]
 		[Export] private bool _showDebug = false;
-
-		#region InternalFields
-
-		private IMovementProfile _internalProfile;
-
-		#endregion
 
 		#region Private state
 
@@ -94,12 +89,30 @@ namespace Game.Code.Components.Mover
 			GetJumpInput();
 		}
 
-		protected virtual void GetInputDirection() => _inputDirection =
-			new Vector3(
-				_inputService.GetInputVector().X,
-				0,
-				_inputService.GetInputVector().Y
-			);
+		protected virtual void GetInputDirection()
+		{
+			Vector2 input = _inputService.GetInputVector();
+
+			// fallback to world coordinates if no camera component is assigned
+			if ( _cameraComponent == null )
+			{
+				_inputDirection = new Vector3( input.X, 0, -input.Y );
+				return;
+			}
+
+			Vector3 camForward = _cameraComponent.GetForwardDirection();
+			camForward.Y = 0;
+			if ( !camForward.IsNearlyZero() )
+				camForward.FastNormalize();
+
+			Vector3 camRight = _cameraComponent.GetRightDirection();
+			camRight.Y = 0;
+			if ( !camRight.IsNearlyZero() )
+				camRight.FastNormalize();
+
+			_inputDirection = ( camRight * input.X ) + ( camForward * -input.Y );
+			_inputDirection.Y = 0;
+		}
 
 		protected virtual void GetJumpInput() => _jumpInput = _inputService.IsJumpPressed();
 
@@ -131,7 +144,7 @@ namespace Game.Code.Components.Mover
 
 			float targetAngle = FMath.FastAtan2( -_inputDirection.X, -_inputDirection.Z );
 
-			Quaternion targetRotation = new Quaternion( Vector3.Up, targetAngle );
+			Quaternion targetRotation = FMath.FromAxisAngle( Vector3.Up, targetAngle );
 			Quaternion currentRotation = _playerMesh.Quaternion;
 			Quaternion smoothRotation = currentRotation.FastSlerp( targetRotation, (float)( _rotationSpeed * delta ) );
 

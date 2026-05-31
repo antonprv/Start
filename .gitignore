@@ -23,3 +23,12 @@ src/*/.vs/
 # other
 src/*/build/
 src/*/builds/
+
+# all binary files from libraries
+
+src/*/obj/
+src/*/bin/
+
+*.pdb
+*.dll
+*.cache

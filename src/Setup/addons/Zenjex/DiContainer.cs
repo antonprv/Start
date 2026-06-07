@@ -71,6 +71,39 @@ namespace Zenjex
 			_singletons[ type ] = instance;
 		}
 
+		/// <summary>
+		/// Register an instance under an explicit service type (e.g. interface).
+		/// Used internally when the service type differs from the instance's concrete type.
+		/// </summary>
+		public void RegisterInstanceAs( Type serviceType, object instance )
+		{
+			var descriptor = new ServiceDescriptor
+			{
+				ServiceType = serviceType,
+				ImplementationType = instance.GetType(),
+				Lifetime = ServiceLifetime.Singleton,
+				Instance = instance
+			};
+			_services[ serviceType ] = descriptor;
+			_singletons[ serviceType ] = instance;
+		}
+
+		/// <summary>Keyed variant of RegisterInstanceAs.</summary>
+		public void RegisterInstanceAs( Type serviceType, string key, object instance )
+		{
+			var dictKey = (key, serviceType);
+			var descriptor = new ServiceDescriptor
+			{
+				ServiceType = serviceType,
+				ImplementationType = instance.GetType(),
+				Lifetime = ServiceLifetime.Singleton,
+				Instance = instance,
+				Key = key
+			};
+			_keyedServices[ dictKey ] = descriptor;
+			_keyedSingletons[ dictKey ] = instance;
+		}
+
 		/// <summary>Register a keyed instance directly as a singleton.</summary>
 		public void RegisterInstance<T>( string key, T instance ) where T : class
 		{

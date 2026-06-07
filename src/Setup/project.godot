@@ -20,10 +20,6 @@ boot_splash/show_image=false
 DiContainer="*uid://bpr7slko5xani"
 AppInstaller="*uid://dlivup3p47326"
 
-[display]
-
-window/vsync/vsync_mode=0
-
 [dotnet]
 
 project/assembly_name="Setup"

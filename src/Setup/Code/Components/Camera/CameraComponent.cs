@@ -4,7 +4,6 @@
 using FastMath;
 using Game.Code.Services.Input;
 using Godot;
-using Logger;
 using Zenjex;
 
 namespace Game.Code.Components.Camera

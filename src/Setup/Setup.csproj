@@ -8,17 +8,15 @@
   <ItemGroup>
     <Compile Remove="addons\ZenjexGodot.Generator\**" />
     <Compile Remove="Code\Model\**" />
-    <Compile Remove="Code\UI\**" />
     <EmbeddedResource Remove="addons\ZenjexGodot.Generator\**" />
     <EmbeddedResource Remove="Code\Model\**" />
-    <EmbeddedResource Remove="Code\UI\**" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Code\Common\" />
     <Folder Include="Code\Gameplay\" />
     <Folder Include="Code\Models\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj" />
     <ProjectReference Include="..\Components\Components.csproj" />
     <ProjectReference Include="..\FastMath\FastMath.csproj" />
     <ProjectReference Include="..\Logger\Logger.csproj" />

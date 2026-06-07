@@ -59,17 +59,22 @@ namespace Zenjex
 
 			_initialized = true;
 
-			// Create and configure container
 			var builder = new DiContainerBuilder();
 
 			// User setup
 			InstallBindings( builder );
 
-			// Build container and make it globally available
-			Container = builder.Build();
-
-			// Fire ready event
-			OnContainerReady?.Invoke();
+			if ( Container == null )
+			{
+				// First installer — creates the container
+				Container = builder.Build();
+				OnContainerReady?.Invoke();
+			}
+			else
+			{
+				// Subsequent installer — adds bindings into the existing container
+				builder.BuildInto( Container );
+			}
 
 			// Trigger a deferred initialization routine
 			CallDeferred( MethodName.InitializeRoutine );
@@ -163,19 +168,27 @@ namespace Zenjex
 		/// <summary>Build the container from all registered bindings.</summary>
 		public DiContainer Build()
 		{
-			// Create the global container (will initialize itself as Instance)
 			var container = new DiContainer();
+			BuildInto( container );
+			return container;
+		}
 
-			// Register all instances first (they're direct values)
+		/// <summary>
+		/// Register all pending bindings into an already-existing container.
+		/// Used for additive registration when multiple RootInstallers are present on a scene.
+		/// </summary>
+		public void BuildInto( DiContainer container )
+		{
+			// Register all instances, respecting the recorded service type
 			foreach ( var (serviceType, instance, key) in _instances )
 			{
 				if ( string.IsNullOrEmpty( key ) )
 				{
-					container.RegisterInstance( instance );
+					container.RegisterInstanceAs( serviceType, instance );
 				}
 				else
 				{
-					container.RegisterInstance( key, instance );
+					container.RegisterInstanceAs( serviceType, key, instance );
 				}
 			}
 
@@ -190,8 +203,6 @@ namespace Zenjex
 			{
 				RegisterFactoryBinding( container, serviceType, implType, factory, lifetime, key );
 			}
-
-			return container;
 		}
 
 		/// <summary>Internal: record a type binding for later building.</summary>
@@ -211,6 +222,15 @@ namespace Zenjex
 		internal void RecordInstance<T>( T instance, string key = "" ) where T : class
 		{
 			_instances.Add( (typeof( T ), instance, key) );
+		}
+
+		/// <summary>
+		/// Internal: record an instance under an explicit service type.
+		/// Called from BindingBuilder when T (service) differs from the instance's concrete type.
+		/// </summary>
+		internal void RecordInstance( Type serviceType, object instance, string key = "" )
+		{
+			_instances.Add( (serviceType, instance, key) );
 		}
 
 		#region Helpers

@@ -9,7 +9,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="GodotSharp" Version="4.6.2" />
+    <PackageReference Include="Godot.SourceGenerators" Version="4.6.3" />
+    <PackageReference Include="GodotSharp" Version="4.6.3" />
   </ItemGroup>
 
 </Project>

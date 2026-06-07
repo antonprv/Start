@@ -98,10 +98,11 @@ namespace Zenjex
 
 			_isCommitted = true;
 
-			// Record the binding in the builder
 			if ( _instance != null )
 			{
-				_builder.RecordInstance( _instance, _key );
+				// Register under the declared service type T, not the concrete type.
+				// This is what makes Register<IFoo>().To<FooImpl>().FromInstance(obj).AsSingleton() work correctly.
+				_builder.RecordInstance( typeof( T ), _instance, _key );
 			}
 			else if ( _factory != null )
 			{

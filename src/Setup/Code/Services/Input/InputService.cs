@@ -2,7 +2,6 @@
 // Any direct commercial use of derivative work is strictly prohibited.
 
 using Godot;
-using Logger;
 using GInput = Godot.Input;
 
 namespace Game.Code.Services.Input

@@ -3,10 +3,10 @@
 
 namespace Logger
 {
-	public enum LogType
-	{
-		Info = 0,
-		Error = 1,
-		Warning = 2
-	}
+    public enum LogType
+    {
+        Info = 0,
+        Error = 1,
+        Warning = 2
+    }
 }

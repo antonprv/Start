@@ -4,6 +4,7 @@
 [ext_resource type="Script" uid="uid://drjw1peyjwc0b" path="res://Code/Common/Debug/UI/FpsTracker.cs" id="1_8v4gd"]
 [ext_resource type="LabelSettings" uid="uid://c14v62t6aqgp1" path="res://Assets/Prefabs/Dynamic/Debug/Resources/FPS_Font.tres" id="2_1ljga"]
 [ext_resource type="Script" uid="uid://bn4a6e18g1chd" path="res://Code/Common/Debug/UI/UIMessage.cs" id="2_4iym7"]
+[ext_resource type="Script" uid="uid://bmcvecot7jj4a" path="res://Code/Common/Debug/UI/DevConsoleNode.cs" id="5_1ljga"]
 
 [node name="DebugUI" type="Control" unique_id=1188731429]
 layout_mode = 3
@@ -13,9 +14,10 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="UIInstaller" type="Node" parent="." unique_id=1701920393 node_paths=PackedStringArray("_uIMessage")]
+[node name="UIInstaller" type="Node" parent="." unique_id=1701920393 node_paths=PackedStringArray("_uIMessage", "_devConsole")]
 script = ExtResource("1_5mrp6")
 _uIMessage = NodePath("../DebugMessages_Text")
+_devConsole = NodePath("../CanvasLayer")
 
 [node name="FPS_Text" type="Label" parent="." unique_id=326776198]
 layout_mode = 0
@@ -30,3 +32,6 @@ offset_top = 63.0
 offset_right = 333.0
 offset_bottom = 339.0
 script = ExtResource("2_4iym7")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1472267401]
+script = ExtResource("5_1ljga")

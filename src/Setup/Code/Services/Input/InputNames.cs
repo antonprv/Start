@@ -14,5 +14,8 @@ namespace Game.Code.Services.Input
 
 		// Jumping
 		public const string Jump = "Jump";
+
+		// Console
+		public const string CallConsole = "CallConsole";
 	}
 }

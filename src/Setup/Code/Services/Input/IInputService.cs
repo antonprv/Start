@@ -10,5 +10,6 @@ namespace Game.Code.Services.Input
 		Vector2 GetCameraVector();
 		Vector2 GetInputVector();
 		bool IsJumpPressed();
+		bool IsConsolePressed();
 	}
 }

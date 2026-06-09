@@ -8,13 +8,13 @@
 
 [node name="Level1" type="Node3D" unique_id=1650388261]
 
-[node name="LocalServiceInitializer" type="Node" parent="." unique_id=1314008614 node_paths=PackedStringArray("_rootNode")]
-script = ExtResource("1_clu36")
-_rootNode = NodePath("..")
-
 [node name="UI" type="Node" parent="." unique_id=1146455411]
 
 [node name="DebugUI" parent="UI" unique_id=1188731429 instance=ExtResource("2_056jx")]
+
+[node name="LocalServiceInitializer" type="Node" parent="." unique_id=1314008614 node_paths=PackedStringArray("_rootNode")]
+script = ExtResource("1_clu36")
+_rootNode = NodePath("..")
 
 [node name="Player" parent="." unique_id=1218174859 instance=ExtResource("2_57bvl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.8937812, 1.1249998, 6.7581854)

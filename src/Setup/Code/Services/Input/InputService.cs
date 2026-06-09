@@ -34,5 +34,7 @@ namespace Game.Code.Services.Input
 
 		public bool IsJumpPressed() =>
 			GInput.IsActionJustPressed( InputNames.Jump );
+		public bool IsConsolePressed() => 
+			GInput.IsActionJustPressed( InputNames.CallConsole );
 	}
 }

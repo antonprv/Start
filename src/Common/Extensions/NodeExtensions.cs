@@ -1,10 +1,13 @@
-﻿using Godot;
+﻿// Created by Anton Piruev in 2026.
+// Any direct commercial use of derivative work is strictly prohibited.
+
+using Godot;
 
 namespace Common.Extensions
 {
     public static class NodeExtensions
     {
-        public static void SetEnabled(this Node node, bool value)
+        public static void SetEnabled( this Node node, bool value )
         {
             node.SetProcess( value );
             node.SetPhysicsProcess( value );

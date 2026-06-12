@@ -26,7 +26,7 @@ namespace Console.Commands
 
             var filter = args[0].ToLowerInvariant() switch
             {
-                "log"     => ConsoleMessageType.Log,
+                "log"     => ConsoleMessageType.Info,
                 "warning" => ConsoleMessageType.Warning,
                 "error"   => ConsoleMessageType.Error,
                 "success" => ConsoleMessageType.Success,

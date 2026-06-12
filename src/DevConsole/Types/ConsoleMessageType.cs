@@ -5,7 +5,7 @@ namespace Console.Types
 {
     public enum ConsoleMessageType
     {
-        Log,
+        Info,
         Warning,
         Error,
         Command,

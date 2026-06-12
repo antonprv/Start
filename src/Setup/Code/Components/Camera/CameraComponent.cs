@@ -4,6 +4,7 @@
 using FastMath;
 using Game.Code.Services.Input;
 using Godot;
+using Logger;
 using Zenjex;
 
 namespace Game.Code.Components.Camera
@@ -36,6 +37,33 @@ namespace Game.Code.Components.Camera
 
 		#endregion
 
+		#region Noclip
+
+		public bool IsNoclip => _noclip;
+
+		public void SetNoclip( bool enabled )
+		{
+			if ( _noclip == enabled )
+				return;
+
+			_noclip = enabled;
+
+			if ( _noclip )
+			{
+				_savedCollisionMask = _springArm.CollisionMask;
+				_springArm.CollisionMask = 0;
+			}
+			else
+			{
+				_springArm.CollisionMask = _savedCollisionMask;
+			}
+
+			GameLogger.LogInfo( $"Noclip -> {( _noclip ? "ON" : "OFF" )}" );
+		}
+
+
+		#endregion
+
 		#region Injection
 
 		IInputService _inputService;
@@ -58,6 +86,8 @@ namespace Game.Code.Components.Camera
 
 		private float _currentYaw;
 		private float _currentPitch;
+		private bool _noclip;
+		private uint _savedCollisionMask;
 
 		#endregion
 

@@ -13,7 +13,7 @@ namespace Console.Interfaces
         void Toggle();
         void ExecuteCommand( string commandLine );
         void RegisterCommand( IConsoleCommand command );
-        void AddMessage( string message, ConsoleMessageType type = ConsoleMessageType.Log );
+        void AddMessage( string message, ConsoleMessageType type = ConsoleMessageType.Info );
 
         string[] GetMessages();
         void ClearMessages();

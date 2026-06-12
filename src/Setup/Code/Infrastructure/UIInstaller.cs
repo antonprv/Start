@@ -4,6 +4,7 @@
 using Console.Interfaces;
 using Game.Code.Common.Debug.UI;
 using Game.Code.Common.DevConsole;
+using Game.Code.Components.Mover;
 using Godot;
 using Zenjex;
 
@@ -13,15 +14,20 @@ namespace Game.Code.Infrastructure
 	{
 		[Export] private UIMessage _uIMessage;
 		[Export] private DevConsoleNode _devConsole;
+		[Export] private MoverComponent _moverComponent;
 
 		public override void InstallBindings( DiContainerBuilder builder )
 		{
 			builder.Register<IUIMessage>()
-				.FromInstance( _uIMessage )
+				.FromInstanceDebug( _uIMessage )
 				.AsSingleton();
 
 			builder.Register<IDevConsole>()
-				.FromInstance( _devConsole.Service )
+				.FromInstanceDebug( _devConsole.Service )
+				.AsSingleton();
+
+			builder.Register<IMoverComponent>()
+				.FromInstance( _moverComponent )
 				.AsSingleton();
 		}
 

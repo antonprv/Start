@@ -4,8 +4,6 @@
 using Console.Interfaces;
 using Godot;
 
-using System.Diagnostics;
-using System.Reflection;
 using System.Runtime.CompilerServices;
 
 namespace Logger
@@ -15,13 +13,14 @@ namespace Logger
         private static readonly List<string> _logs = new List<string>();
         private static readonly object _logsLock = new object();
         private static IDevConsole _devConsole;
+        
+        private static bool IsDebugBuild => OS.IsDebugBuild();
 
         public static void Initialize( IDevConsole console )
         {
             _devConsole = console;
         }
 
-        [Conditional( "DEBUG" )]
         public static void Log(
             LogType logType,
             string message,
@@ -32,7 +31,6 @@ namespace Logger
             WriteLog( logType, message, memberName, filePath, lineNumber );
         }
 
-        [Conditional( "DEBUG" )]
         public static void LogInfo(
             string message,
             [CallerMemberName] string memberName = "",
@@ -42,7 +40,6 @@ namespace Logger
             WriteLog( LogType.Info, message, memberName, filePath, lineNumber );
         }
 
-        [Conditional( "DEBUG" )]
         public static void LogWarning(
             string message,
             [CallerMemberName] string memberName = "",
@@ -52,7 +49,6 @@ namespace Logger
             WriteLog( LogType.Warning, message, memberName, filePath, lineNumber );
         }
 
-        [Conditional( "DEBUG" )]
         public static void LogException(
             Exception exception,
             [CallerMemberName] string memberName = "",
@@ -62,7 +58,6 @@ namespace Logger
             WriteLog( LogType.Error, exception.ToString(), memberName, filePath, lineNumber );
         }
 
-        [Conditional( "DEBUG" )]
         public static void LogError(
             string message,
             [CallerMemberName] string memberName = "",
@@ -72,7 +67,6 @@ namespace Logger
             WriteLog( LogType.Error, message, memberName, filePath, lineNumber );
         }
 
-        [Conditional( "DEBUG" )]
         public static void LogValue<TValue>(
             string propertyName,
             TValue value,
@@ -83,11 +77,53 @@ namespace Logger
             WriteLog( LogType.Info, $"Set {propertyName} to {value}", memberName, filePath, lineNumber );
         }
 
+        #region Private API
+
+        private static void WriteLog(
+            LogType logType,
+            string message,
+            string memberName,
+            string filePath,
+            int lineNumber )
+        {
+            if ( !IsDebugBuild ) 
+                return;
+
+            string className = Path.GetFileNameWithoutExtension( filePath );
+            string formattedMessage = $"[{className}.{memberName}:{lineNumber}] {message}";
+
+            lock ( _logsLock )
+            {
+                _logs.Add( $"[{DateTime.UtcNow:HH:mm:ss}] [{logType}] {formattedMessage}" );
+            }
+
+            _devConsole?.AddMessage( formattedMessage );
+
+            switch ( logType )
+            {
+                case LogType.Info:
+                    GD.Print( formattedMessage );
+                    break;
+
+                case LogType.Warning:
+                    GD.PushWarning( formattedMessage );
+                    break;
+
+                case LogType.Error:
+                    GD.PushError( formattedMessage );
+                    break;
+            }
+        }
+
+        #endregion
+
         #region Save Logs To File
 
-        [Conditional( "DEBUG" )]
         public static void SaveLogsToFile()
         {
+            if ( !IsDebugBuild ) 
+                return;
+
             try
             {
                 List<string> snapshot;
@@ -116,19 +152,22 @@ namespace Logger
             }
         }
 
-        [Conditional( "DEBUG" )]
         public static void ClearLogs()
         {
+            if ( !IsDebugBuild ) 
+                return;
+
             lock ( _logsLock )
             {
                 _logs.Clear();
             }
         }
 
-        #endregion
-
         public static string GetLogsDirectory()
         {
+            if ( !IsDebugBuild ) 
+                return String.Empty;
+
             string directory;
 
             if ( OS.HasFeature( "editor" ) )
@@ -146,44 +185,8 @@ namespace Logger
                 string exeDirectory = Path.GetDirectoryName( exePath ) ?? ".";
                 directory = Path.Combine( exeDirectory, "Logs" );
             }
-            
+
             return directory;
-        }
-
-        #region Private API
-
-        [Conditional( "DEBUG" )]
-        private static void WriteLog(
-            LogType logType,
-            string message,
-            string memberName,
-            string filePath,
-            int lineNumber )
-        {
-            string className = Path.GetFileNameWithoutExtension( filePath );
-            string formattedMessage = $"[{className}.{memberName}:{lineNumber}] {message}";
-
-            lock ( _logsLock )
-            {
-                _logs.Add( $"[{DateTime.UtcNow:HH:mm:ss}] [{logType}] {formattedMessage}" );
-            }
-
-            _devConsole?.AddMessage( formattedMessage );
-
-            switch ( logType )
-            {
-                case LogType.Info:
-                    GD.Print( formattedMessage );
-                    break;
-
-                case LogType.Warning:
-                    GD.PushWarning( formattedMessage );
-                    break;
-
-                case LogType.Error:
-                    GD.PushError( formattedMessage );
-                    break;
-            }
         }
 
         #endregion

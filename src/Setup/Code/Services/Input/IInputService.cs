@@ -7,6 +7,7 @@ namespace Game.Code.Services.Input
 {
 	public interface IInputService
 	{
+		bool CapturePlayerInput { get; set; }
 		Vector2 GetCameraVector();
 		Vector2 GetInputVector();
 		bool IsJumpPressed();

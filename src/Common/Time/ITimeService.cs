@@ -33,5 +33,7 @@ namespace Common.Time
         void StartTime();
 
         void Tick( double delta );
+        void StopTimeGlobal();
+        void StartTimeGlobal();
     }
 }

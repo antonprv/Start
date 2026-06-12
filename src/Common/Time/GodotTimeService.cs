@@ -25,7 +25,10 @@ namespace Common.Time
         public DateTime UtcNow => DateTime.UtcNow;
 
         public void StopTime() => _paused = true;
+        public void StopTimeGlobal() => Engine.TimeScale = 0;
+
         public void StartTime() => _paused = false;
+        public void StartTimeGlobal() => Engine.TimeScale = 1;
 
         #endregion
 

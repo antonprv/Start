@@ -20,11 +20,14 @@ src/*/.vscode/
 #Visual Studio specific ignores
 src/*/.vs/
 
-# other
+# Other
 src/*/build/
-src/*/builds/
+src/*/*/builds/
 
-# all binary files from libraries
+# Devops builds
+src/*/Builds/*
+
+# All binary files from libraries
 
 src/*/obj/
 src/*/bin/

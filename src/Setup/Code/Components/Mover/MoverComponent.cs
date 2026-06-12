@@ -16,7 +16,7 @@ using Zenjex;
 
 namespace Game.Code.Components.Mover
 {
-	public partial class MoverComponent : CharacterBody3D
+	public partial class MoverComponent : CharacterBody3D, IMoverComponent
 	{
 		[ExportGroup( "Rotation" )]
 		[Export] private float _rotationSpeed = 6f;
@@ -32,12 +32,66 @@ namespace Game.Code.Components.Mover
 		[ExportGroup( "Debug" )]
 		[Export] private bool _showDebug = false;
 
+		[ExportGroup( "Noclip" )]
+		[Export] private float _noclipSpeed = 10f;
+
 		#region Private state
 
 		private IMovementMotor _motor;
 		private MovementContext _context;
 		private MovementDebugOverlay _debugOverlay;
 		private MovementMode _currentMode;
+
+		#endregion
+
+		#region Noclip
+
+		private bool _noclip;
+
+		// Collision masks saved before noclip so we can restore them on toggle-off.
+		private uint _savedCollisionLayer;
+		private uint _savedCollisionMask;
+
+		// Speed used in noclip flight (units/sec). Matches the feel of Doom's noclip speed.
+
+		/// <summary>
+		/// Toggle noclip mode.
+		/// When active: collisions are disabled, jump is suppressed, and the player
+		/// flies freely in the direction the camera is facing (including vertical).
+		/// Equivalent to Doom's IDCLIP cheat.
+		/// </summary>
+		public void SetNoclip( bool enabled )
+		{
+			if ( _noclip == enabled )
+				return;
+
+			_noclip = enabled;
+
+			_cameraComponent.SetNoclip( _noclip );
+
+			if ( _noclip )
+			{
+				_savedCollisionLayer = CollisionLayer;
+				_savedCollisionMask = CollisionMask;
+				CollisionLayer = 0;
+				CollisionMask = 0;
+
+				// Kill any existing vertical momentum so the player doesn't float away.
+				Velocity = new Vector3( Velocity.X, 0f, Velocity.Z );
+			}
+			else
+			{
+				CollisionLayer = _savedCollisionLayer;
+				CollisionMask = _savedCollisionMask;
+
+				// Zero out velocity so the player doesn't shoot off after landing.
+				Velocity = Vector3.Zero;
+			}
+
+			GameLogger.LogInfo( $"Noclip: {( _noclip ? "ON" : "OFF" )}" );
+		}
+
+		public bool IsNoclip => _noclip;
 
 		#endregion
 
@@ -75,7 +129,11 @@ namespace Game.Code.Components.Mover
 		{
 			HandleInput();
 
-			SimulateMovement( delta );
+			if ( _noclip )
+				SimulateNoclip( delta );
+			else
+				SimulateMovement( delta );
+
 			DisplayRotation( delta );
 
 			MoveAndSlide();
@@ -93,29 +151,59 @@ namespace Game.Code.Components.Mover
 		{
 			Vector2 input = _inputService.GetInputVector();
 
-			// fallback to world coordinates if no camera component is assigned
+			// Noclip: fly along the full camera vector (including pitch).
+			if ( _noclip )
+			{
+				if ( _cameraComponent != null )
+				{
+					Vector3 camForward = _cameraComponent.GetForwardDirection();
+					Vector3 camRight = _cameraComponent.GetRightDirection();
+
+					if ( !camForward.IsNearlyZero() ) camForward.FastNormalize();
+					if ( !camRight.IsNearlyZero() ) camRight.FastNormalize();
+
+					_inputDirection = ( camRight * input.X ) + ( camForward * -input.Y );
+				}
+				else
+				{
+					// Fallback: no camera, fly in world XZ only.
+					_inputDirection = new Vector3( input.X, 0, -input.Y );
+				}
+
+				return;
+			}
+
+			// Normal: project onto horizontal plane.
 			if ( _cameraComponent == null )
 			{
 				_inputDirection = new Vector3( input.X, 0, -input.Y );
 				return;
 			}
 
-			Vector3 camForward = _cameraComponent.GetForwardDirection();
-			camForward.Y = 0;
-			if ( !camForward.IsNearlyZero() )
-				camForward.FastNormalize();
+			Vector3 cf = _cameraComponent.GetForwardDirection();
+			cf.Y = 0;
+			if ( !cf.IsNearlyZero() )
+				cf.FastNormalize();
 
-			Vector3 camRight = _cameraComponent.GetRightDirection();
-			camRight.Y = 0;
-			if ( !camRight.IsNearlyZero() )
-				camRight.FastNormalize();
+			Vector3 cr = _cameraComponent.GetRightDirection();
+			cr.Y = 0;
+			if ( !cr.IsNearlyZero() )
+				cr.FastNormalize();
 
-			_inputDirection = ( camRight * input.X ) + ( camForward * -input.Y );
+			_inputDirection = ( cr * input.X ) + ( cf * -input.Y );
 			_inputDirection.Y = 0;
 		}
 
+		// Jump input is read but never applied in noclip — kept for consistency.
 		protected virtual void GetJumpInput() => _jumpInput = _inputService.IsJumpPressed();
 
+		private void SimulateNoclip( double delta )
+		{
+			// Direct velocity from input; no gravity, no jump, no traits.
+			Velocity = _inputDirection.IsNearlyZero()
+				? Vector3.Zero
+				: _inputDirection.FastNormalized() * _noclipSpeed;
+		}
 
 		private void SimulateMovement( double delta )
 		{

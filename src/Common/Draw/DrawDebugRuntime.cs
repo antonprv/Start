@@ -4,7 +4,6 @@
 using FastMath;
 
 using Godot;
-
 using Logger;
 
 namespace Common.Draw
@@ -137,7 +136,8 @@ namespace Common.Draw
 
         public static DebugHandle DrawWireCube( Vector3 center, Vector3 size, Color color )
         {
-            if ( !AssertInitialized() ) return null;
+            if ( !AssertInitialized() ) 
+                return null;
 
             EnsureParent( DebugShapeName.Cube, ref _cubeParent );
 
@@ -153,7 +153,8 @@ namespace Common.Draw
           Color color,
           int segments = DefaultSphereSegments )
         {
-            if ( !AssertInitialized() ) return null;
+            if ( !AssertInitialized() ) 
+                return null;
 
             EnsureParent( DebugShapeName.Sphere, ref _sphereParent );
 
@@ -169,7 +170,8 @@ namespace Common.Draw
           Color color,
           float duration = 1f )
         {
-            if ( !AssertInitialized() ) return null;
+            if ( !AssertInitialized() ) 
+                return null;
 
             EnsureParent( DebugShapeName.CubeTemp, ref _cubeTempParent );
 
@@ -189,7 +191,8 @@ namespace Common.Draw
           int segments = DefaultSphereSegments,
           float duration = 1f )
         {
-            if ( !AssertInitialized() ) return null;
+            if ( !AssertInitialized() ) 
+                return null;
 
             EnsureParent( DebugShapeName.SphereTemp, ref _sphereTempParent );
 
@@ -212,7 +215,8 @@ namespace Common.Draw
         /// </summary>
         public static void UpdateColor( DebugHandle handle, Color color )
         {
-            if ( !IsHandleValid( handle ) ) return;
+            if ( !IsHandleValid( handle ) )
+                return;
 
             StopAnimInternal( handle.Instance );
             ApplyColor( handle.Instance, color );
@@ -230,7 +234,8 @@ namespace Common.Draw
           Color colorB,
           float interval = 0.5f )
         {
-            if ( !IsHandleValid( handle ) ) return;
+            if ( !IsHandleValid( handle ) ) 
+                return;
 
             StopAnimInternal( handle.Instance );
 
@@ -259,7 +264,8 @@ namespace Common.Draw
           float duration = 0.15f,
           Color? returnColor = null )
         {
-            if ( !IsHandleValid( handle ) ) return;
+            if ( !IsHandleValid( handle ) )
+                return;
 
             StopAnimInternal( handle.Instance );
 
@@ -281,8 +287,8 @@ namespace Common.Draw
             SceneTreeTimer timer = _sceneTree.CreateTimer( duration, false );
             timer.Timeout += () =>
             {
-                if ( anim.Cancelled ) return;
-                if ( !IsHandleValid( handle ) ) return;
+                if ( anim.Cancelled || !IsHandleValid( handle ) ) 
+                    return;
 
                 _anims.Remove( handle.Instance );
                 ApplyColor( handle.Instance, restoreColor );
@@ -295,7 +301,9 @@ namespace Common.Draw
         /// </summary>
         public static void StopAnimation( DebugHandle handle )
         {
-            if ( !IsHandleValid( handle ) ) return;
+            if ( !IsHandleValid( handle ) ) 
+                return;
+
             StopAnimInternal( handle.Instance );
         }
 
@@ -308,13 +316,15 @@ namespace Common.Draw
         /// </summary>
         public static void DestroyByName( string name )
         {
-            if ( !AssertInitialized() ) return;
+            if ( !AssertInitialized() ) 
+                return;
 
             if ( name == DebugShapeName.SphereTemp || name == DebugShapeName.CubeTemp )
                 throw new InvalidOperationException( "Destruction of temporary shapes is not allowed." );
 
             Node3D parent = name == DebugShapeName.Sphere ? _sphereParent : _cubeParent;
-            if ( parent == null ) return;
+            if ( parent == null ) 
+                return;
 
             foreach ( Node child in parent.GetChildren() )
             {
@@ -333,7 +343,8 @@ namespace Common.Draw
         /// </summary>
         public static void Clear()
         {
-            if ( !AssertInitialized() ) return;
+            if ( !AssertInitialized() ) 
+                return;
 
             _anims.Clear();
             _positions.Clear();

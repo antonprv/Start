@@ -10,7 +10,8 @@
 
 [node name="UI" type="Node" parent="." unique_id=1146455411]
 
-[node name="DebugUI" parent="UI" unique_id=1188731429 instance=ExtResource("2_056jx")]
+[node name="DebugUI" parent="UI" unique_id=1188731429 node_paths=PackedStringArray("_moverComponent") instance=ExtResource("2_056jx")]
+_moverComponent = NodePath("../../Player")
 
 [node name="LocalServiceInitializer" type="Node" parent="." unique_id=1314008614 node_paths=PackedStringArray("_rootNode")]
 script = ExtResource("1_clu36")

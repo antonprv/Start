@@ -72,7 +72,7 @@ namespace Console.Core
             }
         }
 
-        public void AddMessage( string message, ConsoleMessageType type = ConsoleMessageType.Log )
+        public void AddMessage( string message, ConsoleMessageType type = ConsoleMessageType.Info )
         {
             _messages.Add( new ConsoleMessage( message, type, Marker ) );
 

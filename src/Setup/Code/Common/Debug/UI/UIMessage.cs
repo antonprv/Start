@@ -1,6 +1,7 @@
 ﻿// Created by Anton Piruev in 2026. 
 // Any direct commercial use of derivative work is strictly prohibited.
 
+using Common.Extensions;
 using Godot;
 using System.Collections.Generic;
 
@@ -12,6 +13,12 @@ namespace Game.Code.Common.Debug.UI
 
 		[Export] public int MaxMessages = 50;
 		[Export] public float MessageLifetime = 10f;
+
+		#endregion
+
+		#region ConditionalExpression
+
+		public override void _EnterTree() => this.DestroyIfNotDebug();
 
 		#endregion
 

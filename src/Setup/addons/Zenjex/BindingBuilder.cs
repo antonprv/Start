@@ -1,6 +1,8 @@
 // Created by Anton Piruev in 2026. 
 // Any direct commercial use of derivative work is strictly prohibited.
 
+using Godot;
+using NSubstitute;
 using System;
 
 namespace Zenjex
@@ -52,6 +54,15 @@ namespace Zenjex
 			_instance = instance;
 			_factory = null;
 			return this;
+		}
+
+		/// <summary>Bind to a pre-created instance (singleton) or empty stub if not in debug.</summary>
+		public BindingBuilder<T> FromInstanceDebug( T instance )
+		{
+			if ( OS.IsDebugBuild() )
+				return FromInstance( instance );
+
+			return FromInstance( Substitute.For<T>() );
 		}
 
 		/// <summary>Bind using a factory method.</summary>

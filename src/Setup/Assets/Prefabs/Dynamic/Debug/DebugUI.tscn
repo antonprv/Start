@@ -6,32 +6,32 @@
 [ext_resource type="Script" uid="uid://bn4a6e18g1chd" path="res://Code/Common/Debug/UI/UIMessage.cs" id="2_4iym7"]
 [ext_resource type="Script" uid="uid://bmcvecot7jj4a" path="res://Code/Common/Debug/UI/DevConsoleNode.cs" id="5_1ljga"]
 
-[node name="DebugUI" type="Control" unique_id=1188731429]
+[node name="DebugUI" type="Control" unique_id=1188731429 node_paths=PackedStringArray("_uIMessage", "_devConsole")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-
-[node name="UIInstaller" type="Node" parent="." unique_id=1701920393 node_paths=PackedStringArray("_uIMessage", "_devConsole")]
 script = ExtResource("1_5mrp6")
-_uIMessage = NodePath("../DebugMessages_Text")
-_devConsole = NodePath("../CanvasLayer")
+_uIMessage = NodePath("Messages")
+_devConsole = NodePath("Console")
 
-[node name="FPS_Text" type="Label" parent="." unique_id=326776198]
+[node name="FPS" type="Label" parent="." unique_id=326776198]
 layout_mode = 0
 offset_right = 197.0
 offset_bottom = 50.0
 label_settings = ExtResource("2_1ljga")
 script = ExtResource("1_8v4gd")
 
-[node name="DebugMessages_Text" type="RichTextLabel" parent="." unique_id=1455533546]
+[node name="Messages" type="RichTextLabel" parent="." unique_id=1455533546]
 layout_mode = 0
 offset_top = 63.0
 offset_right = 333.0
 offset_bottom = 339.0
 script = ExtResource("2_4iym7")
 
-[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1472267401]
+[node name="Console" type="CanvasLayer" parent="." unique_id=1472267401 node_paths=PackedStringArray("_fpsTrackerNode", "_uiMessageNode")]
 script = ExtResource("5_1ljga")
+_fpsTrackerNode = NodePath("../FPS")
+_uiMessageNode = NodePath("../Messages")

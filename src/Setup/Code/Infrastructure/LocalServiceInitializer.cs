@@ -3,10 +3,11 @@
 
 using Common.Draw;
 using Common.Time;
+
 using Console.Interfaces;
+
 using Godot;
 using Logger;
-using System;
 using Zenjex;
 
 namespace Game.Code.Infrastructure
@@ -30,9 +31,10 @@ namespace Game.Code.Infrastructure
 
 		public override void _Ready()
 		{
+			if ( OS.IsDebugBuild() )
+				GameLogger.Initialize( _devConsole );
+			
 			DrawDebugRuntime.Initialize( GetTree(), _rootNode );
-			GameLogger.Initialize( _devConsole );
-
 			GetTree().Root.CloseRequested += OnCloseRequested;
 		}
 

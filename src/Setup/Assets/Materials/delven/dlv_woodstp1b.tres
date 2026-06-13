@@ -1,0 +1,13 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://dko0mkgy6gmtj"]
+
+[ext_resource type="Shader" uid="uid://bkntipcbr62al" path="res://Code/Shaders/BaseShader.gdshader" id="1_8113d"]
+[ext_resource type="Texture2D" uid="uid://b5tsrcdx04xw5" path="res://Broom/textures/delven/dlv_woodstp1b.bmp" id="2_bxs46"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_8113d")
+shader_parameter/albedo = Color(1, 1, 1, 1)
+shader_parameter/albedo_texture = ExtResource("2_bxs46")
+shader_parameter/vertex_color_enabled = true
+shader_parameter/vertex_snap_enabled = false
+shader_parameter/snap_resolution = 128.0

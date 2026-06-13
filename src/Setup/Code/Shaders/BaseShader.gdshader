@@ -2,7 +2,7 @@ shader_type spatial;
 render_mode depth_draw_opaque, specular_disabled, ambient_light_disabled;
 
 uniform vec4 albedo : source_color = vec4(1.0);
-uniform sampler2D albedo_texture : source_color, hint_default_white;
+uniform sampler2D albedo_texture : source_color, hint_default_white, filter_nearest_mipmap;
 uniform bool vertex_color_enabled = true;
 uniform bool vertex_snap_enabled = true;
 uniform float snap_resolution : hint_range(16.0, 512.0) = 128.0;
@@ -24,7 +24,7 @@ void vertex() {
         clip_pos.xyz *= clip_pos.w;
     }
 
-    // Пишем POSITION всегда — иначе Godot теряет меш в Compatibility
+    // Always write to POSITION - otherwise Godot loses mesh in Compatibility
     POSITION = clip_pos;
 }
 

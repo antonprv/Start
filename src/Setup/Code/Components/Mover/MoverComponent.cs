@@ -230,7 +230,11 @@ namespace Game.Code.Components.Mover
 			if ( _playerMesh == null || _inputDirection.IsNearlyZero() )
 				return;
 
-			float targetAngle = FMath.FastAtan2( -_inputDirection.X, -_inputDirection.Z );
+			// Convert world-space direction to local space of this CharacterBody3D
+			// so the mesh orients correctly regardless of root node rotation.
+			Vector3 localInput = GlobalTransform.Basis.Inverse() * _inputDirection;
+
+			float targetAngle = FMath.FastAtan2( -localInput.X, -localInput.Z );
 
 			Quaternion targetRotation = FMath.FromAxisAngle( Vector3.Up, targetAngle );
 			Quaternion currentRotation = _playerMesh.Quaternion;

@@ -34,7 +34,7 @@ enabled=PackedStringArray("res://addons/Zenjex/plugin.cfg", "res://addons/func_g
 
 [func_godot]
 
-default_map_settings="res://addons/FuncGodot/func_godot_default_map_settings.tres"
+default_map_settings="res://addons/func_godot/func_godot_default_map_settings.tres"
 
 [input]
 
@@ -79,6 +79,9 @@ CallConsole={
 
 [rendering]
 
-textures/canvas_textures/default_texture_filter=2
+textures/canvas_textures/default_texture_filter=3
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
+textures/default_filters/use_nearest_mipmap_filter=true
+textures/decals/filter=2
+textures/light_projectors/filter=2

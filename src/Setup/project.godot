@@ -30,7 +30,11 @@ project/assembly_name="Setup"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/Zenjex/plugin.cfg")
+enabled=PackedStringArray("res://addons/Zenjex/plugin.cfg", "res://addons/func_godot/plugin.cfg", "res://addons/script-ide/plugin.cfg")
+
+[func_godot]
+
+default_map_settings="res://addons/FuncGodot/func_godot_default_map_settings.tres"
 
 [input]
 

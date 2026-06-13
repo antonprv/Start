@@ -1,0 +1,14 @@
+[remap]
+
+importer="func_godot.map"
+type="Resource"
+uid="uid://b564qpagsxit2"
+path="res://.godot/imported/Test.map-765566d89bbef8925a6ba376c03f6c1e.tres"
+
+[deps]
+
+source_file="res://Broom/maps/Test.map"
+dest_files=["res://.godot/imported/Test.map-765566d89bbef8925a6ba376c03f6c1e.tres"]
+
+[params]
+

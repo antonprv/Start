@@ -1,0 +1,8 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://ctw37nkcw6s34"]
+
+[ext_resource type="Texture2D" uid="uid://dwytbjeytn8ei" path="res://Broom/textures/torment/str_metalpan6.bmp" id="1_dc046"]
+
+[resource]
+albedo_texture = ExtResource("1_dc046")
+metallic_specular = 0.0
+texture_filter = 2

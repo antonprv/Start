@@ -35,3 +35,7 @@ src/*/bin/
 *.pdb
 *.dll
 *.cache
+
+# External addons
+src/*/addons/func_godot/
+src/*/addons/script-ide/

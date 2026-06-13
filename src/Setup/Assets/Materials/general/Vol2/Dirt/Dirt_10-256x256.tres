@@ -1,0 +1,13 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://vkmmhtsk6j8w"]
+
+[ext_resource type="Shader" uid="uid://bkntipcbr62al" path="res://Code/Shaders/BaseShader.gdshader" id="1_4dkqs"]
+[ext_resource type="Texture2D" uid="uid://5lmilmtwh1nb" path="res://Broom/textures/general/Vol2/Dirt/Dirt_10-256x256.png" id="2_8kxwe"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_4dkqs")
+shader_parameter/albedo = Color(1, 1, 1, 1)
+shader_parameter/albedo_texture = ExtResource("2_8kxwe")
+shader_parameter/vertex_color_enabled = true
+shader_parameter/vertex_snap_enabled = false
+shader_parameter/snap_resolution = 128.0

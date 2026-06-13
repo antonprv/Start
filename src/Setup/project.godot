@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Setup"
-run/main_scene="uid://cc8uji4toi0gy"
+run/main_scene="uid://ciwb1m1evvfqj"
 config/features=PackedStringArray("4.6", "C#")
 boot_splash/show_image=false
 
@@ -30,7 +30,7 @@ project/assembly_name="Setup"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/Zenjex/plugin.cfg", "res://addons/func_godot/plugin.cfg", "res://addons/script-ide/plugin.cfg")
+enabled=PackedStringArray("res://addons/Zenjex/plugin.cfg", "res://addons/func_godot/plugin.cfg", "res://addons/nexus_vertex_painter/plugin.cfg", "res://addons/script-ide/plugin.cfg")
 
 [func_godot]
 
@@ -79,5 +79,6 @@ CallConsole={
 
 [rendering]
 
+textures/canvas_textures/default_texture_filter=2
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"

@@ -1,0 +1,11 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://dwrbnvf3obqer"]
+
+[ext_resource type="Shader" uid="uid://bkntipcbr62al" path="res://Code/Shaders/BaseShader.gdshader" id="1_dyahv"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_dyahv")
+shader_parameter/albedo = Color(1, 1, 1, 1)
+shader_parameter/vertex_color_enabled = true
+shader_parameter/vertex_snap_enabled = false
+shader_parameter/snap_resolution = 128.0

@@ -31,7 +31,7 @@ You must cease use and destroy derivatives within 14 days of notice.
 
 7. Legal
 The Licensor reserves the right to pursue legal action for violations.
-No warranties: The Work is provided "as-is" without liability for damages.This license is governed by and construed in accordance with the laws of the Russian Federation.
+No warranties: The Work is provided "as-is" without liability for damages.This license is governed by and construed in accordance with the laws of the Russian Federation and US.
 
 8. Amendments
 Anton Piruev may update these terms, with changes effective 30 days after public posting.

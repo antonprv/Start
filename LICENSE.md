@@ -1,4 +1,4 @@
-Anton Piruev Intellectual Property License (2025)Version 1.01.
+Anton Piruev Intellectual Property License (2026) Version 1.02.
 
 Ownership & CopyrightThe original work ("Work"), including its code, design, assets, and concepts, is exclusively owned by Anton Piruev ("Licensor") and protected under applicable copyright laws (© 2025 Anton Piruev). All rights not expressly granted are reserved.
 

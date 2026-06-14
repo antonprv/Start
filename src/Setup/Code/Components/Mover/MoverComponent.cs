@@ -88,7 +88,7 @@ namespace Game.Code.Components.Mover
 				Velocity = Vector3.Zero;
 			}
 
-			GameLogger.LogInfo( $"Noclip: {( _noclip ? "ON" : "OFF" )}" );
+			GameLogger.LogInfo( $"Got noclip: {( _noclip ? "ON" : "OFF" )}" );
 		}
 
 		public bool IsNoclip => _noclip;

@@ -31,7 +31,7 @@ namespace Game.Code.Common.Debug.ConsoleCommands
 			}
 
 			_mover.SetNoclip( !_mover.IsNoclip );
-			_console.AddMessage( $"Noclip: {( _mover.IsNoclip ? "ON" : "OFF" )}", ConsoleMessageType.Info );
+			_console.AddMessage( $"Set noclip: {( _mover.IsNoclip ? "ON" : "OFF" )}", ConsoleMessageType.Info );
 		}
 	}
 }

@@ -58,7 +58,7 @@ namespace Game.Code.Components.Camera
 				_springArm.CollisionMask = _savedCollisionMask;
 			}
 
-			GameLogger.LogInfo( $"Noclip -> {( _noclip ? "ON" : "OFF" )}" );
+			GameLogger.LogInfo( $"Got noclip: {( _noclip ? "ON" : "OFF" )}" );
 		}
 
 

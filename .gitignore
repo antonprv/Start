@@ -25,9 +25,7 @@ src/*/build/
 src/*/*/builds/
 
 # Devops builds
-src/*/Builds/
-src/*/Builds/*
-src/*/Builds/*/*
+src/Builds/
 
 # All binary files from libraries
 

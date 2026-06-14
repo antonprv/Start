@@ -1,0 +1,8 @@
+[23:52:56] [Info] [TriggerVolume.HandleBodyEnter:70] <CharacterBody3D#41758492245> entered!
+[23:52:58] [Info] [TriggerVolume.HandleBodyExit:89] <CharacterBody3D#41758492245> exited!
+[23:52:58] [Info] [TriggerVolume.HandleBodyEnter:70] <CharacterBody3D#41758492245> entered!
+[23:53:00] [Info] [TriggerVolume.HandleBodyExit:89] <CharacterBody3D#41758492245> exited!
+[23:53:01] [Info] [TriggerVolume.HandleBodyEnter:70] <CharacterBody3D#41758492245> entered!
+[23:53:02] [Info] [TriggerVolume.HandleBodyExit:89] <CharacterBody3D#41758492245> exited!
+[23:53:04] [Info] [TriggerVolume.HandleBodyEnter:70] <CharacterBody3D#41758492245> entered!
+[23:53:07] [Info] [TriggerVolume.HandleBodyExit:89] <CharacterBody3D#41758492245> exited!

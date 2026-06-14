@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="VertexColorPaintSnapshot" format=3 uid="uid://ckisohobpe2a6"]
+
+[ext_resource type="Script" uid="uid://nmrvc8rjp043" path="res://addons/nexus_vertex_painter/vertex_color_paint_snapshot.gd" id="1_4ch5i"]
+
+[resource]
+script = ExtResource("1_4ch5i")
+source_mesh_path = "res://Assets/Maps/Main.tscn::ArrayMesh_m7ddt"
+mesh_instance_name = "entity_1_mesh_instance"
+capture_transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.75, -0.5, -4.25)
+world_positions = PackedVector3Array(8, 0, -13.5, -9.5, 0, -13.5, -9.5, -1, -13.5, 8, -1, -13.5, -9.5, 0, 5, -9.5, 0, -13.5, 8, 0, -13.5, 8, 0, 5)
+world_normals = PackedVector3Array(0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 1, -1.5259022e-05, 0, 1, -1.5259022e-05, 0, 1, -1.5259022e-05, 0, 1, -1.5259022e-05)
+colors = PackedColorArray(0.26965705, 0.26965705, 0.26965705, 1, 0.61924106, 0.61924106, 0.61924106, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.68120974, 0.68120974, 0.68120974, 1, 0.61924106, 0.61924106, 0.61924106, 1, 0.26965705, 0.26965705, 0.26965705, 1, 0.76865876, 0.76865876, 0.76865876, 1)

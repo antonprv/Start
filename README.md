@@ -1,6 +1,7 @@
 ### License TLDR: 
-This code is pushed as a **Non-Commercial with attribution** license, with a caveat, that the owner of the intellectual property **can** use it commercially.
+This code is published as a **Non-Commercial with attribution** license, with a caveat, that the owner of the intellectual property, me, **can** use it commercially.
 
+### About the project
 This is the source code for my general-purpose retro game framework. It features:
 - dev console with cheat-codes, 
 - custom C# DI Solution, 

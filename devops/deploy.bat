@@ -34,7 +34,7 @@ if "%BUILD_SUBPATH%"=="" set "BUILD_SUBPATH=src\Builds\Build1"
 
 :: Base paths
 set "GODOT_BASE=C:\Users\User\Godot"
-set "EDITOR_PATH=%GODOT_BASE%\Editors\.editor_config\%PROJECT_NAME%\Godot_v4.6.3-stable_mono_win64_console.exe"
+set "EDITOR_PATH=%GODOT_BASE%\Editors\.editor_config\%PROJECT_NAME%\Godot_v4.7-stable_mono_win64_console.exe"
 set "PROJECT_PATH=%GODOT_BASE%\Projects\%PROJECT_NAME%\src\%PROJECT_NAME%"
 set "BUILD_BASE=%GODOT_BASE%\Projects\%PROJECT_NAME%\%BUILD_SUBPATH%"
 

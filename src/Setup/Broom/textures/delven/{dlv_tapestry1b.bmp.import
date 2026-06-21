@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://u441or426vgs"
 path.s3tc="res://.godot/imported/{dlv_tapestry1b.bmp-219754a7a80aa466724c261a5f5d1447.s3tc.ctex"
+path.etc2="res://.godot/imported/{dlv_tapestry1b.bmp-219754a7a80aa466724c261a5f5d1447.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://Broom/textures/delven/{dlv_tapestry1b.bmp"
-dest_files=["res://.godot/imported/{dlv_tapestry1b.bmp-219754a7a80aa466724c261a5f5d1447.s3tc.ctex"]
+dest_files=["res://.godot/imported/{dlv_tapestry1b.bmp-219754a7a80aa466724c261a5f5d1447.s3tc.ctex", "res://.godot/imported/{dlv_tapestry1b.bmp-219754a7a80aa466724c261a5f5d1447.etc2.ctex"]
 
 [params]
 

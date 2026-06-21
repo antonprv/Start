@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://b5tsrcdx04xw5"
 path.s3tc="res://.godot/imported/dlv_woodstp1b.bmp-af2b48ff981e92bbbfb93da1f937361f.s3tc.ctex"
+path.etc2="res://.godot/imported/dlv_woodstp1b.bmp-af2b48ff981e92bbbfb93da1f937361f.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://Broom/textures/delven/dlv_woodstp1b.bmp"
-dest_files=["res://.godot/imported/dlv_woodstp1b.bmp-af2b48ff981e92bbbfb93da1f937361f.s3tc.ctex"]
+dest_files=["res://.godot/imported/dlv_woodstp1b.bmp-af2b48ff981e92bbbfb93da1f937361f.s3tc.ctex", "res://.godot/imported/dlv_woodstp1b.bmp-af2b48ff981e92bbbfb93da1f937361f.etc2.ctex"]
 
 [params]
 

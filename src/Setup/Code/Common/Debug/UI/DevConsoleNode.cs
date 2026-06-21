@@ -124,6 +124,7 @@ namespace Game.Code.Common.DevConsole
 		{
 			Service.RegisterCommand( new FilterCommand( Service ) );
 			Service.RegisterCommand( new SetFpsCommand( Service ) );
+			Service.RegisterCommand( new ToggleVsyncCommand( Service ) );
 			Service.RegisterCommand( new StatFpsCommand( Service, _fpsTrackerNode ) );
 			Service.RegisterCommand( new ShowDebugUIMessages( Service, _uiMessageNode ) );
 			Service.RegisterCommand( new ExportLogsCommand( Service ) );

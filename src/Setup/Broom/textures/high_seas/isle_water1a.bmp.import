@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://dh322vsjbpbut"
 path.s3tc="res://.godot/imported/isle_water1a.bmp-9a2a3fadf4ad901d8de6afe446af2a3b.s3tc.ctex"
+path.etc2="res://.godot/imported/isle_water1a.bmp-9a2a3fadf4ad901d8de6afe446af2a3b.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://Broom/textures/high_seas/isle_water1a.bmp"
-dest_files=["res://.godot/imported/isle_water1a.bmp-9a2a3fadf4ad901d8de6afe446af2a3b.s3tc.ctex"]
+dest_files=["res://.godot/imported/isle_water1a.bmp-9a2a3fadf4ad901d8de6afe446af2a3b.s3tc.ctex", "res://.godot/imported/isle_water1a.bmp-9a2a3fadf4ad901d8de6afe446af2a3b.etc2.ctex"]
 
 [params]
 

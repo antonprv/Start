@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://dwytbjeytn8ei"
 path.s3tc="res://.godot/imported/str_metalpan6.bmp-935c633e9d21aecce2250867aab388dd.s3tc.ctex"
+path.etc2="res://.godot/imported/str_metalpan6.bmp-935c633e9d21aecce2250867aab388dd.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://Broom/textures/torment/str_metalpan6.bmp"
-dest_files=["res://.godot/imported/str_metalpan6.bmp-935c633e9d21aecce2250867aab388dd.s3tc.ctex"]
+dest_files=["res://.godot/imported/str_metalpan6.bmp-935c633e9d21aecce2250867aab388dd.s3tc.ctex", "res://.godot/imported/str_metalpan6.bmp-935c633e9d21aecce2250867aab388dd.etc2.ctex"]
 
 [params]
 

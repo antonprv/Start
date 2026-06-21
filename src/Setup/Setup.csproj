@@ -1,31 +1,33 @@
-<Project Sdk="Godot.NET.Sdk/4.6.3">
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <TargetFramework Condition=" '$(GodotTargetPlatform)' == 'android' ">net9.0</TargetFramework>
-    <EnableDynamicLoading>true</EnableDynamicLoading>
-    <RootNamespace>Game</RootNamespace>
-  </PropertyGroup>
-  <ItemGroup>
-    <Compile Remove="addons\ZenjexGodot.Generator\**" />
-    <Compile Remove="Code\Model\**" />
-    <EmbeddedResource Remove="addons\ZenjexGodot.Generator\**" />
-    <EmbeddedResource Remove="Code\Model\**" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Code\Gameplay\" />
-    <Folder Include="Code\Models\" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="NSubstitute" Version="5.3.0" />
-    <PackageReference Include="NSubstitute.Analyzers.CSharp" Version="1.0.17">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Common\Common.csproj" />
-    <ProjectReference Include="..\Components\Components.csproj" />
-    <ProjectReference Include="..\FastMath\FastMath.csproj" />
-    <ProjectReference Include="..\Logger\Logger.csproj" />
-  </ItemGroup>
+<Project Sdk="Godot.NET.Sdk/4.7.0">
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<TargetFramework Condition=" '$(GodotTargetPlatform)' == 'android' ">net9.0</TargetFramework>
+		<EnableDynamicLoading>true</EnableDynamicLoading>
+		<RootNamespace>Game</RootNamespace>
+		<EnableDynamicLoading>false</EnableDynamicLoading>
+		<PublishReadyToRun>true</PublishReadyToRun>
+		<PublishReadyToRunShowWarnings>true</PublishReadyToRunShowWarnings>
+	</PropertyGroup>
+	<ItemGroup>
+		<Compile Remove="addons\ZenjexGodot.Generator\**" />
+		<Compile Remove="Code\Model\**" />
+		<EmbeddedResource Remove="addons\ZenjexGodot.Generator\**" />
+		<EmbeddedResource Remove="Code\Model\**" />
+	</ItemGroup>
+	<ItemGroup>
+		<Folder Include="Code\Models\" />
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="NSubstitute" Version="5.3.0" />
+		<PackageReference Include="NSubstitute.Analyzers.CSharp" Version="1.0.17">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Common\Common.csproj" />
+		<ProjectReference Include="..\Components\Components.csproj" />
+		<ProjectReference Include="..\FastMath\FastMath.csproj" />
+		<ProjectReference Include="..\Logger\Logger.csproj" />
+	</ItemGroup>
 </Project>

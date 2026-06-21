@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="FuncGodotFGDSolidClass" format=3 uid="uid://dox2frfvggjl"]
+
+[ext_resource type="Script" uid="uid://5cow84q03m6a" path="res://addons/func_godot/src/fgd/func_godot_fgd_solid_class.gd" id="1_l1gb6"]
+
+[resource]
+script = ExtResource("1_l1gb6")
+global_illumination_mode = 0
+use_in_baked_light = false
+shadow_casting_setting = 0
+classname = "platform_moving"
+description = "Platform that moves back and forth between start and end position."
+class_properties = Dictionary[String, Variant]({
+"move_direction": Vector3(0, 0, 0),
+"move_distance": 2.0,
+"move_time": 2.0
+})
+node_class = "AnimatableBody3D"
+metadata/_custom_type_script = "uid://5cow84q03m6a"

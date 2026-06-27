@@ -1,30 +1,18 @@
 ﻿// Created by Anton Piruev in 2026. 
 // Any direct commercial use of derivative work is strictly prohibited.
 
-using Common.Random;
-using Common.Time;
-using Game.Code.Services.Input;
+using Engine.Infrastructure;
 using Zenjex;
 
-namespace Game.Code.Infrastructure
+namespace Setup.Code.Infrastructure
 {
-	public partial class AppInstaller : RootInstaller
+	public partial class AppInstaller : EngineAppInstaller
 	{
 		public override void InstallBindings( DiContainerBuilder builder )
 		{
-			builder.Register<IRandomService>()
-				.To<GodotRandomService>()
-				.AsSingleton();
+			base.InstallBindings( builder );
 
-			builder.Register<ITimeService>()
-				.To<GodotTimeService>()
-				.AsSingleton();
-
-			builder.Register<IInputService>()
-			  .To<InputService>()
-			  .AsSingleton();
+			// Game-specific Bindings
 		}
-
-		public override void LaunchGame() { }
 	}
 }

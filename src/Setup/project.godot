@@ -18,7 +18,7 @@ boot_splash/show_image=false
 [autoload]
 
 DiContainer="*uid://bpr7slko5xani"
-AppInstaller="*uid://dlivup3p47326"
+AppInstaller="*uid://ckpygjird8ppc"
 
 [display]
 

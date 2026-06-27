@@ -1,6 +1,6 @@
 [gd_scene format=4 uid="uid://ciwb1m1evvfqj"]
 
-[ext_resource type="Script" uid="uid://c7hqhp3asjvxr" path="res://Code/Infrastructure/LocalServiceInitializer.cs" id="1_clu36"]
+[ext_resource type="Script" uid="uid://c7hqhp3asjvxr" path="res://Engine/Infrastructure/LocalServiceInitializer.cs" id="1_clu36"]
 [ext_resource type="PackedScene" uid="uid://crvrwpolm8bgu" path="res://Assets/Prefabs/Dynamic/Debug/DebugUI.tscn" id="2_056jx"]
 [ext_resource type="PackedScene" uid="uid://bkj0tnt11xvlx" path="res://Assets/Prefabs/Dynamic/Player/Player.tscn" id="2_57bvl"]
 [ext_resource type="PackedScene" uid="uid://dws6xjgehhcec" path="res://Assets/Prefabs/Dynamic/Utils/TriggerVolume.tscn" id="4_4esb6"]

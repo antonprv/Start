@@ -1,9 +1,9 @@
 [gd_scene format=3 uid="uid://bkj0tnt11xvlx"]
 
-[ext_resource type="Script" uid="uid://c0o6x1jpgu8xj" path="res://Code/Components/Mover/MoverComponent.cs" id="1_tcdex"]
+[ext_resource type="Script" uid="uid://c0o6x1jpgu8xj" path="res://Engine/Components/Mover/MoverComponent.cs" id="1_tcdex"]
 [ext_resource type="Resource" uid="uid://7qye1rn5hk43" path="res://Assets/Prefabs/Dynamic/Player/Mover/DefaultMovementProfile.tres" id="2_pqobs"]
 [ext_resource type="Material" uid="uid://cdkqx8gy7j5c2" path="res://Assets/Materials/UntexturedMaterial.tres" id="3_aibj7"]
-[ext_resource type="Script" uid="uid://ee5jieaxccnn" path="res://Code/Components/Camera/CameraComponent.cs" id="3_pqobs"]
+[ext_resource type="Script" uid="uid://ee5jieaxccnn" path="res://Engine/Components/Camera/CameraComponent.cs" id="3_pqobs"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_s3j7c"]
 material = ExtResource("3_aibj7")

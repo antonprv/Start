@@ -1,0 +1,15 @@
+C:\USERS\USER\GODOT\PROJECTS\SETUP\SRC\Framework\Logger\bin\Debug\net8.0\Framework.Logger.deps.json
+C:\USERS\USER\GODOT\PROJECTS\SETUP\SRC\Framework\Logger\bin\Debug\net8.0\Framework.Logger.dll
+C:\USERS\USER\GODOT\PROJECTS\SETUP\SRC\Framework\Logger\bin\Debug\net8.0\Framework.Logger.pdb
+C:\USERS\USER\GODOT\PROJECTS\SETUP\SRC\Framework\Logger\bin\Debug\net8.0\Framework.Console.dll
+C:\USERS\USER\GODOT\PROJECTS\SETUP\SRC\Framework\Logger\bin\Debug\net8.0\Framework.Console.pdb
+C:\USERS\USER\GODOT\PROJECTS\SETUP\SRC\Framework\Logger\obj\Debug\net8.0\Framework.Logger.csproj.AssemblyReference.cache
+C:\USERS\USER\GODOT\PROJECTS\SETUP\SRC\Framework\Logger\obj\Debug\net8.0\Framework.Logger.GeneratedMSBuildEditorConfig.editorconfig
+C:\USERS\USER\GODOT\PROJECTS\SETUP\SRC\Framework\Logger\obj\Debug\net8.0\Framework.Logger.AssemblyInfoInputs.cache
+C:\USERS\USER\GODOT\PROJECTS\SETUP\SRC\Framework\Logger\obj\Debug\net8.0\Framework.Logger.AssemblyInfo.cs
+C:\USERS\USER\GODOT\PROJECTS\SETUP\SRC\Framework\Logger\obj\Debug\net8.0\Framework.Logger.csproj.CoreCompileInputs.cache
+C:\USERS\USER\GODOT\PROJECTS\SETUP\SRC\Framework\Logger\obj\Debug\net8.0\Framewor.48588A5C.Up2Date
+C:\USERS\USER\GODOT\PROJECTS\SETUP\SRC\Framework\Logger\obj\Debug\net8.0\Framework.Logger.dll
+C:\USERS\USER\GODOT\PROJECTS\SETUP\SRC\Framework\Logger\obj\Debug\net8.0\refint\Framework.Logger.dll
+C:\USERS\USER\GODOT\PROJECTS\SETUP\SRC\Framework\Logger\obj\Debug\net8.0\Framework.Logger.pdb
+C:\USERS\USER\GODOT\PROJECTS\SETUP\SRC\Framework\Logger\obj\Debug\net8.0\ref\Framework.Logger.dll

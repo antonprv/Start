@@ -1,0 +1,15 @@
+C:\USERS\USER\GODOT\PROJECTS\SETUP\SRC\Framework\Components\bin\Debug\net8.0\Framework.Components.deps.json
+C:\USERS\USER\GODOT\PROJECTS\SETUP\SRC\Framework\Components\bin\Debug\net8.0\Framework.Components.dll
+C:\USERS\USER\GODOT\PROJECTS\SETUP\SRC\Framework\Components\bin\Debug\net8.0\Framework.Components.pdb
+C:\USERS\USER\GODOT\PROJECTS\SETUP\SRC\Framework\Components\bin\Debug\net8.0\Framework.FastMath.dll
+C:\USERS\USER\GODOT\PROJECTS\SETUP\SRC\Framework\Components\bin\Debug\net8.0\Framework.FastMath.pdb
+C:\USERS\USER\GODOT\PROJECTS\SETUP\SRC\Framework\Components\obj\Debug\net8.0\Framework.Components.csproj.AssemblyReference.cache
+C:\USERS\USER\GODOT\PROJECTS\SETUP\SRC\Framework\Components\obj\Debug\net8.0\Framework.Components.GeneratedMSBuildEditorConfig.editorconfig
+C:\USERS\USER\GODOT\PROJECTS\SETUP\SRC\Framework\Components\obj\Debug\net8.0\Framework.Components.AssemblyInfoInputs.cache
+C:\USERS\USER\GODOT\PROJECTS\SETUP\SRC\Framework\Components\obj\Debug\net8.0\Framework.Components.AssemblyInfo.cs
+C:\USERS\USER\GODOT\PROJECTS\SETUP\SRC\Framework\Components\obj\Debug\net8.0\Framework.Components.csproj.CoreCompileInputs.cache
+C:\USERS\USER\GODOT\PROJECTS\SETUP\SRC\Framework\Components\obj\Debug\net8.0\Framewor.A3E2FDD3.Up2Date
+C:\USERS\USER\GODOT\PROJECTS\SETUP\SRC\Framework\Components\obj\Debug\net8.0\Framework.Components.dll
+C:\USERS\USER\GODOT\PROJECTS\SETUP\SRC\Framework\Components\obj\Debug\net8.0\refint\Framework.Components.dll
+C:\USERS\USER\GODOT\PROJECTS\SETUP\SRC\Framework\Components\obj\Debug\net8.0\Framework.Components.pdb
+C:\USERS\USER\GODOT\PROJECTS\SETUP\SRC\Framework\Components\obj\Debug\net8.0\ref\Framework.Components.dll

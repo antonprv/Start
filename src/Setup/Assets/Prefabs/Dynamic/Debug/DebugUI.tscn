@@ -1,10 +1,10 @@
 [gd_scene format=3 uid="uid://crvrwpolm8bgu"]
 
-[ext_resource type="Script" uid="uid://1xni66k0hr3g" path="res://Code/Infrastructure/UIInstaller.cs" id="1_5mrp6"]
-[ext_resource type="Script" uid="uid://drjw1peyjwc0b" path="res://Code/Common/Debug/UI/FpsTracker.cs" id="1_8v4gd"]
+[ext_resource type="Script" uid="uid://1xni66k0hr3g" path="res://Engine/Infrastructure/UIInstaller.cs" id="1_5mrp6"]
+[ext_resource type="Script" uid="uid://drjw1peyjwc0b" path="res://Engine/Common/Debug/UI/FpsTracker.cs" id="1_8v4gd"]
 [ext_resource type="LabelSettings" uid="uid://c14v62t6aqgp1" path="res://Assets/Prefabs/Dynamic/Debug/Resources/FPS_Font.tres" id="2_1ljga"]
-[ext_resource type="Script" uid="uid://bn4a6e18g1chd" path="res://Code/Common/Debug/UI/UIMessage.cs" id="2_4iym7"]
-[ext_resource type="Script" uid="uid://bmcvecot7jj4a" path="res://Code/Common/Debug/UI/DevConsoleNode.cs" id="5_1ljga"]
+[ext_resource type="Script" uid="uid://bn4a6e18g1chd" path="res://Engine/Common/Debug/UI/UIMessage.cs" id="2_4iym7"]
+[ext_resource type="Script" uid="uid://bmcvecot7jj4a" path="res://Engine/Common/Debug/UI/DevConsoleNode.cs" id="5_1ljga"]
 
 [node name="DebugUI" type="Control" unique_id=1188731429 node_paths=PackedStringArray("_uIMessage", "_devConsole")]
 layout_mode = 3
@@ -31,7 +31,5 @@ offset_right = 333.0
 offset_bottom = 339.0
 script = ExtResource("2_4iym7")
 
-[node name="Console" type="CanvasLayer" parent="." unique_id=1472267401 node_paths=PackedStringArray("_fpsTrackerNode", "_uiMessageNode")]
+[node name="Console" type="CanvasLayer" parent="." unique_id=1472267401]
 script = ExtResource("5_1ljga")
-_fpsTrackerNode = NodePath("../FPS")
-_uiMessageNode = NodePath("../Messages")

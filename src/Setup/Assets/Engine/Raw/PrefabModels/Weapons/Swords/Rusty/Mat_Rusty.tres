@@ -1,0 +1,13 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://dkwqssai78msm"]
+
+[ext_resource type="Shader" uid="uid://bkntipcbr62al" path="res://Engine/Shaders/BaseShader.gdshader" id="1_qtdkq"]
+[ext_resource type="Texture2D" uid="uid://dg4i8e4h227u3" path="res://Assets/Engine/Raw/PrefabModels/Weapons/Swords/Rusty/Tex_Rusty.png" id="2_qa8ia"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_qtdkq")
+shader_parameter/albedo = Color(1, 1, 1, 1)
+shader_parameter/albedo_texture = ExtResource("2_qa8ia")
+shader_parameter/vertex_color_enabled = false
+shader_parameter/vertex_snap_enabled = false
+shader_parameter/snap_resolution = 128.0

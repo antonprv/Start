@@ -10,3 +10,4 @@ C:\USERS\USER\GODOT\PROJECTS\SETUP\SRC\Framework\DevConsole\obj\Debug\net8.0\Fra
 C:\USERS\USER\GODOT\PROJECTS\SETUP\SRC\Framework\DevConsole\obj\Debug\net8.0\refint\Framework.Console.dll
 C:\USERS\USER\GODOT\PROJECTS\SETUP\SRC\Framework\DevConsole\obj\Debug\net8.0\Framework.Console.pdb
 C:\USERS\USER\GODOT\PROJECTS\SETUP\SRC\Framework\DevConsole\obj\Debug\net8.0\ref\Framework.Console.dll
+C:\Users\User\Godot\Projects\Setup\src\Framework\DevConsole\obj\Debug\net8.0\Framework.Console.sourcelink.json

@@ -1,0 +1,13 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://dt3ru4bww231g"]
+
+[ext_resource type="Shader" uid="uid://bkntipcbr62al" path="res://Engine/Shaders/BaseShader.gdshader" id="1_wv286"]
+[ext_resource type="Texture2D" uid="uid://u441or426vgs" path="res://Broom/textures/delven/{dlv_tapestry1b.bmp" id="2_vi2fx"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_wv286")
+shader_parameter/albedo = Color(1, 1, 1, 1)
+shader_parameter/albedo_texture = ExtResource("2_vi2fx")
+shader_parameter/vertex_color_enabled = true
+shader_parameter/vertex_snap_enabled = false
+shader_parameter/snap_resolution = 128.0

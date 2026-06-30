@@ -1,10 +1,13 @@
 [gd_resource type="Resource" script_class="FuncGodotFGDFile" format=3 uid="uid://m37bouxjpam6"]
 
 [ext_resource type="Resource" uid="uid://crgpdahjaj" path="res://addons/func_godot/fgd/func_godot_fgd.tres" id="1_lbbf6"]
+[ext_resource type="Resource" uid="uid://dox2frfvggjl" path="res://Broom/fgd/solid/moving_platform.tres" id="2_av0wv"]
 [ext_resource type="Script" uid="uid://drlmgulwbjwqu" path="res://addons/func_godot/src/fgd/func_godot_fgd_file.gd" id="2_s4bbj"]
+[ext_resource type="Resource" uid="uid://8vwubjkd5gu6" path="res://Broom/fgd/point/omni_light.tres" id="3_av0wv"]
 
 [resource]
 script = ExtResource("2_s4bbj")
 fgd_name = "Setup"
 base_fgd_files = Array[Resource]([ExtResource("1_lbbf6")])
+entity_definitions = Array[Resource]([ExtResource("2_av0wv"), ExtResource("3_av0wv")])
 metadata/_custom_type_script = "uid://drlmgulwbjwqu"

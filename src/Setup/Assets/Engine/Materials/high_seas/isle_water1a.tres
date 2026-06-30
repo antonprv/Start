@@ -1,0 +1,13 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://difprby3madg"]
+
+[ext_resource type="Shader" uid="uid://bkntipcbr62al" path="res://Engine/Shaders/BaseShader.gdshader" id="1_of5uo"]
+[ext_resource type="Texture2D" uid="uid://dh322vsjbpbut" path="res://Broom/textures/high_seas/isle_water1a.bmp" id="2_gc6lu"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_of5uo")
+shader_parameter/albedo = Color(1, 1, 1, 1)
+shader_parameter/albedo_texture = ExtResource("2_gc6lu")
+shader_parameter/vertex_color_enabled = true
+shader_parameter/vertex_snap_enabled = false
+shader_parameter/snap_resolution = 128.0

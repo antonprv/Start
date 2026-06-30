@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="FuncGodotMapSettings" format=3 uid="uid://hb8s5tfwa4qj"]
 
-[ext_resource type="Material" uid="uid://dwrbnvf3obqer" path="res://Assets/Materials/BaseMaterial.tres" id="1_ghn84"]
+[ext_resource type="Material" uid="uid://dwrbnvf3obqer" path="res://Assets/Engine/Materials/BaseMaterial.tres" id="1_ghn84"]
 [ext_resource type="Resource" uid="uid://m37bouxjpam6" path="res://Broom/fgd.tres" id="2_ghn84"]
 [ext_resource type="Script" uid="uid://38q6k0ctahjn" path="res://addons/func_godot/src/map/func_godot_map_settings.gd" id="3_cm2kw"]
 [ext_resource type="Script" uid="uid://cij36hpqc46c" path="res://addons/func_godot/src/import/quake_wad_file.gd" id="4_okf6h"]

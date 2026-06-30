@@ -22,11 +22,11 @@ src/*/.vs/
 
 # Other
 src/*/build/
-src/*/Framework/*/build/
-src/*/Framework/*/obj/
-src/*/Framework/*/bin/
+src/Framework/*/build
+src/Framework/*/obj
+src/Framework/*/bin
 src/*/*/builds/
-src/*/Framework/*/builds/
+src/Framework/*/builds/
 
 # Devops builds
 src/Builds/

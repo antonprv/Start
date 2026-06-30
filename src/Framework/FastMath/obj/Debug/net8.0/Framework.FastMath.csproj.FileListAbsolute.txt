@@ -10,3 +10,4 @@ C:\USERS\USER\GODOT\PROJECTS\SETUP\SRC\Framework\FastMath\obj\Debug\net8.0\Frame
 C:\USERS\USER\GODOT\PROJECTS\SETUP\SRC\Framework\FastMath\obj\Debug\net8.0\refint\Framework.FastMath.dll
 C:\USERS\USER\GODOT\PROJECTS\SETUP\SRC\Framework\FastMath\obj\Debug\net8.0\Framework.FastMath.pdb
 C:\USERS\USER\GODOT\PROJECTS\SETUP\SRC\Framework\FastMath\obj\Debug\net8.0\ref\Framework.FastMath.dll
+C:\Users\User\Godot\Projects\Setup\src\Framework\FastMath\obj\Debug\net8.0\Framework.FastMath.sourcelink.json

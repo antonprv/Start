@@ -17,3 +17,4 @@ C:\USERS\USER\GODOT\PROJECTS\SETUP\SRC\Framework\Common\obj\Debug\net8.0\Framewo
 C:\USERS\USER\GODOT\PROJECTS\SETUP\SRC\Framework\Common\obj\Debug\net8.0\refint\Framework.Common.dll
 C:\USERS\USER\GODOT\PROJECTS\SETUP\SRC\Framework\Common\obj\Debug\net8.0\Framework.Common.pdb
 C:\USERS\USER\GODOT\PROJECTS\SETUP\SRC\Framework\Common\obj\Debug\net8.0\ref\Framework.Common.dll
+C:\Users\User\Godot\Projects\Setup\src\Framework\Common\obj\Debug\net8.0\Framework.Common.sourcelink.json

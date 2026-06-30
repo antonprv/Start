@@ -1,0 +1,14 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://xf42gm8fk3ew"]
+
+[ext_resource type="Shader" uid="uid://bkntipcbr62al" path="res://Engine/Shaders/BaseShader.gdshader" id="1_snvvq"]
+[ext_resource type="Texture2D" uid="uid://cvhpkb4tth3j7" path="res://Assets/Engine/Raw/PrefabModels/Weapons/Swords/Espada/Tex_Espada.png" id="2_v7oio"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_snvvq")
+shader_parameter/albedo = Color(0.814379, 0.81196326, 0.8318031, 1)
+shader_parameter/albedo_texture = ExtResource("2_v7oio")
+shader_parameter/vertex_color_enabled = false
+shader_parameter/vertex_snap_enabled = false
+shader_parameter/snap_resolution = 128.0
+shader_parameter/alpha_scissor_threshold = 0.5

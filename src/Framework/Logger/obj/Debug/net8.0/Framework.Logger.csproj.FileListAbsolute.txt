@@ -13,3 +13,4 @@ C:\USERS\USER\GODOT\PROJECTS\SETUP\SRC\Framework\Logger\obj\Debug\net8.0\Framewo
 C:\USERS\USER\GODOT\PROJECTS\SETUP\SRC\Framework\Logger\obj\Debug\net8.0\refint\Framework.Logger.dll
 C:\USERS\USER\GODOT\PROJECTS\SETUP\SRC\Framework\Logger\obj\Debug\net8.0\Framework.Logger.pdb
 C:\USERS\USER\GODOT\PROJECTS\SETUP\SRC\Framework\Logger\obj\Debug\net8.0\ref\Framework.Logger.dll
+C:\Users\User\Godot\Projects\Setup\src\Framework\Logger\obj\Debug\net8.0\Framework.Logger.sourcelink.json

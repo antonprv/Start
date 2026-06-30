@@ -1,0 +1,14 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://hro0amsr4vka"]
+
+[ext_resource type="Shader" uid="uid://bkntipcbr62al" path="res://Engine/Shaders/BaseShader.gdshader" id="1_ksfxm"]
+[ext_resource type="Texture2D" uid="uid://dmfe46xfpvaox" path="res://Assets/Engine/Raw/PrefabModels/Weapons/Swords/Claymore/Tex_Claymore.png" id="2_inlks"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_ksfxm")
+shader_parameter/albedo = Color(0.62787616, 0.6278761, 0.6278761, 1)
+shader_parameter/albedo_texture = ExtResource("2_inlks")
+shader_parameter/vertex_color_enabled = false
+shader_parameter/vertex_snap_enabled = false
+shader_parameter/snap_resolution = 128.0
+shader_parameter/alpha_scissor_threshold = 0.5

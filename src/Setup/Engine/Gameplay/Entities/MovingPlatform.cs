@@ -23,7 +23,7 @@ namespace Engine.Gameplay.Entities
 		private Vector3 _endPosition;
 		private Tween _platformTween;
 
-		public void _FuncGodotApplyProperties( Godot.Collections.Dictionary entityProperties )
+		public void _FuncGodotApplyProperties( Dictionary entityProperties )
 		{
 			MoveDistance = entityProperties[ "move_distance" ].As<float>();
 			MoveTime = entityProperties[ "move_time" ].As<float>();

@@ -1,0 +1,55 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://y13f7oub7fy4"]
+
+[ext_resource type="Shader" uid="uid://bopy1iuejajwj" path="res://Engine/Shaders/SkyShader.gdshader" id="1_nnc6x"]
+[ext_resource type="Texture2D" uid="uid://cjwca3iwwt2ki" path="res://Assets/Engine/Raw/PrefabModels/Sky/Tex_Noise.png" id="2_kq8ad"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_nnc6x")
+shader_parameter/time_of_day = 0.0
+shader_parameter/procedural_sky_enabled = true
+shader_parameter/sky_horizon_color_day = Color(0.85, 0.72, 0.55, 1)
+shader_parameter/sky_zenith_color_day = Color(0.15, 0.25, 0.55, 1)
+shader_parameter/ground_horizon_color_day = Color(0.55, 0.45, 0.35, 1)
+shader_parameter/ground_color_day = Color(0.1, 0.08, 0.07, 1)
+shader_parameter/sky_horizon_color_night = Color(0.05, 0.06, 0.12, 1)
+shader_parameter/sky_zenith_color_night = Color(0.01, 0.01, 0.04, 1)
+shader_parameter/ground_horizon_color_night = Color(0.03, 0.03, 0.05, 1)
+shader_parameter/ground_color_night = Color(0.01, 0.01, 0.02, 1)
+shader_parameter/horizon_blur = 0.230000010925
+shader_parameter/sky_curve = 2.9540001370551203
+shader_parameter/ground_curve = 2.5010001155376202
+shader_parameter/day_night_range = Vector2(-0.2, 0.15)
+shader_parameter/sun_enabled = true
+shader_parameter/sun_color = Color(1, 0.95, 0.85, 1)
+shader_parameter/sun_size = 0.02
+shader_parameter/sun_sharpness = 16.0
+shader_parameter/sun_halo_color = Color(1, 0.8, 0.5, 0.6)
+shader_parameter/sun_halo_size = 0.3
+shader_parameter/moon_enabled = true
+shader_parameter/moon_direction = Vector3(0, -1, 0)
+shader_parameter/moon_size = 0.05
+shader_parameter/moon_tint = Color(0.85, 0.9, 1, 1)
+shader_parameter/clouds_enabled = true
+shader_parameter/noise_texture = ExtResource("2_kq8ad")
+shader_parameter/cloud_color_day = Color(0.88, 0.92, 1, 1)
+shader_parameter/cloud_color_night = Color(0.18, 0.2, 0.32, 1)
+shader_parameter/cloud_density = 32.0
+shader_parameter/cloud_threshold = 0.322000015295
+shader_parameter/cloud_height = 4.6150002159526196
+shader_parameter/cloud_tiling = Vector2(0.78, 0.135)
+shader_parameter/cloud_wind_speed = Vector2(0.5, 0)
+shader_parameter/clouds_horizon_fade = 0.6130000291175
+shader_parameter/clouds_layer2_enabled = true
+shader_parameter/cloud_height_2 = 2.0
+shader_parameter/cloud_tiling_2 = Vector2(0.225, 0.1)
+shader_parameter/cloud_wind_speed_2 = Vector2(0.25, 0.25)
+shader_parameter/cloud_density_2 = 11.942000567245
+shader_parameter/cloud_threshold_2 = 0.2790000132525
+shader_parameter/stars_enabled = true
+shader_parameter/star_density = 0.2070000098325
+shader_parameter/star_size = 1.0
+shader_parameter/star_brightness = 0.534000025365
+shader_parameter/stars_horizon_fade = 0.81600003876
+shader_parameter/star_twinkle_enabled = true
+shader_parameter/star_twinkle_speed = 3.0

@@ -13,3 +13,4 @@ C:\USERS\USER\GODOT\PROJECTS\SETUP\SRC\Framework\Components\obj\Debug\net8.0\Fra
 C:\USERS\USER\GODOT\PROJECTS\SETUP\SRC\Framework\Components\obj\Debug\net8.0\refint\Framework.Components.dll
 C:\USERS\USER\GODOT\PROJECTS\SETUP\SRC\Framework\Components\obj\Debug\net8.0\Framework.Components.pdb
 C:\USERS\USER\GODOT\PROJECTS\SETUP\SRC\Framework\Components\obj\Debug\net8.0\ref\Framework.Components.dll
+C:\Users\User\Godot\Projects\Setup\src\Framework\Components\obj\Debug\net8.0\Framework.Components.sourcelink.json

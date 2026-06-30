@@ -22,7 +22,11 @@ src/*/.vs/
 
 # Other
 src/*/build/
+src/*/Framework/*/build/
+src/*/Framework/*/obj/
+src/*/Framework/*/bin/
 src/*/*/builds/
+src/*/Framework/*/builds/
 
 # Devops builds
 src/Builds/
@@ -30,7 +34,12 @@ src/Builds/
 # All binary files from libraries
 
 src/*/obj/
+src/*/*/obj/
+src/*/*/*/obj/
+src/*/*/*/*/obj/
 src/*/bin/
+src/*/*bin/
+src/*/*/*/*/bin/
 
 *.pdb
 *.dll

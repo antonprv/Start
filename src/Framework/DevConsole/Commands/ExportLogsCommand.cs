@@ -32,10 +32,10 @@ namespace Framework.Console.Commands
                 string[] plain = Array.ConvertAll( messages, StripBBCode );
 
                 string timestamp = DateTime.Now.ToString( "yyyy-MM-dd_HH-mm-ss" );
-                
+
                 string dir = GetDirectory();
                 Directory.CreateDirectory( dir );
-                
+
                 string path = Path.Combine( dir, $"console_{timestamp}.txt" );
                 File.WriteAllLines( path, plain );
 

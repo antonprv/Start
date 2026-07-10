@@ -1,6 +1,7 @@
 [gd_scene format=4 uid="uid://ciwb1m1evvfqj"]
 
 [ext_resource type="Script" uid="uid://c7hqhp3asjvxr" path="res://Engine/Infrastructure/LocalServiceInitializer.cs" id="1_clu36"]
+[ext_resource type="Script" uid="uid://cjxvgfxa5wygf" path="res://addons/Physics/PhysicsWorldNode.cs" id="1_ta0pl"]
 [ext_resource type="PackedScene" uid="uid://crvrwpolm8bgu" path="res://Assets/Engine/Prefabs/Dynamic/Debug/DebugUI.tscn" id="2_056jx"]
 [ext_resource type="PackedScene" uid="uid://bkj0tnt11xvlx" path="res://Assets/Engine/Prefabs/Dynamic/Player/Player.tscn" id="2_57bvl"]
 [ext_resource type="PackedScene" uid="uid://dws6xjgehhcec" path="res://Assets/Engine/Prefabs/Dynamic/Utils/TriggerVolume.tscn" id="4_4esb6"]
@@ -13,6 +14,7 @@
 [ext_resource type="Material" uid="uid://dko0mkgy6gmtj" path="res://Assets/Engine/Materials/delven/dlv_woodstp1b.tres" id="9_megay"]
 [ext_resource type="Material" uid="uid://cl8p32n40te8q" path="res://Assets/Engine/Materials/general/Vol2/Dirt/Dirt_09-256x256.tres" id="10_4wal6"]
 [ext_resource type="Material" uid="uid://difprby3madg" path="res://Assets/Engine/Materials/high_seas/isle_water1a.tres" id="11_7j0ct"]
+[ext_resource type="Script" uid="uid://dxfg4lx55x4ri" path="res://addons/Physics/BepuStaticBody3D.cs" id="11_jcv14"]
 [ext_resource type="Script" uid="uid://dcx8m12gobgr5" path="res://Engine/Gameplay/Entities/MovingPlatform.cs" id="12_m7ddt"]
 [ext_resource type="Script" uid="uid://b7phmlkhrllfh" path="res://addons/nexus_vertex_painter/vertex_color_data.gd" id="14_7wbex"]
 
@@ -242,17 +244,20 @@ points = PackedVector3Array(1.25, 0.25, 1.25, 1.25, -0.25, 1.25, -1.25, 0.25, 1.
 
 [node name="Godot" type="Node" parent="." unique_id=917004623]
 
+[node name="PhysicsWorld" type="Node" parent="Godot" unique_id=2117633540]
+script = ExtResource("1_ta0pl")
+
 [node name="UI" type="Node" parent="Godot" unique_id=1146455411]
 
 [node name="DebugUI" parent="Godot/UI" unique_id=1188731429 node_paths=PackedStringArray("_moverComponent") instance=ExtResource("2_056jx")]
 _moverComponent = NodePath("../../Player")
 
+[node name="Player" parent="Godot" unique_id=1218174859 instance=ExtResource("2_57bvl")]
+transform = Transform3D(-0.99999976, 0.00026906416, 0.00027375369, 0.00026884276, 0.9999995, -0.00086077803, -0.00027397118, -0.0008607088, -0.99999964, 0.16621947, 1.1249998, -9.624439)
+
 [node name="LocalServiceInitializer" type="Node" parent="Godot" unique_id=1314008614 node_paths=PackedStringArray("_rootNode")]
 script = ExtResource("1_clu36")
 _rootNode = NodePath("../..")
-
-[node name="Player" parent="Godot" unique_id=1218174859 instance=ExtResource("2_57bvl")]
-transform = Transform3D(-0.99999976, 0.00026906416, 0.00027375369, 0.00026884276, 0.9999995, -0.00086077803, -0.00027397118, -0.0008607088, -0.99999964, 0.16621947, 1.1249998, -9.624439)
 
 [node name="Lights" type="Node" parent="Godot" unique_id=1098954087]
 
@@ -262,7 +267,6 @@ TimeOfDay = 0.0
 HorizonBlur = 0.23
 SkyCurve = 2.9540002
 GroundCurve = 2.5010002
-MoonEnabled = false
 MoonTint = Color(0.85, 0.9, 1, 1)
 NoiseTexture = ExtResource("5_7j0ct")
 CloudColorDay = Color(0.88, 0.92, 1, 1)
@@ -300,9 +304,11 @@ metadata/_custom_type_script = "uid://cwu5cf7a0awcd"
 
 [node name="entity_0_worldspawn" type="StaticBody3D" parent="Broom/FuncGodotMap" unique_id=1495874439]
 
-[node name="entity_1_func_geo" type="StaticBody3D" parent="Broom/FuncGodotMap" unique_id=1841476880]
+[node name="entity_1_func_geo" type="StaticBody3D" parent="Broom/FuncGodotMap" unique_id=1841476880 node_paths=PackedStringArray("_convexShape")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.75, -0.5, -4.25)
 collision_mask = 0
+script = ExtResource("11_jcv14")
+_convexShape = NodePath("entity_1_collision_shape")
 
 [node name="entity_1_mesh_instance" type="MeshInstance3D" parent="Broom/FuncGodotMap/entity_1_func_geo" unique_id=575757691]
 mesh = SubResource("ArrayMesh_megay")
@@ -319,9 +325,11 @@ occluder = SubResource("ArrayOccluder3D_4wal6")
 [node name="entity_1_collision_shape" type="CollisionShape3D" parent="Broom/FuncGodotMap/entity_1_func_geo" unique_id=948921625]
 shape = SubResource("ConcavePolygonShape3D_7j0ct")
 
-[node name="entity_2_func_geo" type="StaticBody3D" parent="Broom/FuncGodotMap" unique_id=1804537462]
+[node name="entity_2_func_geo" type="StaticBody3D" parent="Broom/FuncGodotMap" unique_id=1804537462 node_paths=PackedStringArray("_convexShape")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.75, 1, -13.25)
 collision_mask = 0
+script = ExtResource("11_jcv14")
+_convexShape = NodePath("entity_2_collision_shape")
 
 [node name="entity_2_mesh_instance" type="MeshInstance3D" parent="Broom/FuncGodotMap/entity_2_func_geo" unique_id=930324820]
 mesh = SubResource("ArrayMesh_xya6p")
@@ -339,9 +347,11 @@ occluder = SubResource("ArrayOccluder3D_v8rkj")
 [node name="entity_2_collision_shape" type="CollisionShape3D" parent="Broom/FuncGodotMap/entity_2_func_geo" unique_id=620204431]
 shape = SubResource("ConcavePolygonShape3D_ovq7i")
 
-[node name="entity_3_func_geo" type="StaticBody3D" parent="Broom/FuncGodotMap" unique_id=1029853340]
+[node name="entity_3_func_geo" type="StaticBody3D" parent="Broom/FuncGodotMap" unique_id=1029853340 node_paths=PackedStringArray("_convexShape")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0.75, 11.25)
 collision_mask = 0
+script = ExtResource("11_jcv14")
+_convexShape = NodePath("entity_3_collision_shape")
 
 [node name="entity_3_mesh_instance" type="MeshInstance3D" parent="Broom/FuncGodotMap/entity_3_func_geo" unique_id=224369826]
 mesh = SubResource("ArrayMesh_tlfam")
@@ -358,9 +368,11 @@ occluder = SubResource("ArrayOccluder3D_7wbex")
 [node name="entity_3_collision_shape" type="CollisionShape3D" parent="Broom/FuncGodotMap/entity_3_func_geo" unique_id=1006531311]
 shape = SubResource("ConcavePolygonShape3D_qspjd")
 
-[node name="entity_4_func_geo" type="StaticBody3D" parent="Broom/FuncGodotMap" unique_id=1796790510]
+[node name="entity_4_func_geo" type="StaticBody3D" parent="Broom/FuncGodotMap" unique_id=1796790510 node_paths=PackedStringArray("_convexShape")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 2.25, 16.75)
 collision_mask = 0
+script = ExtResource("11_jcv14")
+_convexShape = NodePath("entity_4_collision_shape")
 
 [node name="entity_4_mesh_instance" type="MeshInstance3D" parent="Broom/FuncGodotMap/entity_4_func_geo" unique_id=1599658582]
 mesh = SubResource("ArrayMesh_mp8lt")
@@ -378,9 +390,11 @@ occluder = SubResource("ArrayOccluder3D_f8ltj")
 [node name="entity_4_collision_shape" type="CollisionShape3D" parent="Broom/FuncGodotMap/entity_4_func_geo" unique_id=931343046]
 shape = SubResource("ConcavePolygonShape3D_8ocv2")
 
-[node name="entity_5_func_geo" type="StaticBody3D" parent="Broom/FuncGodotMap" unique_id=100532017]
+[node name="entity_5_func_geo" type="StaticBody3D" parent="Broom/FuncGodotMap" unique_id=100532017 node_paths=PackedStringArray("_convexShape")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.75, 2.5, 13.25)
 collision_mask = 0
+script = ExtResource("11_jcv14")
+_convexShape = NodePath("entity_5_collision_shape")
 
 [node name="entity_5_mesh_instance" type="MeshInstance3D" parent="Broom/FuncGodotMap/entity_5_func_geo" unique_id=1696685186]
 mesh = SubResource("ArrayMesh_f75xw")
@@ -398,9 +412,11 @@ occluder = SubResource("ArrayOccluder3D_nls7j")
 [node name="entity_5_collision_shape" type="CollisionShape3D" parent="Broom/FuncGodotMap/entity_5_func_geo" unique_id=1745199492]
 shape = SubResource("ConcavePolygonShape3D_h2q8f")
 
-[node name="entity_6_func_geo" type="StaticBody3D" parent="Broom/FuncGodotMap" unique_id=493775262]
+[node name="entity_6_func_geo" type="StaticBody3D" parent="Broom/FuncGodotMap" unique_id=493775262 node_paths=PackedStringArray("_convexShape")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.75, 5.5, -2)
 collision_mask = 0
+script = ExtResource("11_jcv14")
+_convexShape = NodePath("entity_6_collision_shape")
 
 [node name="entity_6_mesh_instance" type="MeshInstance3D" parent="Broom/FuncGodotMap/entity_6_func_geo" unique_id=729944270]
 mesh = SubResource("ArrayMesh_qxtsx")
@@ -429,9 +445,12 @@ surface_data = {
 0: PackedColorArray(0.6083362, 0.6083362, 0.6083362, 1, 0.7627795, 0.7627795, 0.7627795, 1, 0.7629862, 0.7629862, 0.7629862, 1, 0.6086219, 0.6086219, 0.6086219, 1, 1, 1, 1, 1, 0.7627795, 0.7627795, 0.7627795, 1, 0.6083362, 0.6083362, 0.6083362, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0.6083362, 0.6083362, 0.6083362, 1, 0.6086219, 0.6086219, 0.6086219, 1, 1, 1, 1, 1)
 }
 
-[node name="entity_8_func_geo" type="StaticBody3D" parent="Broom/FuncGodotMap" unique_id=1739384666]
+[node name="entity_8_func_geo" type="StaticBody3D" parent="Broom/FuncGodotMap" unique_id=1739384666 node_paths=PackedStringArray("_convexShape")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.75, 2.5, 13.25)
 collision_mask = 0
+script = ExtResource("11_jcv14")
+_convexShape = NodePath("entity_8_collision_shape")
+Layer = 3
 
 [node name="entity_8_mesh_instance" type="MeshInstance3D" parent="Broom/FuncGodotMap/entity_8_func_geo" unique_id=1276817335]
 mesh = SubResource("ArrayMesh_12gmk")

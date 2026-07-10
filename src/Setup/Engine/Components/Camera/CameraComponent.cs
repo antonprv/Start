@@ -5,7 +5,10 @@ using Engine.Services.Input;
 using Framework.FastMath;
 using Framework.Logger;
 using Godot;
+using Physics;
 using Zenjex;
+
+using CollisionLayer = Physics.CollisionLayer;
 
 namespace Engine.Components.Camera
 {
@@ -28,39 +31,11 @@ namespace Engine.Components.Camera
 		[Export] public float MinPitch = -90f;
 		[Export] public float MaxPitch = 90f;
 		[Export] public float SpringArmLength = 5f;
-		[Export] public float VerticalOffset = 1.6f;
 
 		[ExportGroup( "References" )]
 		[Export] private Camera3D _camera;
-		[Export] private SpringArm3D _springArm;
+		[Export] private BepuSpringArm3D _springArm;
 		[Export] private Node3D _followTarget;
-
-		#endregion
-
-		#region Noclip
-
-		public bool IsNoclip => _noclip;
-
-		public void SetNoclip( bool enabled )
-		{
-			if ( _noclip == enabled )
-				return;
-
-			_noclip = enabled;
-
-			if ( _noclip )
-			{
-				_savedCollisionMask = _springArm.CollisionMask;
-				_springArm.CollisionMask = 0;
-			}
-			else
-			{
-				_springArm.CollisionMask = _savedCollisionMask;
-			}
-
-			GameLogger.LogInfo( $"Got noclip: {( _noclip ? "ON" : "OFF" )}" );
-		}
-
 
 		#endregion
 
@@ -87,7 +62,7 @@ namespace Engine.Components.Camera
 		private float _currentYaw;
 		private float _currentPitch;
 		private bool _noclip;
-		private uint _savedCollisionMask;
+		private CollisionLayer _savedCollisionMask;
 
 		#endregion
 
@@ -124,6 +99,35 @@ namespace Engine.Components.Camera
 			_targetYaw += -input.X * MouseSensitivity;
 			_targetPitch = FMath.Clamp( _targetPitch - input.Y * MouseSensitivity, MinPitch, MaxPitch );
 		}
+
+
+		#region Noclip
+
+		public bool IsNoclip => _noclip;
+
+		public void SetNoclip( bool enabled )
+		{
+			if ( _noclip == enabled )
+				return;
+
+			_noclip = enabled;
+
+			if ( _noclip )
+			{
+				_savedCollisionMask = _springArm.Mask;
+				_springArm.Layer = 0;
+			}
+			else
+			{
+				_springArm.Mask = _savedCollisionMask;
+			}
+
+			GameLogger.LogInfo( $"Got noclip: {( _noclip ? "ON" : "OFF" )}" );
+		}
+
+
+		#endregion
+
 
 		/// <summary>
 		/// Set the target to follow. Pass null to stop following.
@@ -208,10 +212,7 @@ namespace Engine.Components.Camera
 		private void UpdateTargetPosition()
 		{
 			if ( _followTarget != null )
-			{
 				_targetPosition = _followTarget.GlobalPosition;
-				_targetPosition.Y += VerticalOffset;
-			}
 		}
 
 		private void UpdateCameraPosition( double delta )

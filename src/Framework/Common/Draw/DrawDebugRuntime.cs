@@ -135,7 +135,7 @@ namespace Framework.Common.Draw
 
         public static DebugHandle DrawWireCube( Vector3 center, Vector3 size, Color color )
         {
-            if ( !AssertInitialized() ) 
+            if ( !AssertInitialized() )
                 return null;
 
             EnsureParent( DebugShapeName.Cube, ref _cubeParent );
@@ -152,7 +152,7 @@ namespace Framework.Common.Draw
           Color color,
           int segments = DefaultSphereSegments )
         {
-            if ( !AssertInitialized() ) 
+            if ( !AssertInitialized() )
                 return null;
 
             EnsureParent( DebugShapeName.Sphere, ref _sphereParent );
@@ -169,7 +169,7 @@ namespace Framework.Common.Draw
           Color color,
           float duration = 1f )
         {
-            if ( !AssertInitialized() ) 
+            if ( !AssertInitialized() )
                 return null;
 
             EnsureParent( DebugShapeName.CubeTemp, ref _cubeTempParent );
@@ -190,7 +190,7 @@ namespace Framework.Common.Draw
           int segments = DefaultSphereSegments,
           float duration = 1f )
         {
-            if ( !AssertInitialized() ) 
+            if ( !AssertInitialized() )
                 return null;
 
             EnsureParent( DebugShapeName.SphereTemp, ref _sphereTempParent );
@@ -233,7 +233,7 @@ namespace Framework.Common.Draw
           Color colorB,
           float interval = 0.5f )
         {
-            if ( !IsHandleValid( handle ) ) 
+            if ( !IsHandleValid( handle ) )
                 return;
 
             StopAnimInternal( handle.Instance );
@@ -286,7 +286,7 @@ namespace Framework.Common.Draw
             SceneTreeTimer timer = _sceneTree.CreateTimer( duration, false );
             timer.Timeout += () =>
             {
-                if ( anim.Cancelled || !IsHandleValid( handle ) ) 
+                if ( anim.Cancelled || !IsHandleValid( handle ) )
                     return;
 
                 _anims.Remove( handle.Instance );
@@ -300,7 +300,7 @@ namespace Framework.Common.Draw
         /// </summary>
         public static void StopAnimation( DebugHandle handle )
         {
-            if ( !IsHandleValid( handle ) ) 
+            if ( !IsHandleValid( handle ) )
                 return;
 
             StopAnimInternal( handle.Instance );
@@ -315,14 +315,14 @@ namespace Framework.Common.Draw
         /// </summary>
         public static void DestroyByName( string name )
         {
-            if ( !AssertInitialized() ) 
+            if ( !AssertInitialized() )
                 return;
 
             if ( name == DebugShapeName.SphereTemp || name == DebugShapeName.CubeTemp )
                 throw new InvalidOperationException( "Destruction of temporary shapes is not allowed." );
 
             Node3D parent = name == DebugShapeName.Sphere ? _sphereParent : _cubeParent;
-            if ( parent == null ) 
+            if ( parent == null )
                 return;
 
             foreach ( Node child in parent.GetChildren() )
@@ -342,7 +342,7 @@ namespace Framework.Common.Draw
         /// </summary>
         public static void Clear()
         {
-            if ( !AssertInitialized() ) 
+            if ( !AssertInitialized() )
                 return;
 
             _anims.Clear();

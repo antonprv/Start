@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\User\\Godot\\Projects\\Setup\\src\\Framework\\Common\\Framework.Common.csproj": {}
+    "C:\\USERS\\USER\\GODOT\\PROJECTS\\SETUP\\SRC\\Framework\\Common\\Framework.Common.csproj": {}
   },
   "projects": {
-    "C:\\Users\\User\\Godot\\Projects\\Setup\\src\\Framework\\Common\\Framework.Common.csproj": {
+    "C:\\USERS\\USER\\GODOT\\PROJECTS\\SETUP\\SRC\\Framework\\Common\\Framework.Common.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\User\\Godot\\Projects\\Setup\\src\\Framework\\Common\\Framework.Common.csproj",
+        "projectUniqueName": "C:\\USERS\\USER\\GODOT\\PROJECTS\\SETUP\\SRC\\Framework\\Common\\Framework.Common.csproj",
         "projectName": "Framework.Common",
-        "projectPath": "C:\\Users\\User\\Godot\\Projects\\Setup\\src\\Framework\\Common\\Framework.Common.csproj",
+        "projectPath": "C:\\USERS\\USER\\GODOT\\PROJECTS\\SETUP\\SRC\\Framework\\Common\\Framework.Common.csproj",
         "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\User\\Godot\\Projects\\Setup\\src\\Framework\\Common\\obj\\",
+        "outputPath": "C:\\Users\\User\\GODOT\\PROJECTS\\SETUP\\SRC\\Framework\\Common\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -33,11 +33,11 @@
             "framework": "net8.0",
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\Users\\User\\Godot\\Projects\\Setup\\src\\Framework\\FastMath\\Framework.FastMath.csproj": {
-                "projectPath": "C:\\Users\\User\\Godot\\Projects\\Setup\\src\\Framework\\FastMath\\Framework.FastMath.csproj"
+              "C:\\USERS\\USER\\GODOT\\PROJECTS\\SETUP\\SRC\\Framework\\FastMath\\Framework.FastMath.csproj": {
+                "projectPath": "C:\\USERS\\USER\\GODOT\\PROJECTS\\SETUP\\SRC\\Framework\\FastMath\\Framework.FastMath.csproj"
               },
-              "C:\\Users\\User\\Godot\\Projects\\Setup\\src\\Framework\\Logger\\Framework.Logger.csproj": {
-                "projectPath": "C:\\Users\\User\\Godot\\Projects\\Setup\\src\\Framework\\Logger\\Framework.Logger.csproj"
+              "C:\\USERS\\USER\\GODOT\\PROJECTS\\SETUP\\SRC\\Framework\\Logger\\Framework.Logger.csproj": {
+                "projectPath": "C:\\USERS\\USER\\GODOT\\PROJECTS\\SETUP\\SRC\\Framework\\Logger\\Framework.Logger.csproj"
               }
             }
           }
@@ -110,14 +110,14 @@
         }
       }
     },
-    "C:\\Users\\User\\Godot\\Projects\\Setup\\src\\Framework\\DevConsole\\Framework.Console.csproj": {
+    "C:\\USERS\\USER\\GODOT\\PROJECTS\\SETUP\\SRC\\Framework\\DevConsole\\Framework.Console.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\User\\Godot\\Projects\\Setup\\src\\Framework\\DevConsole\\Framework.Console.csproj",
+        "projectUniqueName": "C:\\USERS\\USER\\GODOT\\PROJECTS\\SETUP\\SRC\\Framework\\DevConsole\\Framework.Console.csproj",
         "projectName": "Framework.Console",
-        "projectPath": "C:\\Users\\User\\Godot\\Projects\\Setup\\src\\Framework\\DevConsole\\Framework.Console.csproj",
+        "projectPath": "C:\\USERS\\USER\\GODOT\\PROJECTS\\SETUP\\SRC\\Framework\\DevConsole\\Framework.Console.csproj",
         "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\User\\Godot\\Projects\\Setup\\src\\Framework\\DevConsole\\obj\\",
+        "outputPath": "C:\\USERS\\USER\\GODOT\\PROJECTS\\SETUP\\SRC\\Framework\\DevConsole\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -209,14 +209,14 @@
         }
       }
     },
-    "C:\\Users\\User\\Godot\\Projects\\Setup\\src\\Framework\\FastMath\\Framework.FastMath.csproj": {
+    "C:\\USERS\\USER\\GODOT\\PROJECTS\\SETUP\\SRC\\Framework\\FastMath\\Framework.FastMath.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\User\\Godot\\Projects\\Setup\\src\\Framework\\FastMath\\Framework.FastMath.csproj",
+        "projectUniqueName": "C:\\USERS\\USER\\GODOT\\PROJECTS\\SETUP\\SRC\\Framework\\FastMath\\Framework.FastMath.csproj",
         "projectName": "Framework.FastMath",
-        "projectPath": "C:\\Users\\User\\Godot\\Projects\\Setup\\src\\Framework\\FastMath\\Framework.FastMath.csproj",
+        "projectPath": "C:\\USERS\\USER\\GODOT\\PROJECTS\\SETUP\\SRC\\Framework\\FastMath\\Framework.FastMath.csproj",
         "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\User\\Godot\\Projects\\Setup\\src\\Framework\\FastMath\\obj\\",
+        "outputPath": "C:\\USERS\\USER\\GODOT\\PROJECTS\\SETUP\\SRC\\Framework\\FastMath\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -308,14 +308,14 @@
         }
       }
     },
-    "C:\\Users\\User\\Godot\\Projects\\Setup\\src\\Framework\\Logger\\Framework.Logger.csproj": {
+    "C:\\USERS\\USER\\GODOT\\PROJECTS\\SETUP\\SRC\\Framework\\Logger\\Framework.Logger.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\User\\Godot\\Projects\\Setup\\src\\Framework\\Logger\\Framework.Logger.csproj",
+        "projectUniqueName": "C:\\USERS\\USER\\GODOT\\PROJECTS\\SETUP\\SRC\\Framework\\Logger\\Framework.Logger.csproj",
         "projectName": "Framework.Logger",
-        "projectPath": "C:\\Users\\User\\Godot\\Projects\\Setup\\src\\Framework\\Logger\\Framework.Logger.csproj",
+        "projectPath": "C:\\USERS\\USER\\GODOT\\PROJECTS\\SETUP\\SRC\\Framework\\Logger\\Framework.Logger.csproj",
         "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\User\\Godot\\Projects\\Setup\\src\\Framework\\Logger\\obj\\",
+        "outputPath": "C:\\Users\\User\\GODOT\\PROJECTS\\SETUP\\SRC\\Framework\\Logger\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -337,8 +337,8 @@
             "framework": "net8.0",
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\Users\\User\\Godot\\Projects\\Setup\\src\\Framework\\DevConsole\\Framework.Console.csproj": {
-                "projectPath": "C:\\Users\\User\\Godot\\Projects\\Setup\\src\\Framework\\DevConsole\\Framework.Console.csproj"
+              "C:\\USERS\\USER\\GODOT\\PROJECTS\\SETUP\\SRC\\Framework\\DevConsole\\Framework.Console.csproj": {
+                "projectPath": "C:\\USERS\\USER\\GODOT\\PROJECTS\\SETUP\\SRC\\Framework\\DevConsole\\Framework.Console.csproj"
               }
             }
           }

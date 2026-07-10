@@ -13,7 +13,7 @@ namespace Framework.Logger
         private static readonly List<string> _logs = new List<string>();
         private static readonly object _logsLock = new object();
         private static IDevConsole _devConsole;
-        
+
         private static bool IsDebugBuild => OS.IsDebugBuild();
 
         public static void Initialize( IDevConsole console )
@@ -86,7 +86,7 @@ namespace Framework.Logger
             string filePath,
             int lineNumber )
         {
-            if ( !IsDebugBuild ) 
+            if ( !IsDebugBuild )
                 return;
 
             string className = Path.GetFileNameWithoutExtension( filePath );
@@ -121,7 +121,7 @@ namespace Framework.Logger
 
         public static void SaveLogsToFile()
         {
-            if ( !IsDebugBuild ) 
+            if ( !IsDebugBuild )
                 return;
 
             try
@@ -154,7 +154,7 @@ namespace Framework.Logger
 
         public static void ClearLogs()
         {
-            if ( !IsDebugBuild ) 
+            if ( !IsDebugBuild )
                 return;
 
             lock ( _logsLock )
@@ -165,7 +165,7 @@ namespace Framework.Logger
 
         public static string GetLogsDirectory()
         {
-            if ( !IsDebugBuild ) 
+            if ( !IsDebugBuild )
                 return String.Empty;
 
             string directory;

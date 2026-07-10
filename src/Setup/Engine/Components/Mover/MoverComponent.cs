@@ -10,13 +10,17 @@ using Framework.Components.Mover.Debug;
 using Framework.Components.Mover.Presets;
 using Framework.FastMath;
 using Framework.Logger;
+
 using Godot;
+using Physics;
 using System.Collections.Generic;
 using Zenjex;
 
+using CollisionLayer = Physics.CollisionLayer;
+
 namespace Engine.Components.Mover
 {
-	public partial class MoverComponent : CharacterBody3D, IMoverComponent
+	public partial class MoverComponent : BepuCharacterBody3D, IMoverComponent
 	{
 		[ExportGroup( "Rotation" )]
 		[Export] private float _rotationSpeed = 6f;
@@ -49,10 +53,8 @@ namespace Engine.Components.Mover
 		private bool _noclip;
 
 		// Collision masks saved before noclip so we can restore them on toggle-off.
-		private uint _savedCollisionLayer;
+		private CollisionLayer _savedCollisionLayer;
 		private uint _savedCollisionMask;
-
-		// Speed used in noclip flight (units/sec). Matches the feel of Doom's noclip speed.
 
 		/// <summary>
 		/// Toggle noclip mode.
@@ -71,21 +73,18 @@ namespace Engine.Components.Mover
 
 			if ( _noclip )
 			{
-				_savedCollisionLayer = CollisionLayer;
-				_savedCollisionMask = CollisionMask;
-				CollisionLayer = 0;
-				CollisionMask = 0;
+				_savedCollisionLayer = Layer;
+				Layer = CollisionLayer.None;
 
 				// Kill any existing vertical momentum so the player doesn't float away.
-				Velocity = new Vector3( Velocity.X, 0f, Velocity.Z );
+				Velocity.Value = new Vector3( Velocity.Value.X, 0f, Velocity.Value.Z );
 			}
 			else
 			{
-				CollisionLayer = _savedCollisionLayer;
-				CollisionMask = _savedCollisionMask;
+				Layer = _savedCollisionLayer;
 
 				// Zero out velocity so the player doesn't shoot off after landing.
-				Velocity = Vector3.Zero;
+				Velocity.Value = Vector3.Zero;
 			}
 
 			GameLogger.LogInfo( $"Got noclip: {( _noclip ? "ON" : "OFF" )}" );
@@ -104,14 +103,14 @@ namespace Engine.Components.Mover
 		[Inject]
 		private void Construct( IInputService inputService ) => _inputService = inputService;
 
-		public override void _EnterTree() => DiContainer.Instance.Inject( this );
-
 		#endregion
 
 		#region Godot lifecycle
 
-		public override void _Ready()
+		protected override void OnRegister()
 		{
+			base.OnRegister();
+
 			if ( Profile == null )
 				Profile = QuakePreset.DefaultProfile().Convert();
 
@@ -136,7 +135,7 @@ namespace Engine.Components.Mover
 
 			DisplayRotation( delta );
 
-			MoveAndSlide();
+			MoveAndSlide( delta );
 
 			ShowDebugOverlay();
 		}
@@ -200,7 +199,7 @@ namespace Engine.Components.Mover
 		private void SimulateNoclip( double delta )
 		{
 			// Direct velocity from input; no gravity, no jump, no traits.
-			Velocity = _inputDirection.IsNearlyZero()
+			Velocity.Value = _inputDirection.IsNearlyZero()
 				? Vector3.Zero
 				: _inputDirection.FastNormalized() * _noclipSpeed;
 		}
@@ -212,8 +211,8 @@ namespace Engine.Components.Mover
 			// Build context
 			_context.WishDirection = _inputDirection;
 			_context.JumpRequested = _jumpInput;
-			_context.IsOnFloor = IsOnFloor();
-			_context.Gravity = GetGravity();
+			_context.IsOnFloor = IsOnFloor.Value;
+			_context.Gravity = Gravity.Value;
 			_context.Delta = dt;   // motor also sets this, but set here for clarity
 			_context.Profile = Profile;
 			_context.JumpConsumed = false; // reset each tick; JumpTrait sets it when jump fires
@@ -222,7 +221,7 @@ namespace Engine.Components.Mover
 			_motor.Simulate( dt, _context );
 
 			// Apply to CharacterBody3D
-			Velocity = _motor.Velocity;
+			Velocity.Value = _motor.Velocity;
 		}
 
 		private void DisplayRotation( double delta )
@@ -245,9 +244,9 @@ namespace Engine.Components.Mover
 
 		private void ShowDebugOverlay() => _debugOverlay?.UpdateOverlay(
 			GlobalPosition + Vector3.Up * 0.1f,
-			Velocity,
+			Velocity.Value,
 			_context.WishDirection,
-			IsOnFloor(),
+			IsOnFloor.Value,
 			_currentMode
 		);
 

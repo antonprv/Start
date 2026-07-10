@@ -24,19 +24,19 @@ namespace Framework.Console.Commands
                 return;
             }
 
-            var filter = args[0].ToLowerInvariant() switch
+            var filter = args[ 0 ].ToLowerInvariant() switch
             {
-                "log"     => ConsoleMessageType.Info,
+                "log" => ConsoleMessageType.Info,
                 "warning" => ConsoleMessageType.Warning,
-                "error"   => ConsoleMessageType.Error,
+                "error" => ConsoleMessageType.Error,
                 "success" => ConsoleMessageType.Success,
-                "all"     => ConsoleMessageType.All,
-                _         => (ConsoleMessageType)(-1)
+                "all" => ConsoleMessageType.All,
+                _ => (ConsoleMessageType)( -1 )
             };
 
             if ( (int)filter == -1 )
             {
-                _console.AddMessage( $"Unknown filter: '{args[0]}'", ConsoleMessageType.Error );
+                _console.AddMessage( $"Unknown filter: '{args[ 0 ]}'", ConsoleMessageType.Error );
                 return;
             }
 

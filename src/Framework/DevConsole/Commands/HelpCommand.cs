@@ -7,7 +7,7 @@ namespace Framework.Console.Commands
 {
     public class HelpCommand : IConsoleCommand
     {
-        private readonly IDevConsole                      _console;
+        private readonly IDevConsole _console;
         private readonly Dictionary<string, IConsoleCommand> _all;
 
         public string CommandName => "help";
@@ -16,7 +16,7 @@ namespace Framework.Console.Commands
         public HelpCommand( IDevConsole console, Dictionary<string, IConsoleCommand> all )
         {
             _console = console;
-            _all     = all;
+            _all = all;
         }
 
         public void Execute( string[] args )

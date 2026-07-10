@@ -10,14 +10,14 @@ namespace Framework.Components.Mover.Traits.Common
     [GlobalClass]
     public partial class GravityTrait : MovementTraitResource
     {
-        public override void PreProcess(ref MovementContext ctx) { }
+        public override void PreProcess( ref MovementContext ctx ) { }
 
-        public override void Process(ref MovementContext ctx, ref Vector3 velocity, float delta)
+        public override void Process( ref MovementContext ctx, ref Vector3 velocity, float delta )
         {
-            if (ctx.IsOnFloor)
+            if ( ctx.IsOnFloor )
             {
                 // Prevent velocity from accumulating downward while grounded
-                if (velocity.Y < 0f)
+                if ( velocity.Y < 0f )
                     velocity.Y = 0f;
                 return;
             }
@@ -25,6 +25,6 @@ namespace Framework.Components.Mover.Traits.Common
             velocity += ctx.Gravity * delta;
         }
 
-        public override void PostProcess(ref MovementContext ctx) { }
+        public override void PostProcess( ref MovementContext ctx ) { }
     }
 }

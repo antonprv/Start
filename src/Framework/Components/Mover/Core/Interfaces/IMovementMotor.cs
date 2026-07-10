@@ -9,12 +9,12 @@ namespace Framework.Components.Mover.Core.Interfaces
     {
         Vector3 Velocity { get; set; }
 
-        void Simulate(float delta, MovementContext context);
+        void Simulate( float delta, MovementContext context );
 
         /// <summary>
         /// Hot-swap the trait list at runtime.
         /// Equivalent to UE SetMovementMode — velocity is preserved, only behavior changes.
         /// </summary>
-        void SetTraits(List<IMovementTrait> traits);
+        void SetTraits( List<IMovementTrait> traits );
     }
 }

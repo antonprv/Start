@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="FuncGodotFGDSolidClass" format=3]
+
+[ext_resource type="Script" path="res://addons/func_godot/src/fgd/func_godot_fgd_solid_class.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+spawn_type = 2
+build_visuals = false
+collision_shape_type = 1
+classname = "trigger_bepu_once"
+description = "Brush-shaped trigger volume (Bepu, not Godot's Area3D). Fires its 'Triggered' signal once when a Character-layer body enters, then disables itself. Set 'target' to a Godot group name to also call _on_bepu_trigger_fired(trigger, activator) on every node in that group."
+class_properties = Dictionary[String, Variant]({
+"target": "",
+"once": true
+})
+class_property_descriptions = Dictionary[String, Variant]({
+"target": "Godot group name to notify on trigger (optional)",
+"once": "Disable after firing once"
+})
+auto_apply_to_matching_node_properties = false
+meta_properties = Dictionary[String, Variant]({
+"color": Color(0.8, 0.4, 0.2, 1)
+})
+node_class = "FuncGodotBepuTriggerSolid3D"

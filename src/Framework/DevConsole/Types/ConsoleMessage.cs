@@ -5,12 +5,12 @@ namespace Framework.Console.Types
 {
     public class ConsoleMessage
     {
-        public ConsoleMessageType Type      { get; }
-        public string             Formatted { get; }
+        public ConsoleMessageType Type { get; }
+        public string Formatted { get; }
 
         public ConsoleMessage( string message, ConsoleMessageType type, string marker )
         {
-            Type      = type;
+            Type = type;
             Formatted = Format( message, type, marker );
         }
 
@@ -18,10 +18,10 @@ namespace Framework.Console.Types
             type switch
             {
                 ConsoleMessageType.Warning => $"{marker}[color=yellow][WARN][/color] {message}",
-                ConsoleMessageType.Error   => $"{marker}[color=red][ERR][/color] {message}",
+                ConsoleMessageType.Error => $"{marker}[color=red][ERR][/color] {message}",
                 ConsoleMessageType.Command => $"[color=cyan]> {message}[/color]",
                 ConsoleMessageType.Success => $"{marker}[color=green][OK][/color] {message}",
-                _                          => $"{marker}{message}"
+                _ => $"{marker}{message}"
             };
     }
 }

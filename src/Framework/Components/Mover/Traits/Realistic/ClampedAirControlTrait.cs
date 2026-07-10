@@ -3,8 +3,8 @@
 
 using Framework.Components.Mover.Core;
 using Framework.Components.Mover.Core.Resources;
-using Godot;
 using Framework.FastMath;
+using Godot;
 
 namespace Framework.Components.Mover.Traits.Realistic
 {
@@ -16,26 +16,26 @@ namespace Framework.Components.Mover.Traits.Realistic
     [GlobalClass]
     public partial class ClampedAirControlTrait : MovementTraitResource
     {
-        public override void PreProcess(ref MovementContext ctx) { }
+        public override void PreProcess( ref MovementContext ctx ) { }
 
-        public override void Process(ref MovementContext ctx, ref Vector3 velocity, float delta)
+        public override void Process( ref MovementContext ctx, ref Vector3 velocity, float delta )
         {
-            if (ctx.IsOnFloor)
+            if ( ctx.IsOnFloor )
                 return;
 
             Vector3 wishDir = ctx.WishDirection;
-            if (wishDir.IsNearlyZero())
+            if ( wishDir.IsNearlyZero() )
                 return;
 
-            Vector3 horizontal = new Vector3(velocity.X, 0f, velocity.Z);
+            Vector3 horizontal = new Vector3( velocity.X, 0f, velocity.Z );
             Vector3 target = wishDir * ctx.Profile.AirMaxSpeed;
 
-            horizontal = horizontal.FastLerp(target, ctx.Profile.AirControl * delta);
+            horizontal = horizontal.FastLerp( target, ctx.Profile.AirControl * delta );
 
             velocity.X = horizontal.X;
             velocity.Z = horizontal.Z;
         }
 
-        public override void PostProcess(ref MovementContext ctx) { }
+        public override void PostProcess( ref MovementContext ctx ) { }
     }
 }

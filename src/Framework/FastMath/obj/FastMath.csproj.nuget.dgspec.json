@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\USERS\\USER\\GODOT\\PROJECTS\\SETUP\\SRC\\Framework\\FastMath\\FastMath.csproj": {}
+    "C:\\Users\\User\\Godot\\Projects\\Setup\\src\\Framework\\FastMath\\FastMath.csproj": {}
   },
   "projects": {
-    "C:\\USERS\\USER\\GODOT\\PROJECTS\\SETUP\\SRC\\Framework\\FastMath\\FastMath.csproj": {
+    "C:\\Users\\User\\Godot\\Projects\\Setup\\src\\Framework\\FastMath\\FastMath.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\USERS\\USER\\GODOT\\PROJECTS\\SETUP\\SRC\\Framework\\FastMath\\FastMath.csproj",
+        "projectUniqueName": "C:\\Users\\User\\Godot\\Projects\\Setup\\src\\Framework\\FastMath\\FastMath.csproj",
         "projectName": "FastMath",
-        "projectPath": "C:\\USERS\\USER\\GODOT\\PROJECTS\\SETUP\\SRC\\Framework\\FastMath\\FastMath.csproj",
+        "projectPath": "C:\\Users\\User\\Godot\\Projects\\Setup\\src\\Framework\\FastMath\\FastMath.csproj",
         "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-        "outputPath": "C:\\USERS\\USER\\GODOT\\PROJECTS\\SETUP\\SRC\\Framework\\FastMath\\obj\\",
+        "outputPath": "C:\\Users\\User\\Godot\\Projects\\Setup\\src\\Framework\\FastMath\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

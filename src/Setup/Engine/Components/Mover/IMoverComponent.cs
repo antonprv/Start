@@ -3,6 +3,8 @@
 
 using Engine.Components.Mover.Resources;
 using Framework.Components.Mover.Core;
+using Physics;
+using Physics.Types;
 
 namespace Engine.Components.Mover
 {
@@ -12,6 +14,10 @@ namespace Engine.Components.Mover
 		MovementMode InitialMode { get; set; }
 		bool IsNoclip { get; }
 		MProfile Profile { get; set; }
+		CollisionLayer Layer { get; set; }
+		CollisionLayer Mask { get; set; }
+		Vector3Packed Velocity { get; set; }
+		BoolPacked IsOnFloor { get; }
 
 		void SetMovementMode( MovementMode mode );
 		void SetNoclip( bool enabled );

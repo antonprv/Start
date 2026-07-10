@@ -5,8 +5,8 @@ namespace Framework.Console.Interfaces
 {
     public interface IConsoleCommand
     {
-        string CommandName  { get; }
-        string Description  { get; }
-        void   Execute( string[] args );
+        string CommandName { get; }
+        string Description { get; }
+        void Execute( string[] args );
     }
 }

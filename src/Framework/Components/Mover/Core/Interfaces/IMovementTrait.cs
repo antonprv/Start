@@ -12,12 +12,12 @@ namespace Framework.Components.Mover.Core.Interfaces
         /// Use for timers, state tracking, input buffering.
         /// ctx.Delta is guaranteed to be set here.
         /// </summary>
-        void PreProcess(ref MovementContext ctx);
+        void PreProcess( ref MovementContext ctx );
 
         /// <summary>Integrates velocity.</summary>
-        void Process(ref MovementContext ctx, ref Vector3 velocity, float delta);
+        void Process( ref MovementContext ctx, ref Vector3 velocity, float delta );
 
         /// <summary>Runs after all traits have processed. Use for clamping, events.</summary>
-        void PostProcess(ref MovementContext ctx);
+        void PostProcess( ref MovementContext ctx );
     }
 }

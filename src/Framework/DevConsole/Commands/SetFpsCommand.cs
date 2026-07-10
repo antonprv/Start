@@ -24,13 +24,13 @@ namespace Framework.Console.Commands
                 return;
             }
 
-            if ( int.TryParse( args[0], out int fps ) )
+            if ( int.TryParse( args[ 0 ], out int fps ) )
             {
                 Engine.MaxFps = fps;
                 _console.AddMessage( $"FPS cap: {( fps == 0 ? "uncapped" : fps.ToString() )}", ConsoleMessageType.Success );
             }
             else
-                _console.AddMessage( $"Invalid value: '{args[0]}'", ConsoleMessageType.Error );
+                _console.AddMessage( $"Invalid value: '{args[ 0 ]}'", ConsoleMessageType.Error );
         }
     }
 }

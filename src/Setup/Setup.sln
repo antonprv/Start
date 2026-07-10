@@ -5,19 +5,29 @@ VisualStudioVersion = 18.7.11919.86
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Setup", "Setup.csproj", "{D307347B-4E37-4FCE-8F1B-70F3188ED693}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Framework.Common", "..\Framework\Common\Framework.Common.csproj", "{9F0601AB-EA31-A20F-1B21-30C901BDC579}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "..\Framework\Common\Common.csproj", "{9F0601AB-EA31-A20F-1B21-30C901BDC579}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Framework.Components", "..\Framework\Components\Framework.Components.csproj", "{273EFD2B-264A-73C4-9554-0773CE10039D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Components", "..\Framework\Components\Components.csproj", "{273EFD2B-264A-73C4-9554-0773CE10039D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Framework.Console", "..\Framework\DevConsole\Framework.Console.csproj", "{5FB08902-D7AE-50CD-5293-8730670D6A61}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Console", "..\Framework\DevConsole\Console.csproj", "{5FB08902-D7AE-50CD-5293-8730670D6A61}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Framework.FastMath", "..\Framework\FastMath\Framework.FastMath.csproj", "{362974B2-E1E1-96E6-479C-B1D8AB6B553C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FastMath", "..\Framework\FastMath\FastMath.csproj", "{362974B2-E1E1-96E6-479C-B1D8AB6B553C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Framework.Logger", "..\Framework\Logger\Framework.Logger.csproj", "{6C1C76AA-84F7-C031-4B60-3AD999FE858D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logger", "..\Framework\Logger\Logger.csproj", "{6C1C76AA-84F7-C031-4B60-3AD999FE858D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Framework", "Framework", "{27C98E73-4A72-4B5D-94D7-06FD197DE703}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Game", "Game", "{5EEFF9F0-77C2-4447-9BCD-7FA94B00BF98}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Physics", "Physics", "{E3FE56D5-B35F-4784-8344-0F0E2D1501B6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Physics.Integration", "..\Framework\Physics\Core\Physics.Integration.csproj", "{6F5F37CE-07DC-DB47-B0EA-CFAE9237F336}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Bepu", "Bepu", "{D6168FF3-0476-4A8D-8391-DE88109398BE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BepuPhysics", "..\Framework\Physics\Bepu\BepuPhysics\BepuPhysics.csproj", "{EEBCF329-BDA2-4A44-B7EE-6551AB7BFB02}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BepuUtilities", "..\Framework\Physics\Bepu\BepuUtilities\BepuUtilities.csproj", "{015D124D-E55E-45A8-866D-528A14ABBA96}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -62,6 +72,24 @@ Global
 		{6C1C76AA-84F7-C031-4B60-3AD999FE858D}.ExportDebug|Any CPU.Build.0 = Release|Any CPU
 		{6C1C76AA-84F7-C031-4B60-3AD999FE858D}.ExportRelease|Any CPU.ActiveCfg = Release|Any CPU
 		{6C1C76AA-84F7-C031-4B60-3AD999FE858D}.ExportRelease|Any CPU.Build.0 = Release|Any CPU
+		{6F5F37CE-07DC-DB47-B0EA-CFAE9237F336}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F5F37CE-07DC-DB47-B0EA-CFAE9237F336}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F5F37CE-07DC-DB47-B0EA-CFAE9237F336}.ExportDebug|Any CPU.ActiveCfg = Release|Any CPU
+		{6F5F37CE-07DC-DB47-B0EA-CFAE9237F336}.ExportDebug|Any CPU.Build.0 = Release|Any CPU
+		{6F5F37CE-07DC-DB47-B0EA-CFAE9237F336}.ExportRelease|Any CPU.ActiveCfg = Release|Any CPU
+		{6F5F37CE-07DC-DB47-B0EA-CFAE9237F336}.ExportRelease|Any CPU.Build.0 = Release|Any CPU
+		{EEBCF329-BDA2-4A44-B7EE-6551AB7BFB02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EEBCF329-BDA2-4A44-B7EE-6551AB7BFB02}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EEBCF329-BDA2-4A44-B7EE-6551AB7BFB02}.ExportDebug|Any CPU.ActiveCfg = Release|Any CPU
+		{EEBCF329-BDA2-4A44-B7EE-6551AB7BFB02}.ExportDebug|Any CPU.Build.0 = Release|Any CPU
+		{EEBCF329-BDA2-4A44-B7EE-6551AB7BFB02}.ExportRelease|Any CPU.ActiveCfg = Release|Any CPU
+		{EEBCF329-BDA2-4A44-B7EE-6551AB7BFB02}.ExportRelease|Any CPU.Build.0 = Release|Any CPU
+		{015D124D-E55E-45A8-866D-528A14ABBA96}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{015D124D-E55E-45A8-866D-528A14ABBA96}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{015D124D-E55E-45A8-866D-528A14ABBA96}.ExportDebug|Any CPU.ActiveCfg = Release|Any CPU
+		{015D124D-E55E-45A8-866D-528A14ABBA96}.ExportDebug|Any CPU.Build.0 = Release|Any CPU
+		{015D124D-E55E-45A8-866D-528A14ABBA96}.ExportRelease|Any CPU.ActiveCfg = Release|Any CPU
+		{015D124D-E55E-45A8-866D-528A14ABBA96}.ExportRelease|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -73,6 +101,11 @@ Global
 		{5FB08902-D7AE-50CD-5293-8730670D6A61} = {27C98E73-4A72-4B5D-94D7-06FD197DE703}
 		{362974B2-E1E1-96E6-479C-B1D8AB6B553C} = {27C98E73-4A72-4B5D-94D7-06FD197DE703}
 		{6C1C76AA-84F7-C031-4B60-3AD999FE858D} = {27C98E73-4A72-4B5D-94D7-06FD197DE703}
+		{E3FE56D5-B35F-4784-8344-0F0E2D1501B6} = {27C98E73-4A72-4B5D-94D7-06FD197DE703}
+		{6F5F37CE-07DC-DB47-B0EA-CFAE9237F336} = {E3FE56D5-B35F-4784-8344-0F0E2D1501B6}
+		{D6168FF3-0476-4A8D-8391-DE88109398BE} = {E3FE56D5-B35F-4784-8344-0F0E2D1501B6}
+		{EEBCF329-BDA2-4A44-B7EE-6551AB7BFB02} = {D6168FF3-0476-4A8D-8391-DE88109398BE}
+		{015D124D-E55E-45A8-866D-528A14ABBA96} = {D6168FF3-0476-4A8D-8391-DE88109398BE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {94A0A957-8192-414D-8EC9-CEE1DB704A8D}

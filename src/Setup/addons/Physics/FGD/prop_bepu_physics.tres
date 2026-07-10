@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="FuncGodotFGDPointClass" format=3]
+
+[ext_resource type="Script" path="res://addons/func_godot/src/fgd/func_godot_fgd_point_class.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+classname = "prop_bepu_physics"
+description = "Mesh-less placeholder dynamic physics prop simulated by the Bepu physics world. Box-shaped, sized and weighted from the 'size'/'mass' properties below. For a prop with an actual mesh, build your own scene with a BepuRigidBody3D root instead and reference it via a Point Class' Scene File field."
+class_properties = Dictionary[String, Variant]({
+"mass": 5.0,
+"size": Vector3(0.5, 0.5, 0.5)
+})
+class_property_descriptions = Dictionary[String, Variant]({
+"mass": "Mass in kg",
+"size": "Box extents (matches BoxShape3D.Size)"
+})
+meta_properties = Dictionary[String, Variant]({
+"size": AABB(Vector3(-0.5, -0.5, -0.5), Vector3(1, 1, 1)),
+"color": Color(0.3, 0.7, 0.3, 1)
+})
+node_class = "FuncGodotBepuPhysicsProp3D"

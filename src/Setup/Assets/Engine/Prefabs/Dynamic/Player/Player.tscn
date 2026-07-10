@@ -1,9 +1,10 @@
 [gd_scene format=3 uid="uid://bkj0tnt11xvlx"]
 
 [ext_resource type="Script" uid="uid://c0o6x1jpgu8xj" path="res://Engine/Components/Mover/MoverComponent.cs" id="1_tcdex"]
-[ext_resource type="Resource" uid="uid://7qye1rn5hk43" path="res://Assets/Engine/Prefabs/Dynamic/Player/Mover/DefaultMovementProfile.tres" id="2_pqobs"]
+[ext_resource type="Shape3D" uid="uid://dnrdbwc8amdhu" path="res://Assets/Engine/Prefabs/Dynamic/Player/Mover/PlayerCollisionCapsule.tres" id="2_vg0dt"]
 [ext_resource type="Material" uid="uid://cdkqx8gy7j5c2" path="res://Assets/Engine/Materials/UntexturedMaterial.tres" id="3_aibj7"]
 [ext_resource type="Script" uid="uid://ee5jieaxccnn" path="res://Engine/Components/Camera/CameraComponent.cs" id="3_pqobs"]
+[ext_resource type="Script" uid="uid://b85m20g1vh4hr" path="res://addons/Physics/BepuSpringArm3D.cs" id="7_xx87b"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_s3j7c"]
 material = ExtResource("3_aibj7")
@@ -11,14 +12,12 @@ material = ExtResource("3_aibj7")
 [sub_resource type="BoxMesh" id="BoxMesh_s3j7c"]
 material = ExtResource("3_aibj7")
 
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_tcdex"]
-
-[node name="Player" type="CharacterBody3D" unique_id=1218174859 node_paths=PackedStringArray("_playerMesh", "_cameraComponent")]
+[node name="Player" type="Node3D" unique_id=472418512 node_paths=PackedStringArray("_playerMesh", "_cameraComponent")]
 script = ExtResource("1_tcdex")
-Profile = ExtResource("2_pqobs")
-InitialMode = 2
 _playerMesh = NodePath("PlayerMesh")
 _cameraComponent = NodePath("CameraRoot")
+_capsule = ExtResource("2_vg0dt")
+Layer = 3
 
 [node name="PlayerMesh" type="MeshInstance3D" parent="." unique_id=521465016]
 mesh = SubResource("CapsuleMesh_s3j7c")
@@ -27,18 +26,19 @@ mesh = SubResource("CapsuleMesh_s3j7c")
 transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 1, 0, 0, -0.5)
 mesh = SubResource("BoxMesh_s3j7c")
 
-[node name="PlayerCollision" type="CollisionShape3D" parent="." unique_id=1810335408]
-shape = SubResource("CapsuleShape3D_tcdex")
-
 [node name="CameraRoot" type="Node3D" parent="." unique_id=697449312 node_paths=PackedStringArray("_camera", "_springArm", "_followTarget")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.0344658, 3.6325886)
 script = ExtResource("3_pqobs")
-_camera = NodePath("SpringArm/Camera")
-_springArm = NodePath("SpringArm")
+_camera = NodePath("BepuSpringArm3D/Camera")
+_springArm = NodePath("BepuSpringArm3D")
 _followTarget = NodePath("../PlayerMesh")
 
-[node name="SpringArm" type="SpringArm3D" parent="CameraRoot" unique_id=1254659250]
-spring_length = 1.5
+[node name="BepuSpringArm3D" type="Node3D" parent="CameraRoot" unique_id=2043259507]
+script = ExtResource("7_xx87b")
+Layer = 3
+SpringLength = 1.5
+metadata/_custom_type_script = "uid://b85m20g1vh4hr"
 
-[node name="Camera" type="Camera3D" parent="CameraRoot/SpringArm" unique_id=470799468]
+[node name="Camera" type="Camera3D" parent="CameraRoot/BepuSpringArm3D" unique_id=470799468]
 transform = Transform3D(1, 0, 0, 0, 0.9396927, 0.34202015, 0, -0.34202015, 0.9396927, 0, 0, 0)
+current = true

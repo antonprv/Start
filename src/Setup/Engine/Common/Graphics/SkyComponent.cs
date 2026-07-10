@@ -1,7 +1,6 @@
 ﻿// Created by Anton Piruev in 2026.
 // Any direct commercial use of derivative work is strictly prohibited.
 
-using Framework.Logger;
 using Godot;
 
 namespace Setup.Engine.Common.Graphics
@@ -13,7 +12,7 @@ namespace Setup.Engine.Common.Graphics
 
 		private ShaderMaterial _material;
 
-		public override void _Ready() => 
+		public override void _Ready() =>
 			_material = GetActiveMaterial( 0 ) as ShaderMaterial;
 
 		// =========================================================================

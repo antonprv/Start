@@ -3,8 +3,8 @@
 
 using Framework.Components.Mover.Core;
 using Framework.Components.Mover.Core.Resources;
-using Godot;
 using Framework.FastMath;
+using Godot;
 
 namespace Framework.Components.Mover.Traits.Quake
 {
@@ -19,21 +19,21 @@ namespace Framework.Components.Mover.Traits.Quake
     {
         [Export] public float PassiveDamping { get; set; } = 0.98f;
 
-        public override void PreProcess(ref MovementContext ctx) { }
+        public override void PreProcess( ref MovementContext ctx ) { }
 
-        public override void Process(ref MovementContext ctx, ref Vector3 velocity, float delta)
+        public override void Process( ref MovementContext ctx, ref Vector3 velocity, float delta )
         {
-            if (!ctx.IsOnFloor)
+            if ( !ctx.IsOnFloor )
                 return;
 
             // Active input — full momentum preserved
-            if (ctx.WishDirection.FastLength() > 0.01f)
+            if ( ctx.WishDirection.FastLength() > 0.01f )
                 return;
 
             velocity.X *= PassiveDamping;
             velocity.Z *= PassiveDamping;
         }
 
-        public override void PostProcess(ref MovementContext ctx) { }
+        public override void PostProcess( ref MovementContext ctx ) { }
     }
 }

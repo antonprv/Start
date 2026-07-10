@@ -3,8 +3,8 @@
 
 using Framework.Components.Mover.Core;
 using Framework.Components.Mover.Core.Resources;
-using Godot;
 using Framework.FastMath;
+using Godot;
 
 namespace Framework.Components.Mover.Traits.Realistic
 {
@@ -17,23 +17,23 @@ namespace Framework.Components.Mover.Traits.Realistic
     {
         [Export] public float StopLerpSpeed { get; set; } = 10f;
 
-        public override void PreProcess(ref MovementContext ctx) { }
+        public override void PreProcess( ref MovementContext ctx ) { }
 
-        public override void Process(ref MovementContext ctx, ref Vector3 velocity, float delta)
+        public override void Process( ref MovementContext ctx, ref Vector3 velocity, float delta )
         {
-            if (!ctx.IsOnFloor)
+            if ( !ctx.IsOnFloor )
                 return;
 
-            if (ctx.WishDirection.FastLength() > 0.01f)
+            if ( ctx.WishDirection.FastLength() > 0.01f )
                 return;
 
-            Vector3 horizontal = new Vector3(velocity.X, 0f, velocity.Z);
-            horizontal = horizontal.FastLerp(Vector3.Zero, StopLerpSpeed * delta);
+            Vector3 horizontal = new Vector3( velocity.X, 0f, velocity.Z );
+            horizontal = horizontal.FastLerp( Vector3.Zero, StopLerpSpeed * delta );
 
             velocity.X = horizontal.X;
             velocity.Z = horizontal.Z;
         }
 
-        public override void PostProcess(ref MovementContext ctx) { }
+        public override void PostProcess( ref MovementContext ctx ) { }
     }
 }

@@ -5,10 +5,10 @@ namespace Framework.Console
 {
     public class CommandHistory
     {
-        private readonly int          _capacity;
+        private readonly int _capacity;
         private readonly List<string> _items = new();
-        private int                   _index = -1;
-        private string                _cached = string.Empty;
+        private int _index = -1;
+        private string _cached = string.Empty;
 
         public CommandHistory( int capacity ) => _capacity = capacity;
 
@@ -27,14 +27,14 @@ namespace Framework.Console
             if ( _index == -1 )
             {
                 _cached = current;
-                _index  = _items.Count - 1;
+                _index = _items.Count - 1;
             }
             else if ( _index > 0 )
             {
                 _index--;
             }
 
-            return _items[_index];
+            return _items[ _index ];
         }
 
         public string Down()
@@ -49,7 +49,7 @@ namespace Framework.Console
                 return _cached;
             }
 
-            return _items[_index];
+            return _items[ _index ];
         }
     }
 }

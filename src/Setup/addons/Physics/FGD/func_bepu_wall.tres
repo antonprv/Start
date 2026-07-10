@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="FuncGodotFGDSolidClass" format=3]
+
+[ext_resource type="Script" path="res://addons/func_godot/src/fgd/func_godot_fgd_solid_class.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+spawn_type = 1
+collision_shape_type = 1
+classname = "func_bepu_wall"
+description = "Static brush geometry simulated by the Bepu physics world instead of Godot's native PhysicsServer3D. Behaves like func_wall/func_group - merges into worldspawn. Note: the FGD collision_layer/mask fields are ignored for this entity (they only affect Godot's native physics, which this node disables on itself) - set Layer/Mask on the generated FuncGodotBepuStaticBody3D node directly in the scene if you need non-default values."
+meta_properties = Dictionary[String, Variant]({
+"color": Color(0.6, 0.6, 0.8, 1)
+})
+node_class = "FuncGodotBepuStaticBody3D"

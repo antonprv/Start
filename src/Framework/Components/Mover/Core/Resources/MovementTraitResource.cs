@@ -31,8 +31,8 @@ namespace Framework.Components.Mover.Core.Resources
     /// </summary>
     public abstract partial class MovementTraitResource : Resource, IMovementTrait
     {
-        public abstract void PreProcess(ref MovementContext ctx);
-        public abstract void Process(ref MovementContext ctx, ref Vector3 velocity, float delta);
-        public abstract void PostProcess(ref MovementContext ctx);
+        public abstract void PreProcess( ref MovementContext ctx );
+        public abstract void Process( ref MovementContext ctx, ref Vector3 velocity, float delta );
+        public abstract void PostProcess( ref MovementContext ctx );
     }
 }

@@ -17,31 +17,31 @@ namespace Framework.Components.Mover.Core
         private Vector3 _velocity;
         private List<IMovementTrait> _traits;
 
-        public MovementMotor(List<IMovementTrait> traits)
+        public MovementMotor( List<IMovementTrait> traits )
         {
             _traits = traits;
         }
 
         /// <inheritdoc cref="IMovementMotor.SetTraits"/>
-        public void SetTraits(List<IMovementTrait> traits)
+        public void SetTraits( List<IMovementTrait> traits )
         {
             _traits = traits;
         }
 
-        public void Simulate(float delta, MovementContext ctx)
+        public void Simulate( float delta, MovementContext ctx )
         {
             // Inject delta into context so PreProcess callbacks can use it
             // without needing an extra parameter on the interface.
             ctx.Delta = delta;
 
-            foreach (var t in _traits)
-                t.PreProcess(ref ctx);
+            foreach ( var t in _traits )
+                t.PreProcess( ref ctx );
 
-            foreach (var t in _traits)
-                t.Process(ref ctx, ref _velocity, delta);
+            foreach ( var t in _traits )
+                t.Process( ref ctx, ref _velocity, delta );
 
-            foreach (var t in _traits)
-                t.PostProcess(ref ctx);
+            foreach ( var t in _traits )
+                t.PostProcess( ref ctx );
         }
     }
 }

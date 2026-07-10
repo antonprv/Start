@@ -3,6 +3,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <TargetFramework Condition=" '$(GodotTargetPlatform)' == 'android' ">net9.0</TargetFramework>
     <EnableDynamicLoading>true</EnableDynamicLoading>
+    <Nullable>annotations</Nullable>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="addons\func_godot\**" />
@@ -13,14 +14,11 @@
     <EmbeddedResource Remove="Code\Shaders\**" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Code\Shaders\BaseShader.gdshader" />
-    <None Include="Code\Shaders\WaterShader.gdshader" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Framework\Common\Framework.Common.csproj" />
-    <ProjectReference Include="..\Framework\Components\Framework.Components.csproj" />
-    <ProjectReference Include="..\Framework\DevConsole\Framework.Console.csproj" />
-    <ProjectReference Include="..\Framework\FastMath\Framework.FastMath.csproj" />
-    <ProjectReference Include="..\Framework\Logger\Framework.Logger.csproj" />
+    <ProjectReference Include="..\Framework\Common\Common.csproj" />
+    <ProjectReference Include="..\Framework\Components\Components.csproj" />
+    <ProjectReference Include="..\Framework\DevConsole\Console.csproj" />
+    <ProjectReference Include="..\Framework\FastMath\FastMath.csproj" />
+    <ProjectReference Include="..\Framework\Logger\Logger.csproj" />
+    <ProjectReference Include="..\Framework\Physics\Core\Physics.Integration.csproj" />
   </ItemGroup>
 </Project>

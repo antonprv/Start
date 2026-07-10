@@ -9,20 +9,20 @@ namespace Framework.Console.Core
 {
     public class DevConsoleService : IDevConsole
     {
-        public bool   IsOpen { get; private set; }
+        public bool IsOpen { get; private set; }
         public string Marker => "[Console] ";
 
         public event Action MessagesChanged;
 
         private readonly Dictionary<string, IConsoleCommand> _commands = new();
-        private readonly List<ConsoleMessage>                _messages = new();
+        private readonly List<ConsoleMessage> _messages = new();
 
-        private ConsoleMessageType _filter      = ConsoleMessageType.All;
-        private const int          MaxMessages  = 500;
-        private bool               _initialized;
+        private ConsoleMessageType _filter = ConsoleMessageType.All;
+        private const int MaxMessages = 500;
+        private bool _initialized;
 
         #region Initialization
-        
+
         public void Initialize()
         {
             if ( _initialized ) return;

@@ -3,8 +3,8 @@
 
 using Framework.Components.Mover.Core;
 using Framework.Components.Mover.Core.Resources;
-using Godot;
 using Framework.FastMath;
+using Godot;
 
 namespace Framework.Components.Mover.Traits.Quake
 {
@@ -16,15 +16,15 @@ namespace Framework.Components.Mover.Traits.Quake
     [GlobalClass]
     public partial class GroundAccelerationTrait : MovementTraitResource
     {
-        public override void PreProcess(ref MovementContext ctx) { }
+        public override void PreProcess( ref MovementContext ctx ) { }
 
-        public override void Process(ref MovementContext ctx, ref Vector3 velocity, float delta)
+        public override void Process( ref MovementContext ctx, ref Vector3 velocity, float delta )
         {
-            if (!ctx.IsOnFloor)
+            if ( !ctx.IsOnFloor )
                 return;
 
             Vector3 wishDir = ctx.WishDirection;
-            if (wishDir.IsNearlyZero())
+            if ( wishDir.IsNearlyZero() )
                 return;
 
             Vector3 wishVel = wishDir * ctx.Profile.MaxSpeed;
@@ -32,16 +32,16 @@ namespace Framework.Components.Mover.Traits.Quake
             deltaVel.Y = 0f;
 
             float deltaVelLen = deltaVel.FastLength();
-            if (deltaVelLen < 0.001f)
+            if ( deltaVelLen < 0.001f )
                 return;
 
             float accel = ctx.Profile.GroundAcceleration * delta;
-            if (accel > deltaVelLen)
+            if ( accel > deltaVelLen )
                 accel = deltaVelLen;
 
             velocity += deltaVel.FastNormalized() * accel;
         }
 
-        public override void PostProcess(ref MovementContext ctx) { }
+        public override void PostProcess( ref MovementContext ctx ) { }
     }
 }

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\USERS\\USER\\GODOT\\PROJECTS\\SETUP\\SRC\\Framework\\DevConsole\\Console.csproj": {}
+    "C:\\Users\\User\\Godot\\Projects\\Setup\\src\\Framework\\DevConsole\\Console.csproj": {}
   },
   "projects": {
-    "C:\\USERS\\USER\\GODOT\\PROJECTS\\SETUP\\SRC\\Framework\\DevConsole\\Console.csproj": {
+    "C:\\Users\\User\\Godot\\Projects\\Setup\\src\\Framework\\DevConsole\\Console.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\USERS\\USER\\GODOT\\PROJECTS\\SETUP\\SRC\\Framework\\DevConsole\\Console.csproj",
+        "projectUniqueName": "C:\\Users\\User\\Godot\\Projects\\Setup\\src\\Framework\\DevConsole\\Console.csproj",
         "projectName": "Console",
-        "projectPath": "C:\\USERS\\USER\\GODOT\\PROJECTS\\SETUP\\SRC\\Framework\\DevConsole\\Console.csproj",
+        "projectPath": "C:\\Users\\User\\Godot\\Projects\\Setup\\src\\Framework\\DevConsole\\Console.csproj",
         "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-        "outputPath": "C:\\USERS\\USER\\GODOT\\PROJECTS\\SETUP\\SRC\\Framework\\DevConsole\\obj\\",
+        "outputPath": "C:\\Users\\User\\Godot\\Projects\\Setup\\src\\Framework\\DevConsole\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

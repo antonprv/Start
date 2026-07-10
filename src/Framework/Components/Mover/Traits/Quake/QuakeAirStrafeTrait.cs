@@ -3,8 +3,8 @@
 
 using Framework.Components.Mover.Core;
 using Framework.Components.Mover.Core.Resources;
-using Godot;
 using Framework.FastMath;
+using Godot;
 
 namespace Framework.Components.Mover.Traits.Quake
 {
@@ -21,31 +21,31 @@ namespace Framework.Components.Mover.Traits.Quake
     [GlobalClass]
     public partial class QuakeAirStrafeTrait : MovementTraitResource
     {
-        public override void PreProcess(ref MovementContext ctx) { }
+        public override void PreProcess( ref MovementContext ctx ) { }
 
-        public override void Process(ref MovementContext ctx, ref Vector3 velocity, float delta)
+        public override void Process( ref MovementContext ctx, ref Vector3 velocity, float delta )
         {
-            if (ctx.IsOnFloor)
+            if ( ctx.IsOnFloor )
                 return;
 
             Vector3 wishDir = ctx.WishDirection;
-            if (wishDir.IsNearlyZero())
+            if ( wishDir.IsNearlyZero() )
                 return;
 
             float wishSpeed = ctx.Profile.AirMaxSpeed;
-            float currentSpeed = velocity.FastDot(wishDir);
+            float currentSpeed = velocity.FastDot( wishDir );
             float addSpeed = wishSpeed - currentSpeed;
 
-            if (addSpeed <= 0f)
+            if ( addSpeed <= 0f )
                 return;
 
             float accel = ctx.Profile.AirAcceleration * delta;
-            if (accel > addSpeed)
+            if ( accel > addSpeed )
                 accel = addSpeed;
 
             velocity += wishDir * accel;
         }
 
-        public override void PostProcess(ref MovementContext ctx) { }
+        public override void PostProcess( ref MovementContext ctx ) { }
     }
 }

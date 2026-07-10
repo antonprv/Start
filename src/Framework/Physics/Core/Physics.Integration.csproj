@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>annotations</Nullable>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<RootNamespace>Framework.Physics</RootNamespace>
+		<AssemblyName>Physics.Integration</AssemblyName>
+		<Nullable>annotations</Nullable>
+		<EnableDynamicLoading>false</EnableDynamicLoading>
+		<PublishTrimmed>true</PublishTrimmed>
+		<PublishReadyToRun>true</PublishReadyToRun>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\FastMath\FastMath.csproj" />
+		<ProjectReference Include="..\Bepu\BepuPhysics\BepuPhysics.csproj" />
+		<ProjectReference Include="..\Bepu\BepuUtilities\BepuUtilities.csproj" />
+	</ItemGroup>
+
+</Project>

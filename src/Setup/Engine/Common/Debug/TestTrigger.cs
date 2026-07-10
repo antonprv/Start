@@ -9,21 +9,21 @@ using Zenjex;
 
 namespace Engine.Common.Debug
 {
-    public partial class TestTrigger : TriggerVolume
-    {
-        private IUIMessage _uIMessage;
+	public partial class TestTrigger : TriggerVolume
+	{
+		private IUIMessage _uIMessage;
 
-        [Inject]
-        private void Construct( IUIMessage uIMessage ) => _uIMessage = uIMessage;
+		[Inject]
+		private void Construct( IUIMessage uIMessage ) => _uIMessage = uIMessage;
 
 		public override void _EnterTree() => DiContainer.Instance.Inject( this );
 
 		public override void Initialize() { }
 
-        protected override void OnBodyEnter( Node3D body ) =>
-            _uIMessage.Send( $"{body} entered!" );
+		protected override void OnBodyEnter( Node3D body ) =>
+			_uIMessage.Send( $"{body} entered!" );
 
-		protected override void OnBodyExit( Node3D body ) => 
-            _uIMessage.Send( $"{body} exited!" );
+		protected override void OnBodyExit( Node3D body ) =>
+			_uIMessage.Send( $"{body} exited!" );
 	}
 }

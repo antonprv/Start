@@ -13,12 +13,12 @@ namespace Zenjex
 	/// and override the abstract methods to configure your DI bindings.
 	///
 	/// Lifecycle (execution order):
-	/// 1. InstallBindings() — register all global services
-	/// 2. OnContainerReady — first injection pass (optional custom hook)
-	/// 3. InstallRuntimeBindings() — async setup, load assets, register runtime bindings
-	/// 4. OnInitializables() — call Initialize() on all IInitializable services
-	/// 5. LaunchGame() — user entry point (start game state, etc.)
-	/// 6. OnGameLaunched — second injection pass for late-bound services
+	/// 1. InstallBindings() - register all global services
+	/// 2. OnContainerReady - first injection pass (optional custom hook)
+	/// 3. InstallRuntimeBindings() - async setup, load assets, register runtime bindings
+	/// 4. OnInitializables() - call Initialize() on all IInitializable services
+	/// 5. LaunchGame() - user entry point (start game state, etc.)
+	/// 6. OnGameLaunched - second injection pass for late-bound services
 	/// 
 	/// Usage:
 	///   public partial class AppInstaller : RootInstaller
@@ -66,13 +66,13 @@ namespace Zenjex
 
 			if ( Container == null )
 			{
-				// First installer — creates the container
+				// First installer - creates the container
 				Container = builder.Build();
 				OnContainerReady?.Invoke();
 			}
 			else
 			{
-				// Subsequent installer — adds bindings into the existing container
+				// Subsequent installer - adds bindings into the existing container
 				builder.BuildInto( Container );
 			}
 

@@ -266,68 +266,114 @@ namespace Zenjex
 			if ( target == null )
 				return;
 
-			var targetType = target.GetType();
+			Type targetType = target.GetType();
+			List<FieldInfo> fields = new List<FieldInfo>();
+			List<PropertyInfo> properties = new List<PropertyInfo>();
+			List<MethodInfo> methods = new List<MethodInfo>();
+
+			for ( Type current = targetType; current != null && current != typeof( object ); current = current.BaseType )
+			{
+				const BindingFlags flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly;
+
+				fields.AddRange( current.GetFields( flags ).Where( f => f.GetCustomAttribute<InjectAttribute>() != null ) );
+				properties.AddRange( current.GetProperties( flags ).Where( p => p.GetCustomAttribute<InjectAttribute>() != null && p.CanWrite ) );
+				methods.AddRange( current.GetMethods( flags ).Where( m => m.GetCustomAttribute<InjectAttribute>() != null ) );
+			}
 
 			// Inject fields
-			var fields = targetType
-				.GetFields( BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic )
-				.Where( f => f.GetCustomAttribute<InjectAttribute>() != null );
-
-			foreach ( var field in fields )
+			foreach ( FieldInfo field in fields )
 			{
+				InjectAttribute attr = field.GetCustomAttribute<InjectAttribute>();
+				object value;
+
 				try
 				{
-					var attr = field.GetCustomAttribute<InjectAttribute>();
-					var value = Resolve( field.FieldType, attr.Key );
-					field.SetValue( target, value );
+					value = Resolve( field.FieldType, attr.Key );
 				}
 				catch ( Exception ex )
 				{
-					GD.PushError( $"[ZenjexGodot] Failed to inject field '{field.Name}' on '{targetType.Name}': {ex.Message}" );
+					throw new InvalidOperationException(
+						$"[Zenjex] Failed to resolve field '{field.Name}' of type '{field.FieldType.Name}' " +
+						$"on '{targetType.Name}': {ex}", ex );
 				}
+
+				if ( value == null )
+				{
+					throw new InvalidOperationException(
+						$"[Zenjex] Resolved a null instance for field '{field.Name}' of type " +
+						$"'{field.FieldType.Name}' on '{targetType.Name}'. A factory/instance binding returned " +
+						"null instead of throwing - check whatever FromFactory()/FromInstance() call registered this service." );
+				}
+
+				field.SetValue( target, value );
 			}
 
 			// Inject properties
-			var properties = targetType
-				.GetProperties( BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic )
-				.Where( p => p.GetCustomAttribute<InjectAttribute>() != null && p.CanWrite );
-
-			foreach ( var property in properties )
+			foreach ( PropertyInfo property in properties )
 			{
+				InjectAttribute attr = property.GetCustomAttribute<InjectAttribute>();
+				object value;
+
 				try
 				{
-					var attr = property.GetCustomAttribute<InjectAttribute>();
-					var value = Resolve( property.PropertyType, attr.Key );
-					property.SetValue( target, value );
+					value = Resolve( property.PropertyType, attr.Key );
 				}
 				catch ( Exception ex )
 				{
-					GD.PushError( $"[ZenjexGodot] Failed to inject property '{property.Name}' on '{targetType.Name}': {ex.Message}" );
+					throw new InvalidOperationException(
+						$"[Zenjex] Failed to resolve property '{property.Name}' of type '{property.PropertyType.Name}' " +
+						$"on '{targetType.Name}': {ex}", ex );
 				}
+
+				if ( value == null )
+				{
+					throw new InvalidOperationException(
+						$"[Zenjex] Resolved a null instance for property '{property.Name}' of type " +
+						$"'{property.PropertyType.Name}' on '{targetType.Name}'. A factory/instance binding returned " +
+						"null instead of throwing - check whatever FromFactory()/FromInstance() call registered this service." );
+				}
+
+				property.SetValue( target, value );
 			}
 
 			// Inject methods
-			var methods = targetType
-				.GetMethods( BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic )
-				.Where( m => m.GetCustomAttribute<InjectAttribute>() != null );
-
-			foreach ( var method in methods )
+			foreach ( MethodInfo method in methods )
 			{
-				try
-				{
-					var parameters = method.GetParameters();
-					var args = new object[ parameters.Length ];
+				System.Reflection.ParameterInfo[] parameters = method.GetParameters();
+				object[] args = new object[ parameters.Length ];
 
-					for ( int i = 0; i < parameters.Length; i++ )
+				for ( int i = 0; i < parameters.Length; i++ )
+				{
+					try
 					{
 						args[ i ] = Resolve( parameters[ i ].ParameterType );
 					}
+					catch ( Exception ex )
+					{
+						throw new InvalidOperationException(
+							$"[Zenjex] Failed to resolve parameter '{parameters[ i ].Name}' of type " +
+							$"'{parameters[ i ].ParameterType.Name}' while injecting method '{method.Name}' on " +
+							$"'{targetType.Name}': {ex}", ex );
+					}
 
+					if ( args[ i ] == null )
+					{
+						throw new InvalidOperationException(
+							$"[Zenjex] Resolved a null instance for parameter '{parameters[ i ].Name}' of type " +
+							$"'{parameters[ i ].ParameterType.Name}' while injecting method '{method.Name}' on " +
+							$"'{targetType.Name}'. A factory/instance binding returned null instead of throwing - " +
+							"check whatever FromFactory()/FromInstance() call registered this service." );
+					}
+				}
+
+				try
+				{
 					method.Invoke( target, args );
 				}
 				catch ( Exception ex )
 				{
-					GD.PushError( $"[ZenjexGodot] Failed to inject method '{method.Name}' on '{targetType.Name}': {ex.Message}" );
+					throw new InvalidOperationException(
+						$"[Zenjex] Injected method '{method.Name}' on '{targetType.Name}' threw: {ex.InnerException ?? ex}", ex );
 				}
 			}
 		}

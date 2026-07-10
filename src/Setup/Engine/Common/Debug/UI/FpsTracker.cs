@@ -14,7 +14,7 @@ namespace Engine.Common.Debug.UI
 		public override void _EnterTree() =>
 			this.DestroyIfNotDebug();
 
-		public override void _Process( double delta ) => 
+		public override void _Process( double delta ) =>
 			Text = $"FPS: {GEngine.GetFramesPerSecond()}";
 	}
 }

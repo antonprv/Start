@@ -32,12 +32,12 @@ namespace Engine.Infrastructure
 		{
 			if ( OS.IsDebugBuild() )
 				GameLogger.Initialize( _devConsole );
-			
+
 			DrawDebugRuntime.Initialize( GetTree(), _rootNode );
 			GetTree().Root.CloseRequested += OnCloseRequested;
 		}
 
-		private void OnCloseRequested() => 
+		private void OnCloseRequested() =>
 			GameLogger.SaveLogsToFile();
 
 		public override void _Process( double delta ) =>

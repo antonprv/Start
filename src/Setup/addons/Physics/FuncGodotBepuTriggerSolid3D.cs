@@ -74,9 +74,21 @@ namespace Physics
 
 		private void RegisterShape( CollisionShape3D collisionShape )
 		{
-			BuiltShape built = GodotShapeConverter.FromCollisionShape3D( _world, collisionShape, mass: 0f );
-			PhysicsTransform pose = GodotShapeConverter.ToPhysicsTransform( collisionShape.GlobalTransform, built.LocalOffset );
-			StaticHandle handle = _world.Core.AddStatic( pose, built.Handle, (uint)Layer, (uint)Mask, _ownerId, PhysicsObjectKind.Trigger );
+			BuiltShape built = GodotShapeConverter
+				.FromCollisionShape3D( _world, collisionShape, mass: 0f );
+			
+			PhysicsTransform pose = GodotShapeConverter
+				.ToPhysicsTransform( collisionShape.GlobalTransform, built.LocalOffset );
+			
+			StaticHandle handle = _world.Core.AddStatic( 
+				pose: pose, 
+				shape: built.Handle, 
+				layer: (uint)Layer, 
+				mask: (uint)Mask, 
+			 	ownerId: _ownerId, 
+				kind: PhysicsObjectKind.Trigger 
+			);
+
 			_handles.Add( handle );
 		}
 

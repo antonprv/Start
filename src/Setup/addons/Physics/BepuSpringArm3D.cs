@@ -13,10 +13,17 @@ namespace Physics
 	/// PhysicsServer3D - so it sees the same Bepu world every other component in this framework
 	/// does, including static level geometry baked by func_godot.
 	///
-	/// Each physics tick it sweeps a sphere from this node's position along local -Z by up to
+	/// Each physics tick it sweeps a sphere from this node's position along local +Z by up to
 	/// <see cref="SpringLength"/>, then repositions every direct Node3D child to
-	/// <c>(0, 0, -CurrentLength)</c> - exactly like the native node. Typical use: parent this
-	/// under the player, put a Camera3D as its only child.
+	/// <c>(0, 0, CurrentLength)</c> - exactly matching native SpringArm3D's own convention (see
+	/// spring_arm_3d.cpp: <c>cast_direction = basis.xform(Vector3(0, 0, 1))</c>, i.e. positive Z,
+	/// not negative). This matters: +Z is "backward" in Godot's forward=-Z convention, so the arm
+	/// extends behind the pivot and a child Camera3D with no extra rotation (default forward -Z)
+	/// ends up looking back toward the pivot/character - the standard third-person arrangement.
+	/// An earlier version of this file used -Z, which points the arm the opposite way - toward
+	/// wherever the rig is already facing - so the camera ended up positioned past the character
+	/// looking further away from it instead of positioned behind it looking back. That was the
+	/// actual cause of the "camera is somewhere unclear" symptom.
 	///
 	/// Unlike the native node (which takes an arbitrary <c>Shape3D</c>), this only supports a
 	/// sphere - that covers the overwhelming majority of camera-boom use cases and keeps the
@@ -60,27 +67,27 @@ namespace Physics
 		private void UpdateArm()
 		{
 			Vector3 origin = GlobalPosition;
-			Vector3 direction = -GlobalTransform.Basis.Z;
+			Vector3 direction = GlobalTransform.Basis.Z;
 			BodyHandle? exclude = ResolveExcludeHandle();
 
 			ShapeCastResult result = _world.Core.SweepSphereCast(
-				GodotShapeConverter.ToNumerics( origin ),
-				GodotShapeConverter.ToNumerics( direction ),
-				SpringLength,
-				Radius,
-				(uint)Layer,
-				(uint)Mask,
-				exclude );
+				origin: GodotShapeConverter.ToNumerics( origin ),
+				direction: GodotShapeConverter.ToNumerics( direction ),
+				maxDistance: SpringLength,
+				radius: Radius,
+				layer: (uint)Layer,
+				mask: (uint)Mask,
+				exclude: exclude
+			);
 
 			IsColliding = result.Hit;
 			CurrentLength = result.Hit ? Mathf.Max( 0f, result.Distance - Margin ) : SpringLength;
 
-			Vector3 localTip = new Vector3( 0f, 0f, -CurrentLength );
+			Vector3 localTip = new Vector3( 0f, 0f, CurrentLength );
+
 			foreach ( Node child in GetChildren() )
-			{
 				if ( child is Node3D node3D )
 					node3D.Position = localTip;
-			}
 		}
 
 		private BodyHandle? ResolveExcludeHandle()

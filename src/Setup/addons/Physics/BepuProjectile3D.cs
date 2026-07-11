@@ -42,8 +42,17 @@ namespace Physics
 			HitListener ??= GetParent() as IProjectileHitListener;
 
 			ShapeHandle shapeHandle = World.Core.AddSphereShape( _radius );
-			PhysicsTransform pose = PhysicsTransform.FromPosition( GodotShapeConverter.ToNumerics( GlobalPosition ) );
-			Handle = World.Core.AddKinematicBody( pose, shapeHandle, (uint)Layer, (uint)Mask, OwnerId, PhysicsObjectKind.Projectile );
+			PhysicsTransform pose = PhysicsTransform
+				.FromPosition( GodotShapeConverter.ToNumerics( GlobalPosition ) );
+			
+			Handle = World.Core.AddKinematicBody( 
+				pose: pose, 
+				shape: shapeHandle, 
+				layer: (uint)Layer, 
+				mask: (uint)Mask, 
+				ownerId: OwnerId, 
+				kind: PhysicsObjectKind.Projectile 
+			);
 		}
 
 		protected override void OnUnregister() => World.Core.RemoveBody( Handle );
@@ -71,14 +80,22 @@ namespace Physics
 			{
 				_resolved = true;
 				Node3D? hitOwner = World.GetOwner( result.HitOwnerId );
-				HitListener?.OnProjectileHit( GodotShapeConverter.ToGodot( result.Point ), GodotShapeConverter.ToGodot( result.Normal ), hitOwner );
+				HitListener?.OnProjectileHit( 
+					GodotShapeConverter.ToGodot( result.Point ), 
+					GodotShapeConverter.ToGodot( result.Normal ), 
+					hitOwner 
+				);
 
 				if ( _destroyOnHit )
 					QueueFree();
 				return;
 			}
 
-			World.Core.SetBodyPose( Handle, PhysicsTransform.FromPosition( GodotShapeConverter.ToNumerics( GlobalPosition ) ) );
+			World.Core.SetBodyPose( 
+				Handle, 
+				PhysicsTransform
+					.FromPosition( GodotShapeConverter.ToNumerics( GlobalPosition ) )
+			);
 
 			if ( _lifetime >= _maxLifetimeSeconds )
 			{

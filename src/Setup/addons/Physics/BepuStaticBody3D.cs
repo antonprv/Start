@@ -1,6 +1,7 @@
 // Created by Anton Piruev in 2026.
 // Any direct commercial use of derivative work is strictly prohibited.
 
+using Framework.Logger;
 using Framework.Physics;
 using Godot;
 
@@ -30,20 +31,26 @@ namespace Physics
 
 			if ( _convexShape != null )
 			{
-				built = GodotShapeConverter.FromCollisionShape3D( World, _convexShape, mass: 0f );
+				built = GodotShapeConverter
+					.FromCollisionShape3D( World, _convexShape, mass: 0f );
 			}
 			else if ( _meshShape != null )
 			{
-				built = GodotShapeConverter.FromMeshInstance3D( World, _meshShape, GlobalTransform.Basis.Scale );
+				built = GodotShapeConverter
+					.FromMeshInstance3D( World, _meshShape, GlobalTransform.Basis.Scale );
 			}
 			else
 			{
-				GD.PushError( $"{Name}: BepuStaticBody3D needs either a CollisionShape3D or MeshInstance3D assigned." );
+				GameLogger.LogError( $"{Name}: BepuStaticBody3D needs either " +
+					$"a CollisionShape3D or MeshInstance3D assigned." );
 				return;
 			}
 
-			PhysicsTransform pose = GodotShapeConverter.ToPhysicsTransform( GlobalTransform, built.LocalOffset );
-			Handle = World.Core.AddStatic( pose, built.Handle, (uint)Layer, (uint)Mask, OwnerId );
+			PhysicsTransform pose = GodotShapeConverter
+				.ToPhysicsTransform( GlobalTransform, built.LocalOffset );
+			
+			Handle = World.Core
+				.AddStatic( pose, built.Handle, (uint)Layer, (uint)Mask, OwnerId );
 		}
 
 		protected override void OnUnregister() => World.Core.RemoveStatic( Handle );

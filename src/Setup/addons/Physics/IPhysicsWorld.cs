@@ -29,7 +29,9 @@ namespace Physics
 	/// </summary>
 	public interface IPhysicsWorld
 	{
-		/// <summary>The engine-agnostic simulation facade. Its API only uses plain data types (see Framework.Physics) - never a Godot type, never a raw Bepu type.</summary>
+		/// <summary>The engine-agnostic simulation facade. 
+		/// Its API only uses plain data types (see Framework.Physics) - never a Godot type,
+		/// never a raw Bepu type.</summary>
 		Framework.Physics.PhysicsWorld Core { get; }
 		Vector3Packed Gravity { get; }
 

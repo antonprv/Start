@@ -93,8 +93,7 @@
         "framework": ".NETCoreApp,Version=v8.0",
         "dependencies": {
           "Godot.SourceGenerators": "4.7.0",
-          "GodotSharp": "4.7.0",
-          "NSubstitute": "5.3.0"
+          "GodotSharp": "4.7.0"
         },
         "compile": {
           "bin/placeholder/FastMath.dll": {}
@@ -275,8 +274,8 @@
     },
     "FastMath/1.0.0": {
       "type": "project",
-      "path": "../FastMath/FastMath.csproj",
-      "msbuildProject": "../FastMath/FastMath.csproj"
+      "path": "../Math/Core/FastMath/FastMath.csproj",
+      "msbuildProject": "../Math/Core/FastMath/FastMath.csproj"
     }
   },
   "projectFileDependencyGroups": {
@@ -296,11 +295,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\User\\Godot\\Projects\\Setup\\src\\Framework\\Components\\Components.csproj",
+      "projectUniqueName": "C:\\Users\\User\\GODOT\\PROJECTS\\SETUP\\SRC\\Framework\\Components\\Components.csproj",
       "projectName": "Components",
-      "projectPath": "C:\\Users\\User\\Godot\\Projects\\Setup\\src\\Framework\\Components\\Components.csproj",
+      "projectPath": "C:\\Users\\User\\GODOT\\PROJECTS\\SETUP\\SRC\\Framework\\Components\\Components.csproj",
       "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\User\\Godot\\Projects\\Setup\\src\\Framework\\Components\\obj\\",
+      "outputPath": "C:\\Users\\User\\GODOT\\PROJECTS\\SETUP\\SRC\\Framework\\Components\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -322,8 +321,8 @@
           "framework": "net8.0",
           "targetAlias": "net8.0",
           "projectReferences": {
-            "C:\\Users\\User\\Godot\\Projects\\Setup\\src\\Framework\\FastMath\\FastMath.csproj": {
-              "projectPath": "C:\\Users\\User\\Godot\\Projects\\Setup\\src\\Framework\\FastMath\\FastMath.csproj"
+            "C:\\Users\\User\\GODOT\\PROJECTS\\SETUP\\SRC\\Framework\\Math\\Core\\FastMath\\FastMath.csproj": {
+              "projectPath": "C:\\Users\\User\\GODOT\\PROJECTS\\SETUP\\SRC\\Framework\\Math\\Core\\FastMath\\FastMath.csproj"
             }
           }
         }

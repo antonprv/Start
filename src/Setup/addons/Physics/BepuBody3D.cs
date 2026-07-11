@@ -30,17 +30,6 @@ namespace Physics
 
 		public override void _Ready()
 		{
-			if ( _physicsWorld == null )
-			{
-				throw new InvalidOperationException(
-					$"{GetType().Name} ('{Name}'): IPhysicsWorld was not injected before _Ready() ran. " +
-					"This means DiContainer.Instance.Inject(this) either never ran (check that every override " +
-					"of _EnterTree() up the inheritance chain calls base._EnterTree()) or the IPhysicsWorld " +
-					"binding itself resolved to null. Check the console for an earlier " +
-					"'[ZenjexGodot] ... resolved a null instance ...' or factory error - that message names the " +
-					"actual root cause; this exception only means the symptom finally caught up here." );
-			}
-
 			OwnerId = _physicsWorld.RegisterOwner( this );
 			OnRegister();
 		}

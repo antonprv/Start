@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="MProfile" format=3 uid="uid://7qye1rn5hk43"]
 
-[ext_resource type="Script" uid="uid://cuxx311uatps4" path="res://Code/Components/Mover/Resources/MProfile.cs" id="1_a4hpl"]
+[ext_resource type="Script" uid="uid://cuxx311uatps4" path="res://Engine/Components/Mover/Resources/MProfile.cs" id="1_a4hpl"]
 
 [resource]
 script = ExtResource("1_a4hpl")

@@ -267,6 +267,7 @@ TimeOfDay = 0.0
 HorizonBlur = 0.23
 SkyCurve = 2.9540002
 GroundCurve = 2.5010002
+MoonEnabled = false
 MoonTint = Color(0.85, 0.9, 1, 1)
 NoiseTexture = ExtResource("5_7j0ct")
 CloudColorDay = Color(0.88, 0.92, 1, 1)

@@ -70,8 +70,7 @@
       },
       "FastMath/1.0.0": {
         "dependencies": {
-          "GodotSharp": "4.7.0",
-          "NSubstitute": "5.3.0"
+          "GodotSharp": "4.7.0"
         },
         "runtime": {
           "FastMath.dll": {

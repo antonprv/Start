@@ -65,6 +65,44 @@ namespace Framework.FastMath
             if ( x <= 0f ) return 0f;
             return x * FastInvSqrt( x );
         }
+        
+        // ----------------------------------------------------------------
+        // Overflow-safe squared-length helper (shared by Normalize/Length)
+        // ----------------------------------------------------------------
+
+        /// <summary>
+        /// Computes a squared length and, if any component's magnitude
+        /// exceeds <see cref="SAFE_SQUARE_THRESHOLD"/>, pre-scales the
+        /// components by their max magnitude first to avoid x*x overflowing
+        /// to +Infinity. Returns the (possibly rescaled) components and the
+        /// scale that was applied, plus the squared length of the rescaled
+        /// vector. Callers reconstruct the true result by dividing the
+        /// scale back in (or, for Normalize, the scale cancels out entirely).
+        /// </summary>
+        [MethodImpl( MethodImplOptions.AggressiveInlining )]
+        private static float SafeScaleFor( float ax, float ay, float az )
+        {
+            float max = ax > ay ? ( ax > az ? ax : az ) : ( ay > az ? ay : az );
+            return max > SAFE_SQUARE_THRESHOLD ? 1f / max : 1f;
+        }
+
+        /// <summary>4-component overload used by Quaternion Normalize/Inverse/Length.</summary>
+        [MethodImpl( MethodImplOptions.AggressiveInlining )]
+        private static float SafeScaleFor( float ax, float ay, float az, float aw )
+        {
+            float max = ax > ay ? ax : ay;
+            float max2 = az > aw ? az : aw;
+            max = max > max2 ? max : max2;
+            return max > SAFE_SQUARE_THRESHOLD ? 1f / max : 1f;
+        }
+
+        [MethodImpl( MethodImplOptions.AggressiveInlining )]
+        private static float SafeScaleFor( float ax, float ay )
+        {
+            float max = ax > ay ? ax : ay;
+            return max > SAFE_SQUARE_THRESHOLD ? 1f / max : 1f;
+        }
+
 
         // ----------------------------------------------------------------
         // Normalize (ref scalar components) - lowest-level overload
@@ -74,15 +112,18 @@ namespace Framework.FastMath
         /// Fast 3-D normalization via a single FastInvSqrt call.
         /// Writes results back through refs - zero copies, zero allocation.
         /// Sets all components to 0 when length² &lt; epsilon.
+        /// Overflow-safe for very large components (see class remarks).
         /// </summary>
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
         public static void FastNormalize( ref float x, ref float y, ref float z,
                                          float epsilon = SMALL_NUMBER )
         {
-            float sq = x * x + y * y + z * z;
+            float scale = SafeScaleFor( AbsBranchless( x ), AbsBranchless( y ), AbsBranchless( z ) );
+            float sx = x * scale, sy = y * scale, sz = z * scale;
+            float sq = sx * sx + sy * sy + sz * sz;
             if ( sq < epsilon ) { x = y = z = 0f; return; }
             float inv = FastInvSqrt( sq );
-            x *= inv; y *= inv; z *= inv;
+            x = sx * inv; y = sy * inv; z = sz * inv;
         }
 
         // ----------------------------------------------------------------
@@ -93,28 +134,35 @@ namespace Framework.FastMath
         /// Normalizes <paramref name="v"/> in-place using FastInvSqrt.
         /// Mutates the original struct through the ref - zero allocation.
         /// Sets v to Vector3.Zero when its length is below epsilon.
+        /// Overflow-safe: pre-scales by the largest component before
+        /// squaring, so components beyond ~1e17 don't overflow to Infinity.
         /// </summary>
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
         public static void Normalize( ref Vector3 v, float epsilon = SMALL_NUMBER )
         {
-            float sq = v.X * v.X + v.Y * v.Y + v.Z * v.Z;
+            float scale = SafeScaleFor( AbsBranchless( v.X ), AbsBranchless( v.Y ), AbsBranchless( v.Z ) );
+            float sx = v.X * scale, sy = v.Y * scale, sz = v.Z * scale;
+            float sq = sx * sx + sy * sy + sz * sz;
             if ( sq < epsilon ) { v = Vector3.Zero; return; }
-            float inv = FastInvSqrt( sq );   // ← Quake III bit hack
-            v.X *= inv; v.Y *= inv; v.Z *= inv;
+            float inv = FastInvSqrt( sq );
+            v.X = sx * inv; v.Y = sy * inv; v.Z = sz * inv;
         }
 
         /// <summary>
         /// Returns a new normalized Vector3 using FastInvSqrt.
         /// The original vector is not modified.
         /// Returns Vector3.Zero when length is below epsilon.
+        /// Overflow-safe (see <see cref="Normalize(ref Vector3, float)"/>).
         /// </summary>
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
         public static Vector3 Normalized( in Vector3 v, float epsilon = SMALL_NUMBER )
         {
-            float sq = v.X * v.X + v.Y * v.Y + v.Z * v.Z;
+            float scale = SafeScaleFor( AbsBranchless( v.X ), AbsBranchless( v.Y ), AbsBranchless( v.Z ) );
+            float sx = v.X * scale, sy = v.Y * scale, sz = v.Z * scale;
+            float sq = sx * sx + sy * sy + sz * sz;
             if ( sq < epsilon ) return Vector3.Zero;
             float inv = FastInvSqrt( sq );
-            return new Vector3( v.X * inv, v.Y * inv, v.Z * inv );
+            return new Vector3( sx * inv, sy * inv, sz * inv );
         }
 
         /// <summary>
@@ -122,6 +170,8 @@ namespace Framework.FastMath
         ///
         /// Hack: compares squared length against [1-ε, 1+ε] - no sqrt needed.
         /// Useful to assert invariants on hot paths without paying sqrt cost.
+        /// Not pre-scaled: a vector whose squared length is near 1 can never
+        /// be large enough to risk overflow, so the extra work is unnecessary.
         /// </summary>
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
         public static bool IsNormalized( in Vector3 v, float epsilon = KINDA_SMALL_NUMBER )
@@ -140,27 +190,33 @@ namespace Framework.FastMath
         /// Normalizes a Vector2 in-place using FastInvSqrt.
         /// Writes back through ref - zero allocation.
         /// Sets v to Vector2.Zero when length is below epsilon.
+        /// Overflow-safe (see Vector3 overload remarks).
         /// </summary>
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
         public static void Normalize( ref Vector2 v, float epsilon = SMALL_NUMBER )
         {
-            float sq = v.X * v.X + v.Y * v.Y;
+            float scale = SafeScaleFor( AbsBranchless( v.X ), AbsBranchless( v.Y ) );
+            float sx = v.X * scale, sy = v.Y * scale;
+            float sq = sx * sx + sy * sy;
             if ( sq < epsilon ) { v = Vector2.Zero; return; }
             float inv = FastInvSqrt( sq );
-            v.X *= inv; v.Y *= inv;
+            v.X = sx * inv; v.Y = sy * inv;
         }
 
         /// <summary>
         /// Returns a new normalized Vector2 using FastInvSqrt.
         /// Returns Vector2.Zero when length is below epsilon.
+        /// Overflow-safe (see Vector3 overload remarks).
         /// </summary>
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
         public static Vector2 Normalized( in Vector2 v, float epsilon = SMALL_NUMBER )
         {
-            float sq = v.X * v.X + v.Y * v.Y;
+            float scale = SafeScaleFor( AbsBranchless( v.X ), AbsBranchless( v.Y ) );
+            float sx = v.X * scale, sy = v.Y * scale;
+            float sq = sx * sx + sy * sy;
             if ( sq < epsilon ) return Vector2.Zero;
             float inv = FastInvSqrt( sq );
-            return new Vector2( v.X * inv, v.Y * inv );
+            return new Vector2( sx * inv, sy * inv );
         }
 
         /// <summary>
@@ -195,7 +251,7 @@ namespace Framework.FastMath
         // ----------------------------------------------------------------
 
         /// <summary>
-        /// Fast 3-D vector length.
+        /// Fast 3-D vector length. Overflow-safe for very large components.
         ///
         /// Hack: length = sq · FastInvSqrt(sq) - gets sqrt from the same
         /// Newton-Raphson pass we'd need for normalize anyway.
@@ -204,35 +260,48 @@ namespace Framework.FastMath
         public static float FastLength( float x, float y, float z,
                                        float epsilon = SMALL_NUMBER )
         {
-            float sq = x * x + y * y + z * z;
+            float scale = SafeScaleFor( AbsBranchless( x ), AbsBranchless( y ), AbsBranchless( z ) );
+            float sx = x * scale, sy = y * scale, sz = z * scale;
+            float sq = sx * sx + sy * sy + sz * sz;
             if ( sq < epsilon ) return 0f;
-            return sq * FastInvSqrt( sq );           // sqrt(sq) via single inv-sqrt
+            return ( sq * FastInvSqrt( sq ) ) / scale;   // undo the pre-scale
         }
 
-        /// <summary>Fast 3-D length of a Godot Vector3.</summary>
+        /// <summary>Fast 3-D length of a Godot Vector3. Overflow-safe.</summary>
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
         public static float FastLength( in Vector3 v )
         {
-            float sq = v.X * v.X + v.Y * v.Y + v.Z * v.Z;
+            float scale = SafeScaleFor( AbsBranchless( v.X ), AbsBranchless( v.Y ), AbsBranchless( v.Z ) );
+            float sx = v.X * scale, sy = v.Y * scale, sz = v.Z * scale;
+            float sq = sx * sx + sy * sy + sz * sz;
             if ( sq < SMALL_NUMBER ) return 0f;
-            return sq * FastInvSqrt( sq );
+            return ( sq * FastInvSqrt( sq ) ) / scale;
         }
 
         /// <summary>
-        /// Fast 2-D length.
+        /// Fast 2-D length. Overflow-safe.
         /// One fewer multiply than the 3-D path - worth a separate overload
         /// when processing thousands of 2-D vectors per frame.
         /// </summary>
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
         public static float FastLength( in Vector2 v )
         {
-            float sq = v.X * v.X + v.Y * v.Y;
+            float scale = SafeScaleFor( AbsBranchless( v.X ), AbsBranchless( v.Y ) );
+            float sx = v.X * scale, sy = v.Y * scale;
+            float sq = sx * sx + sy * sy;
             if ( sq < SMALL_NUMBER ) return 0f;
-            return sq * FastInvSqrt( sq );
+            return ( sq * FastInvSqrt( sq ) ) / scale;
         }
 
         // ----------------------------------------------------------------
         // LengthSq helpers - cheapest possible magnitude check
+        //
+        // Deliberately NOT overflow-guarded: these exist specifically for
+        // cheap comparisons ("is A closer than B"), where an overflowed
+        // +Infinity still compares correctly as "very far away". Guarding
+        // them would add cost to the hottest, most-called functions in the
+        // library for a case that doesn't change the comparison outcome.
+        // Use FastLength (guarded) if you need the actual numeric value.
         // ----------------------------------------------------------------
 
         /// <summary>Squared length of a Vector3 - no sqrt, use for comparisons.</summary>
@@ -249,7 +318,7 @@ namespace Framework.FastMath
         // Distance helpers
         // ----------------------------------------------------------------
 
-        /// <summary>Fast 3-D distance via FastInvSqrt.</summary>
+        /// <summary>Fast 3-D distance via FastInvSqrt. Overflow-safe.</summary>
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
         public static float FastDistance( float x1, float y1, float z1,
                                          float x2, float y2, float z2 )
@@ -258,29 +327,26 @@ namespace Framework.FastMath
             return FastLength( dx, dy, dz );
         }
 
-        /// <summary>Fast 3-D distance between two Vector3 points.</summary>
+        /// <summary>Fast 3-D distance between two Vector3 points. Overflow-safe.</summary>
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
         public static float FastDistance( in Vector3 a, in Vector3 b )
         {
             float dx = b.X - a.X, dy = b.Y - a.Y, dz = b.Z - a.Z;
-            float sq = dx * dx + dy * dy + dz * dz;
-            if ( sq < SMALL_NUMBER ) return 0f;
-            return sq * FastInvSqrt( sq );
+            return FastLength( dx, dy, dz );
         }
 
-        /// <summary>Fast 2-D distance between two Vector2 points.</summary>
+        /// <summary>Fast 2-D distance between two Vector2 points. Overflow-safe.</summary>
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
         public static float FastDistance( in Vector2 a, in Vector2 b )
         {
             float dx = b.X - a.X, dy = b.Y - a.Y;
-            float sq = dx * dx + dy * dy;
-            if ( sq < SMALL_NUMBER ) return 0f;
-            return sq * FastInvSqrt( sq );
+            return FastLength( new Vector2( dx, dy ) );
         }
 
         /// <summary>
         /// Squared 3-D distance - zero sqrt, ideal for "closer than X" checks.
-        /// Compare result against X*X instead of X.
+        /// Compare result against X*X instead of X. Not overflow-guarded -
+        /// see the LengthSq remarks above (comparisons are unaffected).
         /// </summary>
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
         public static float DistanceSquared( float x1, float y1, float z1,

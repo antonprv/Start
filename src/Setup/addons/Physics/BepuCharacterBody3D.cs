@@ -73,7 +73,12 @@ namespace Physics
 		/// </summary>
 		public void MoveAndSlide( double delta )
 		{
-			CharacterMoveOptions options = new CharacterMoveOptions( _maxSlideIterations, _skinWidth, _maxFloorAngleDegrees, _floorProbeDistance );
+			CharacterMoveOptions options = new CharacterMoveOptions( 
+				_maxSlideIterations, 
+				_skinWidth, 
+				_maxFloorAngleDegrees, 
+				_floorProbeDistance 
+			);
 
 			CharacterMoveResult result = World.Core.MoveCharacter(
 				Handle,
@@ -90,17 +95,23 @@ namespace Physics
 			FloorNormal = GodotShapeConverter.ToGodot( result.FloorNormal );
 			GlobalPosition = GodotShapeConverter.ToGodot( result.Position );
 
-			// Keep the registered kinematic body's pose in sync so dynamic props resting against
-			// the character (or anything else querying the simulation) see where it actually is -
-			// the sweep above is purely geometric and never touches the body's own pose in Core.
-			World.Core.SetBodyPose( Handle, PhysicsTransform.FromPosition( GodotShapeConverter.ToNumerics( GlobalPosition ) ) );
+			World.Core.SetBodyPose( 
+				Handle, 
+				PhysicsTransform
+					.FromPosition( GodotShapeConverter.ToNumerics( GlobalPosition ) ) 
+			);
 		}
 
 		/// <summary>Teleport without sliding (e.g. respawn, cutscenes). Keeps the Core body in sync.</summary>
 		public void Teleport( Vector3 worldPosition )
 		{
 			GlobalPosition = worldPosition;
-			World.Core.SetBodyPose( Handle, PhysicsTransform.FromPosition( GodotShapeConverter.ToNumerics( worldPosition ) ) );
+
+			World.Core.SetBodyPose( 
+				Handle, 
+				PhysicsTransform
+					.FromPosition( GodotShapeConverter.ToNumerics( worldPosition ) ) 
+			);
 		}
 	}
 }

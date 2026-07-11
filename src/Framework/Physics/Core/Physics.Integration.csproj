@@ -14,7 +14,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\FastMath\FastMath.csproj" />
+		<ProjectReference Include="..\..\Math\Core\FastMath\FastMath.csproj" />
 		<ProjectReference Include="..\Bepu\BepuPhysics\BepuPhysics.csproj" />
 		<ProjectReference Include="..\Bepu\BepuUtilities\BepuUtilities.csproj" />
 	</ItemGroup>

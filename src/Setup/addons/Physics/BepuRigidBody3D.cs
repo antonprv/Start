@@ -1,6 +1,7 @@
 // Created by Anton Piruev in 2026.
 // Any direct commercial use of derivative work is strictly prohibited.
 
+using Framework.Logger;
 using Framework.Physics;
 using Godot;
 
@@ -29,15 +30,28 @@ namespace Physics
 		{
 			if ( _shapeSource == null )
 			{
-				GD.PushError( $"{Name}: BepuRigidBody3D requires a CollisionShape3D assigned to ShapeSource." );
+				GameLogger
+					.LogError( $"{Name}: BepuRigidBody3D requires a" +
+					$" CollisionShape3D assigned to ShapeSource." );
 				return;
 			}
 
-			BuiltShape built = GodotShapeConverter.FromCollisionShape3D( World, _shapeSource, _mass );
+			BuiltShape built = GodotShapeConverter
+				.FromCollisionShape3D( World, _shapeSource, _mass );
 			_localOffset = built.LocalOffset;
 
-			PhysicsTransform pose = GodotShapeConverter.ToPhysicsTransform( GlobalTransform, _localOffset );
-			Handle = World.Core.AddDynamicBody( pose, built.Handle, _mass, (uint)Layer, (uint)Mask, OwnerId, PhysicsObjectKind.Solid, _continuousDetection );
+			PhysicsTransform pose = GodotShapeConverter
+				.ToPhysicsTransform( GlobalTransform, _localOffset );
+			Handle = World.Core.AddDynamicBody( 
+				pose: pose, 
+				shape: built.Handle, 
+				mass: _mass, 
+				layer: (uint)Layer, 
+				mask: (uint)Mask, 
+				ownerId: OwnerId, 
+				kind: PhysicsObjectKind.Solid, 
+				continuousDetection: _continuousDetection 
+			);
 		}
 
 		protected override void OnUnregister() => World.Core.RemoveBody( Handle );
@@ -69,7 +83,12 @@ namespace Physics
 		public void ApplyImpulse( Vector3 impulse, Vector3 worldPoint )
 		{
 			Vector3 offset = worldPoint - GlobalPosition;
-			World.Core.ApplyImpulse( Handle, GodotShapeConverter.ToNumerics( impulse ), GodotShapeConverter.ToNumerics( offset ) );
+
+			World.Core.ApplyImpulse( 
+				handle: Handle, 
+				impulse: GodotShapeConverter.ToNumerics( impulse ), 
+				offset: GodotShapeConverter.ToNumerics( offset ) 
+			);
 		}
 	}
 }

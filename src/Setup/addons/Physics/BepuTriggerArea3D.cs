@@ -1,6 +1,7 @@
 // Created by Anton Piruev in 2026.
 // Any direct commercial use of derivative work is strictly prohibited.
 
+using Framework.Logger;
 using Framework.Physics;
 using Godot;
 
@@ -39,7 +40,8 @@ namespace Physics
 		{
 			if ( _shapeSource == null )
 			{
-				GD.PushError( $"{Name}: BepuTriggerArea3D requires a CollisionShape3D assigned to ShapeSource." );
+				GameLogger.LogError( $"{Name}: BepuTriggerArea3D requires " +
+					$"a CollisionShape3D assigned to ShapeSource." );
 				return;
 			}
 
@@ -47,9 +49,27 @@ namespace Physics
 			PhysicsTransform pose = GodotShapeConverter.ToPhysicsTransform( GlobalTransform, built.LocalOffset );
 
 			if ( _buildAsStatic )
-				StaticHandleValue = World.Core.AddStatic( pose, built.Handle, (uint)Layer, (uint)Mask, OwnerId, PhysicsObjectKind.Trigger );
+			{
+				StaticHandleValue = World.Core.AddStatic(
+					pose: pose,
+					shape: built.Handle,
+					layer: (uint)Layer,
+					mask: (uint)Mask,
+					ownerId: OwnerId,
+					kind: PhysicsObjectKind.Trigger
+				);
+			}
 			else
-				BodyHandleValue = World.Core.AddKinematicBody( pose, built.Handle, (uint)Layer, (uint)Mask, OwnerId, PhysicsObjectKind.Trigger );
+			{
+				BodyHandleValue = World.Core.AddKinematicBody( 
+					pose: pose, 
+					shape: built.Handle, 
+					layer: (uint)Layer, 
+					mask: (uint)Mask, 
+					ownerId: OwnerId, 
+					kind: PhysicsObjectKind.Trigger 
+				);
+			}
 		}
 
 		protected override void OnUnregister()
@@ -65,10 +85,15 @@ namespace Physics
 			if ( _buildAsStatic )
 				return;
 
-			World.Core.SetBodyPose( BodyHandleValue, GodotShapeConverter.ToPhysicsTransform( GlobalTransform ) );
+			World.Core.SetBodyPose( 
+				BodyHandleValue, 
+				GodotShapeConverter.ToPhysicsTransform( GlobalTransform ) 
+			);
 		}
 
-		void IPhysicsCollisionListener.OnPhysicsBodyEntered( Node3D other ) => EmitSignal( SignalName.BodyEntered, other );
-		void IPhysicsCollisionListener.OnPhysicsBodyExited( Node3D other ) => EmitSignal( SignalName.BodyExited, other );
+		void IPhysicsCollisionListener.OnPhysicsBodyEntered( Node3D other ) =>
+			EmitSignal( SignalName.BodyEntered, other );
+		void IPhysicsCollisionListener.OnPhysicsBodyExited( Node3D other ) => 
+			EmitSignal( SignalName.BodyExited, other );
 	}
 }

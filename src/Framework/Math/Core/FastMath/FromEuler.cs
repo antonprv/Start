@@ -11,6 +11,13 @@ namespace Framework.FastMath
     /// 
     /// Uses fast sin/cos polynomials (5th order) — no Math.Sin/Math.Cos calls.
     /// All methods work on the half-angle trick: uses sin(θ/2), cos(θ/2) to build quaternion.
+    ///
+    /// Uses the general-purpose FMath.FastSin/FastCos (Trigonometry.cs), not the
+    /// [-π/2, π/2]-only "Unsafe" fast path: yaw/pitch/roll arguments here are
+    /// caller-supplied and NOT guaranteed to be pre-normalized (e.g. accumulated
+    /// rotation over many frames can drift outside [-π, π] well before anyone
+    /// wraps it). The previous version silently fed such angles into a polynomial
+    /// only valid on [0, π/2], with no diagnostic - see CHANGELOG.md.
     /// 
     /// Supported Euler angle conventions:
     /// • FromEulerZYX — Most common in game engines (Godot, UE5 default)
@@ -20,41 +27,6 @@ namespace Framework.FastMath
     /// </summary>
     public static partial class FMath
     {
-        // ================================================================
-        // Fast Sin / Cos for half-angles (reused from FastQuaternion.cs)
-        // ================================================================
-
-        /// <summary>
-        /// Fast sin approximation via 5th-order Horner scheme.
-        /// Valid for x ∈ [0, π/2].
-        /// Error: ~0.47% at x=π/2 (worst case), imperceptible for rotations.
-        /// </summary>
-        [MethodImpl( MethodImplOptions.AggressiveInlining )]
-        private static float FastSinHalf( float x )
-        {
-            // sin(x) ≈ x*(S0 + x²*(S2 + x²*S4))
-            const float S0 = 1.00000000f;
-            const float S2 = -0.16666667f;   // -1/6
-            const float S4 = 0.00833333f;    //  1/120
-            float x2 = x * x;
-            return x * ( S0 + x2 * ( S2 + x2 * S4 ) );
-        }
-
-        /// <summary>
-        /// Fast cos approximation via 4th-order Horner scheme.
-        /// Valid for x ∈ [0, π/2].
-        /// cos(x) ≈ 1 − x²/2 + x⁴/24
-        /// </summary>
-        [MethodImpl( MethodImplOptions.AggressiveInlining )]
-        private static float FastCosHalf( float x )
-        {
-            const float C0 = 1.00000000f;
-            const float C2 = -0.50000000f;   // -1/2
-            const float C4 = 0.04166667f;    //  1/24
-            float x2 = x * x;
-            return C0 + x2 * ( C2 + x2 * C4 );
-        }
-
         // ================================================================
         // FromEulerZYX — Most common convention (Yaw-Pitch-Roll)
         // ================================================================
@@ -72,6 +44,7 @@ namespace Framework.FastMath
         /// 
         /// Formula uses half-angles to build quaternion efficiently.
         /// No Math.Sin/Cos calls — uses fast polynomial approximations.
+        /// Safe for any finite input angle (see class remarks).
         /// </summary>
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
         public static Quaternion FromEulerZYX( float yaw, float pitch, float roll )
@@ -81,19 +54,11 @@ namespace Framework.FastMath
             float hp = pitch * 0.5f;
             float hr = roll * 0.5f;
 
-            // Precompute sin/cos pairs using fast approximations
-            // Clamp to [0, π/2] for approximation validity
-            float sy = FastSinHalf( hy < 0f ? -hy : hy );
-            float cy = FastCosHalf( hy < 0f ? -hy : hy );
-            float sp = FastSinHalf( hp < 0f ? -hp : hp );
-            float cp = FastCosHalf( hp < 0f ? -hp : hp );
-            float sr = FastSinHalf( hr < 0f ? -hr : hr );
-            float cr = FastCosHalf( hr < 0f ? -hr : hr );
-
-            // Restore signs (sin is odd, cos is even)
-            if ( hy < 0f ) sy = -sy;
-            if ( hp < 0f ) sp = -sp;
-            if ( hr < 0f ) sr = -sr;
+            // FastSin/FastCos handle arbitrary sign and magnitude internally
+            // (range-reduce + reflect) - no manual abs/sign-restore needed here.
+            float sy = FastSin( hy ); float cy = FastCos( hy );
+            float sp = FastSin( hp ); float cp = FastCos( hp );
+            float sr = FastSin( hr ); float cr = FastCos( hr );
 
             // ZYX order formula (derived from Rodrigues via rotation matrices)
             // q = qz(yaw) · qy(pitch) · qx(roll)
@@ -111,10 +76,7 @@ namespace Framework.FastMath
         /// </summary>
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
         public static Quaternion FromEulerZYXDegrees( float yawDeg, float pitchDeg, float rollDeg )
-        {
-            const float DEG_TO_RAD = 3.14159274f / 180f;  // Deg2Rad
-            return FromEulerZYX( yawDeg * DEG_TO_RAD, pitchDeg * DEG_TO_RAD, rollDeg * DEG_TO_RAD );
-        }
+            => FromEulerZYX( yawDeg * Deg2Rad, pitchDeg * Deg2Rad, rollDeg * Deg2Rad );
 
         // ================================================================
         // FromEulerXYZ — Alternative convention (Roll-Pitch-Yaw)
@@ -134,22 +96,13 @@ namespace Framework.FastMath
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
         public static Quaternion FromEulerXYZ( float roll, float pitch, float yaw )
         {
-            // Half angles
             float hr = roll * 0.5f;
             float hp = pitch * 0.5f;
             float hy = yaw * 0.5f;
 
-            // Sin/cos with sign handling
-            float sr = FastSinHalf( hr < 0f ? -hr : hr );
-            float cr = FastCosHalf( hr < 0f ? -hr : hr );
-            float sp = FastSinHalf( hp < 0f ? -hp : hp );
-            float cp = FastCosHalf( hp < 0f ? -hp : hp );
-            float sy = FastSinHalf( hy < 0f ? -hy : hy );
-            float cy = FastCosHalf( hy < 0f ? -hy : hy );
-
-            if ( hr < 0f ) sr = -sr;
-            if ( hp < 0f ) sp = -sp;
-            if ( hy < 0f ) sy = -sy;
+            float sr = FastSin( hr ); float cr = FastCos( hr );
+            float sp = FastSin( hp ); float cp = FastCos( hp );
+            float sy = FastSin( hy ); float cy = FastCos( hy );
 
             // XYZ order formula
             // q = qx(roll) · qy(pitch) · qz(yaw)
@@ -166,10 +119,7 @@ namespace Framework.FastMath
         /// </summary>
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
         public static Quaternion FromEulerXYZDegrees( float rollDeg, float pitchDeg, float yawDeg )
-        {
-            const float DEG_TO_RAD = 3.14159274f / 180f;
-            return FromEulerXYZ( rollDeg * DEG_TO_RAD, pitchDeg * DEG_TO_RAD, yawDeg * DEG_TO_RAD );
-        }
+            => FromEulerXYZ( rollDeg * Deg2Rad, pitchDeg * Deg2Rad, yawDeg * Deg2Rad );
 
         // ================================================================
         // FromEulerYXZ — For certain animation systems
@@ -184,22 +134,13 @@ namespace Framework.FastMath
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
         public static Quaternion FromEulerYXZ( float pitch, float roll, float yaw )
         {
-            // Half angles
             float hp = pitch * 0.5f;
             float hr = roll * 0.5f;
             float hy = yaw * 0.5f;
 
-            // Sin/cos
-            float sp = FastSinHalf( hp < 0f ? -hp : hp );
-            float cp = FastCosHalf( hp < 0f ? -hp : hp );
-            float sr = FastSinHalf( hr < 0f ? -hr : hr );
-            float cr = FastCosHalf( hr < 0f ? -hr : hr );
-            float sy = FastSinHalf( hy < 0f ? -hy : hy );
-            float cy = FastCosHalf( hy < 0f ? -hy : hy );
-
-            if ( hp < 0f ) sp = -sp;
-            if ( hr < 0f ) sr = -sr;
-            if ( hy < 0f ) sy = -sy;
+            float sp = FastSin( hp ); float cp = FastCos( hp );
+            float sr = FastSin( hr ); float cr = FastCos( hr );
+            float sy = FastSin( hy ); float cy = FastCos( hy );
 
             // YXZ order formula
             float x = sr * cp * cy - cr * sp * sy;
@@ -215,10 +156,7 @@ namespace Framework.FastMath
         /// </summary>
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
         public static Quaternion FromEulerYXZDegrees( float pitchDeg, float rollDeg, float yawDeg )
-        {
-            const float DEG_TO_RAD = 3.14159274f / 180f;
-            return FromEulerYXZ( pitchDeg * DEG_TO_RAD, rollDeg * DEG_TO_RAD, yawDeg * DEG_TO_RAD );
-        }
+            => FromEulerYXZ( pitchDeg * Deg2Rad, rollDeg * Deg2Rad, yawDeg * Deg2Rad );
 
         // ================================================================
         // FromEulerVector3 convenience overloads

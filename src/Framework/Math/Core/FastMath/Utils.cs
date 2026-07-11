@@ -8,7 +8,7 @@ namespace Framework.FastMath
     public static partial class FMath
     {
         // ================================================================
-        // OPTIMIZATION: Additional unsafe methods for reduced allocations
+        // Additional methods for reduced allocations
         // ================================================================
 
         /// <summary>
@@ -27,6 +27,12 @@ namespace Framework.FastMath
         /// Unsafe variant: compares up to N floats from two span pointers.
         /// Faster than repeated IsNearlyEqual calls with zero bounds-check overhead.
         /// Use when comparing many packed components (e.g., interleaved vertex data).
+        ///
+        /// Kept as `unsafe` deliberately (unlike the scalar bit tricks below):
+        /// walking a raw pointer across a large buffer to skip per-element bounds
+        /// checks is a genuine, measurable win here, not just style. The scalar
+        /// single-float tricks elsewhere in this file don't have that justification
+        /// and have been converted to BitConverter instead.
         /// </summary>
         public static unsafe bool IsNearlyEqualSpan( System.ReadOnlySpan<float> a, System.ReadOnlySpan<float> b,
             int count, float epsilon = KINDA_SMALL_NUMBER )
@@ -48,7 +54,7 @@ namespace Framework.FastMath
         }
 
         /// <summary>
-        /// Unsafe-optimized span Min: pointer walk avoids bounds checks.
+        /// Unsafe-optimized span Max: pointer walk avoids bounds checks.
         /// Unrolled by 4 for better branch prediction and ILP.
         /// ~30% faster than standard enumerable foreach.
         /// </summary>
@@ -151,12 +157,8 @@ namespace Framework.FastMath
         public static float FastRad2Deg( float deg ) => deg * Rad2Deg;
 
         // ================================================================
-        // The rest of the original FMath methods remain unchanged below
+        // Clamp / Lerp / SmoothStep / etc.
         // ================================================================
-
-        // ── Original constants and branchless utilities ───────────────────
-        // See Constants.cs for KINDA_SMALL_NUMBER, SMALL_NUMBER, etc.
-        // See below for original Clamp / Lerp / SmoothStep / etc.
 
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
         public static float Clamp( float value, float min, float max )
@@ -223,11 +225,21 @@ namespace Framework.FastMath
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
         public static float Abs( float value ) => value >= 0f ? value : -value;
 
+        /// <summary>
+        /// Branchless absolute value via IEEE-754 sign-bit clear.
+        ///
+        /// Was implemented with raw `unsafe` pointer casts; now uses
+        /// <see cref="System.BitConverter.SingleToInt32Bits"/> /
+        /// <see cref="System.BitConverter.Int32BitsToSingle"/> instead. Both are
+        /// recognized as JIT intrinsics (compile to the same single `movd`
+        /// reinterpret, no actual conversion), so there's no performance cost -
+        /// only the `unsafe` keyword and its associated footgun surface are gone.
+        /// </summary>
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
-        public static unsafe float AbsBranchless( float value )
+        public static float AbsBranchless( float value )
         {
-            int bits = *(int*)&value & ABS_MASK;
-            return *(float*)&bits;
+            int bits = System.BitConverter.SingleToInt32Bits( value ) & ABS_MASK;
+            return System.BitConverter.Int32BitsToSingle( bits );
         }
 
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
@@ -236,13 +248,17 @@ namespace Framework.FastMath
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
         public static int SignInt( float value ) => value >= 0f ? 1 : -1;
 
+        /// <summary>
+        /// Branchless signum: returns ±1.0 matching the sign bit of value.
+        /// See <see cref="AbsBranchless"/> remarks - BitConverter instead of unsafe.
+        /// </summary>
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
-        public static unsafe float SignBranchless( float value )
+        public static float SignBranchless( float value )
         {
             const int ONE_BITS = 0x3F800000;
-            int signBit = *(int*)&value & SIGN_BIT_MASK;
+            int signBit = System.BitConverter.SingleToInt32Bits( value ) & SIGN_BIT_MASK;
             int result = ONE_BITS | signBit;
-            return *(float*)&result;
+            return System.BitConverter.Int32BitsToSingle( result );
         }
 
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
@@ -257,7 +273,8 @@ namespace Framework.FastMath
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
         public static int Max( int a, int b ) => a > b ? a : b;
 
-        // ── Original span operations already optimized with unsafe ─────────
+        // ── Span operations - kept `unsafe` for the pointer-walk (see remarks
+        //    on IsNearlyEqualSpan above) ───────────────────────────────────
         public static unsafe float Max( System.ReadOnlySpan<float> values )
         {
             if ( values.Length == 0 )
@@ -297,11 +314,15 @@ namespace Framework.FastMath
             return diff < epsilon & diff > -epsilon;
         }
 
+        /// <summary>
+        /// See <see cref="AbsBranchless"/> remarks - BitConverter instead of unsafe.
+        /// (Previously used <c>Unsafe.As&lt;float,int&gt;</c> reinterpret casts.)
+        /// </summary>
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
         public static bool IsNearlyZero( float value, float epsilon = KINDA_SMALL_NUMBER )
         {
-            int bits = System.Runtime.CompilerServices.Unsafe.As<float, int>( ref value ) & ABS_MASK;
-            return System.Runtime.CompilerServices.Unsafe.As<int, float>( ref bits ) < epsilon;
+            int bits = System.BitConverter.SingleToInt32Bits( value ) & ABS_MASK;
+            return System.BitConverter.Int32BitsToSingle( bits ) < epsilon;
         }
 
         [MethodImpl( MethodImplOptions.AggressiveInlining )]

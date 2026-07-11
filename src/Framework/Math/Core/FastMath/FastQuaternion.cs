@@ -10,59 +10,30 @@ namespace Framework.FastMath
     /// Fast quaternion math for Godot.Quaternion.
     ///
     /// Hack pipeline used across operations:
-    ///   • FastInvSqrt (Quake III)           - normalization and 1/sin(ω)
+    ///   • FastInvSqrt (hardware RSQRT estimate + Newton-Raphson) - normalization
+    ///     and 1/sin(ω). See SquareRoot.cs for why this replaced the old Quake III
+    ///     bit-hack (faster AND more accurate on modern hardware - benchmarked).
     ///   • sinSq * invSin trick              - sqrt(x) from a single FastInvSqrt call
     ///   • FastAtan2 (polynomial)            - ω = acos(dot) without Math.Acos
-    ///   • 5th-order Horner sin poly         - blend weights without Math.Sin
+    ///   • 5th-order Horner sin poly (Trigonometry.cs) - blend weights without Math.Sin
     ///   • Nlerp shortcut (dot > 0.9995)    - zero trig ops for close rotations
     ///   • IEEE-754 bit OR for sign restore  - shortest-path flip without branch
     ///   • (1/x) ≈ FastInvSqrt² trick       - 1/|q|² for true inverse
     ///
     /// All methods use in/ref parameters to avoid struct copies.
     /// No heap allocations occur when working with Godot.Quaternion.
+    ///
+    /// Sin/cos: this file intentionally does NOT define its own FastSin/FastCos
+    /// any more (they used to be duplicated here and in FromEuler.cs, which let
+    /// the two copies drift). It now calls Trigonometry.cs's shared
+    /// FastSin/FastCos (safe, any finite input) or FastSinUnsafe/FastCosUnsafe
+    /// (fast, PRECONDITION x ∈ [-π/2, π/2]) - each call site below documents
+    /// which one it uses and why.
     /// </summary>
     public static partial class FMath
     {
         // Below this dot product slerp falls back to cheap nlerp (angle < ~1.8°)
         private const float SLERP_DOT_THRESHOLD = 0.9995f;
-
-        // ----------------------------------------------------------------
-        // Private helpers
-        // ----------------------------------------------------------------
-
-        /// <summary>
-        /// Fast sin approximation via 5th-order Horner scheme.
-        /// Valid for x ∈ [0, π/2] - exactly the range slerp blend weights occupy.
-        /// Error: ~0.47% at x=π/2 (worst case), imperceptible for game rotations.
-        /// </summary>
-        [MethodImpl( MethodImplOptions.AggressiveInlining )]
-        private static float FastSin( float x )
-        {
-            // sin(x) ≈ x*(S0 + x²*(S2 + x²*S4))  - 4 ops total (Horner)
-            const float S0 = 1.00000000f;
-            const float S2 = -0.16666667f;   // -1/6
-            const float S4 = 0.00833333f;   //  1/120
-            float x2 = x * x;
-            return x * ( S0 + x2 * ( S2 + x2 * S4 ) );
-        }
-
-        /// <summary>
-        /// Fast cos approximation via 4th-order Horner scheme.
-        /// Valid for x ∈ [0, π/2].
-        /// Derived from: cos(x) ≈ 1 − x²/2 + x⁴/24
-        ///
-        /// NEW - used by FromAxisAngle so we get both sin and cos cheaply
-        /// without a second Newton-Raphson or a trig call.
-        /// </summary>
-        [MethodImpl( MethodImplOptions.AggressiveInlining )]
-        private static float FastCos( float x )
-        {
-            const float C0 = 1.00000000f;
-            const float C2 = -0.50000000f;   // -1/2
-            const float C4 = 0.04166667f;   //  1/24
-            float x2 = x * x;
-            return C0 + x2 * ( C2 + x2 * C4 );
-        }
 
         // ----------------------------------------------------------------
         // Dot / Length
@@ -81,12 +52,16 @@ namespace Framework.FastMath
         /// <summary>
         /// Quaternion length via FastInvSqrt.
         /// |q| = sq · (1/√sq) - one Newton-Raphson, no division.
+        /// Overflow-safe: see remarks on <see cref="Normalize(ref Quaternion, float)"/>.
         /// </summary>
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
         public static float QuatLength( in Quaternion q )
         {
-            float sq = q.X * q.X + q.Y * q.Y + q.Z * q.Z + q.W * q.W;
-            return sq * FastInvSqrt( sq );
+            float scale = SafeScaleFor( AbsBranchless( q.X ), AbsBranchless( q.Y ),
+                                       AbsBranchless( q.Z ), AbsBranchless( q.W ) );
+            float sx = q.X * scale, sy = q.Y * scale, sz = q.Z * scale, sw = q.W * scale;
+            float sq = sx * sx + sy * sy + sz * sz + sw * sw;
+            return ( sq * FastInvSqrt( sq ) ) / scale;
         }
 
         // ----------------------------------------------------------------
@@ -96,24 +71,39 @@ namespace Framework.FastMath
         /// <summary>
         /// Normalizes <paramref name="q"/> in-place using FastInvSqrt.
         /// Writes back through the ref - zero copies, zero heap allocation.
+        ///
+        /// Overflow-safe: quaternions are almost always near-unit length in
+        /// practice, but Normalize/Inverse are public API that can receive
+        /// arbitrary caller input, so we apply the same largest-component
+        /// pre-scaling used for Vector2/Vector3 in SquareRoot.cs rather than
+        /// assuming the input is well-behaved.
         /// </summary>
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
-        public static void Normalize( ref Quaternion q )
+        public static void Normalize( ref Quaternion q, float epsilon = SMALL_NUMBER )
         {
-            float sq = q.X * q.X + q.Y * q.Y + q.Z * q.Z + q.W * q.W;
-            if ( sq < SMALL_NUMBER ) { q = Quaternion.Identity; return; }
-            float inv = FastInvSqrt( sq );   // ← Quake III bit-level hack
-            q.X *= inv; q.Y *= inv; q.Z *= inv; q.W *= inv;
+            float scale = SafeScaleFor( AbsBranchless( q.X ), AbsBranchless( q.Y ),
+                                       AbsBranchless( q.Z ), AbsBranchless( q.W ) );
+            float sx = q.X * scale, sy = q.Y * scale, sz = q.Z * scale, sw = q.W * scale;
+            float sq = sx * sx + sy * sy + sz * sz + sw * sw;
+            if ( sq < epsilon ) { q = Quaternion.Identity; return; }
+            float inv = FastInvSqrt( sq );
+            q.X = sx * inv; q.Y = sy * inv; q.Z = sz * inv; q.W = sw * inv;
         }
 
-        /// <summary>Returns a new normalized quaternion using FastInvSqrt.</summary>
+        /// <summary>
+        /// Returns a new normalized quaternion using FastInvSqrt.
+        /// Overflow-safe (see <see cref="Normalize(ref Quaternion, float)"/>).
+        /// </summary>
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
-        public static Quaternion Normalized( in Quaternion q )
+        public static Quaternion Normalized( in Quaternion q, float epsilon = SMALL_NUMBER )
         {
-            float sq = q.X * q.X + q.Y * q.Y + q.Z * q.Z + q.W * q.W;
-            if ( sq < SMALL_NUMBER ) return Quaternion.Identity;
+            float scale = SafeScaleFor( AbsBranchless( q.X ), AbsBranchless( q.Y ),
+                                       AbsBranchless( q.Z ), AbsBranchless( q.W ) );
+            float sx = q.X * scale, sy = q.Y * scale, sz = q.Z * scale, sw = q.W * scale;
+            float sq = sx * sx + sy * sy + sz * sz + sw * sw;
+            if ( sq < epsilon ) return Quaternion.Identity;
             float inv = FastInvSqrt( sq );
-            return new Quaternion( q.X * inv, q.Y * inv, q.Z * inv, q.W * inv );
+            return new Quaternion( sx * inv, sy * inv, sz * inv, sw * inv );
         }
 
         // ----------------------------------------------------------------
@@ -133,15 +123,21 @@ namespace Framework.FastMath
         ///
         /// Hack: 1/|q|² ≈ FastInvSqrt(|q|²)² - squaring the inv-sqrt result
         /// gives the reciprocal in two cheap ops (one Newton-Raphson + one mul)
-        /// instead of a full division.
+        /// instead of a full division. Overflow-safe pre-scaling applied first
+        /// (see <see cref="Normalize(ref Quaternion, float)"/> remarks).
         /// </summary>
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
         public static Quaternion Inverse( in Quaternion q )
         {
-            float sq = q.X * q.X + q.Y * q.Y + q.Z * q.Z + q.W * q.W;
+            float scale = SafeScaleFor( AbsBranchless( q.X ), AbsBranchless( q.Y ),
+                                       AbsBranchless( q.Z ), AbsBranchless( q.W ) );
+            float sx = q.X * scale, sy = q.Y * scale, sz = q.Z * scale, sw = q.W * scale;
+            float sq = sx * sx + sy * sy + sz * sz + sw * sw;
             if ( sq < SMALL_NUMBER ) return Quaternion.Identity;
             float invSqrt = FastInvSqrt( sq );
-            float invSq = invSqrt * invSqrt;   // ≈ 1/sq - one mul instead of divide
+            // invSq is 1/(scale²·|q|²); multiply by scale² to undo the pre-scale
+            // and recover the true 1/|q|².
+            float invSq = invSqrt * invSqrt * scale * scale;
             return new Quaternion( -q.X * invSq, -q.Y * invSq, -q.Z * invSq, q.W * invSq );
         }
 
@@ -202,7 +198,7 @@ namespace Framework.FastMath
         }
 
         // ----------------------------------------------------------------
-        // FromAxisAngle - NEW
+        // FromAxisAngle
         // ----------------------------------------------------------------
 
         /// <summary>
@@ -213,6 +209,11 @@ namespace Framework.FastMath
         /// Hack: uses FastSin + FastCos polynomials instead of MathF.Sin/Cos.
         /// Both are evaluated from the same half-angle - zero extra trig calls.
         /// The axis must be unit length; call with Normalized(axis) if unsure.
+        ///
+        /// Uses the SAFE (range-reduced) FastSin/FastCos, not the Unsafe fast
+        /// path: <paramref name="angle"/> is caller-supplied and can be any
+        /// finite value (e.g. an accumulated rotation), so half is not
+        /// guaranteed to stay inside [-π/2, π/2].
         /// </summary>
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
         public static Quaternion FromAxisAngle( in Vector3 axis, float angle )
@@ -225,7 +226,7 @@ namespace Framework.FastMath
         }
 
         // ----------------------------------------------------------------
-        // ToAxisAngle - NEW
+        // ToAxisAngle
         // ----------------------------------------------------------------
 
         /// <summary>
@@ -314,9 +315,17 @@ namespace Framework.FastMath
         ///   2. Nlerp shortcut when dot > 0.9995               - 0 trig ops
         ///   3. FastInvSqrt(sinSq) → both 1/sin(ω) AND sin(ω) - 1 Newton-Raphson
         ///   4. FastAtan2 polynomial for ω = acos(dot)         - ~12 float ops
-        ///   5. FastSin polynomial for sin((1-t)ω), sin(tω)   - ~8 float ops each
+        ///   5. FastSinUnsafe polynomial for sin((1-t)ω), sin(tω) - ~4 float ops each
         ///
         /// Total trig cost: 0 standard library calls.
+        ///
+        /// Uses FastSinUnsafe (no range reduction) rather than the safe FastSin:
+        /// dot is forced non-negative a few lines above, so sinOmega ≥ 0 too,
+        /// which means omega = FastAtan2(sinOmega, dot) is provably confined to
+        /// [0, π/2] (atan2 of two non-negative arguments never leaves the first
+        /// quadrant). Both (1-t)·omega and t·omega (t ∈ [0,1]) are therefore
+        /// always ≤ omega ≤ π/2 - inside FastSinUnsafe's valid domain by
+        /// construction, so the cheaper/faster variant is safe here.
         /// </summary>
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
         public static Quaternion FastSlerp( in Quaternion a, in Quaternion b, float t )
@@ -341,11 +350,11 @@ namespace Framework.FastMath
             }
 
             float sinSq = 1f - dot * dot;
-            float invSin = FastInvSqrt( sinSq );       // ← Quake III bit trick
+            float invSin = FastInvSqrt( sinSq );
             float sinOmega = sinSq * invSin;            // sqrt(sinSq) - no extra sqrt call
-            float omega = FastAtan2( sinOmega, dot, precise: true );
-            float scale0 = FastSin( ( 1f - t ) * omega ) * invSin;
-            float scale1 = FastSin( t * omega ) * invSin;
+            float omega = FastAtan2( sinOmega, dot, precise: true );   // ∈ [0, π/2] - see remarks above
+            float scale0 = FastSinUnsafe( ( 1f - t ) * omega ) * invSin;
+            float scale1 = FastSinUnsafe( t * omega ) * invSin;
 
             return new Quaternion( scale0 * a.X + scale1 * bx,
                                   scale0 * a.Y + scale1 * by,
@@ -395,6 +404,14 @@ namespace Framework.FastMath
         // Exp / Log
         // ----------------------------------------------------------------
 
+        /// <summary>
+        /// Uses the SAFE FastSin (range-reduced), not FastSinUnsafe:
+        /// <paramref name="q"/> here represents a pure/imaginary quaternion
+        /// (typically from Log(), but the function accepts any input), and its
+        /// vector-part magnitude - hence <c>angle</c> and <c>halfAngle</c> below -
+        /// is not provably bounded to [-π/2, π/2] the way FastSlerp's blend
+        /// weights are. See FromAxisAngle remarks for the same reasoning.
+        /// </summary>
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
         public static Quaternion Exp( in Quaternion q )
         {
@@ -423,7 +440,7 @@ namespace Framework.FastMath
         }
 
         // ----------------------------------------------------------------
-        // LookRotation - NEW
+        // LookRotation
         // ----------------------------------------------------------------
 
         /// <summary>
@@ -444,47 +461,51 @@ namespace Framework.FastMath
             Vector3 r = Normalized( Cross( up, f ) );       // right
             Vector3 u = Cross( f, r );                    // true up (already unit if f,r are)
 
-            // Build rotation matrix columns and convert to quaternion
-            // (Shepperd's method - picks the numerically stable case)
+            // Convert the (r, u, f) rotation matrix to a quaternion using
+            // Shepperd's method: pick whichever of {trace, r.X, u.Y, f.Z} is
+            // largest as the "pivot" term to take the square root of, since
+            // that keeps the sqrt argument comfortably away from zero (the
+            // usual single-formula approach divides by 4w and blows up
+            // whenever w is small, i.e. near a 180° rotation).
+            //
+            // Standard identities used below, for w as the pivot (trace > 0):
+            //   w = sqrt(trace + 1) / 2
+            //   x = (u.Z - f.Y) / (4w),  y = (f.X - r.Z) / (4w),  z = (r.Y - u.X) / (4w)
+            // and symmetric versions when x, y, or z is the pivot instead.
             float trace = r.X + u.Y + f.Z;
             if ( trace > 0f )
             {
-                float s = FastInvSqrt( trace + 1f ) * 0.5f;   // 0.5/sqrt(trace+1)
-                float inv = 4f * s;                            // actually 2/sqrt(trace+1)... see below
-                // Correct Shepperd: w=sqrt(trace+1)/2, x=(u.Z-f.Y)/(4w) etc.
-                // s = 1/(4w) → w = 0.5*sqrt(trace+1), x = (u.Z-f.Y)*s
-                // We reuse FastInvSqrt: sqrt(trace+1) = (trace+1)*FastInvSqrt(trace+1)
-                float sqrtT = ( trace + 1f ) * FastInvSqrt( trace + 1f );
+                float sqrtT = ( trace + 1f ) * FastInvSqrt( trace + 1f );   // sqrt(trace+1)
                 float w = sqrtT * 0.5f;
-                float t4w = 1f / ( 2f * sqrtT );             // 1/(4w) - one division, amortised
+                float inv4w = 1f / ( 2f * sqrtT );                          // 1/(4w)
                 return new Quaternion(
-                    ( u.Z - f.Y ) * t4w,
-                    ( f.X - r.Z ) * t4w,
-                    ( r.Y - u.X ) * t4w,
+                    ( u.Z - f.Y ) * inv4w,
+                    ( f.X - r.Z ) * inv4w,
+                    ( r.Y - u.X ) * inv4w,
                     w );
             }
             else if ( r.X > u.Y && r.X > f.Z )
             {
                 float sqrtT = FastSqrt( 1f + r.X - u.Y - f.Z );
-                float t4x = 1f / ( 2f * sqrtT );
+                float inv4x = 1f / ( 2f * sqrtT );
                 return new Quaternion( sqrtT * 0.5f,
-                    ( r.Y + u.X ) * t4x, ( f.X + r.Z ) * t4x, ( u.Z - f.Y ) * t4x );
+                    ( r.Y + u.X ) * inv4x, ( f.X + r.Z ) * inv4x, ( u.Z - f.Y ) * inv4x );
             }
             else if ( u.Y > f.Z )
             {
                 float sqrtT = FastSqrt( 1f + u.Y - r.X - f.Z );
-                float t4y = 1f / ( 2f * sqrtT );
+                float inv4y = 1f / ( 2f * sqrtT );
                 return new Quaternion(
-                    ( r.Y + u.X ) * t4y, sqrtT * 0.5f,
-                    ( u.Z + f.Y ) * t4y, ( f.X - r.Z ) * t4y );
+                    ( r.Y + u.X ) * inv4y, sqrtT * 0.5f,
+                    ( u.Z + f.Y ) * inv4y, ( f.X - r.Z ) * inv4y );
             }
             else
             {
                 float sqrtT = FastSqrt( 1f + f.Z - r.X - u.Y );
-                float t4z = 1f / ( 2f * sqrtT );
+                float inv4z = 1f / ( 2f * sqrtT );
                 return new Quaternion(
-                    ( f.X + r.Z ) * t4z, ( u.Z + f.Y ) * t4z,
-                    sqrtT * 0.5f, ( r.Y - u.X ) * t4z );
+                    ( f.X + r.Z ) * inv4z, ( u.Z + f.Y ) * inv4z,
+                    sqrtT * 0.5f, ( r.Y - u.X ) * inv4z );
             }
         }
 

@@ -296,11 +296,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\User\\Godot\\Projects\\Setup\\src\\Framework\\Logger\\Logger.csproj",
+      "projectUniqueName": "C:\\Users\\User\\GODOT\\PROJECTS\\SETUP\\SRC\\Framework\\Logger\\Logger.csproj",
       "projectName": "Logger",
-      "projectPath": "C:\\Users\\User\\Godot\\Projects\\Setup\\src\\Framework\\Logger\\Logger.csproj",
+      "projectPath": "C:\\Users\\User\\GODOT\\PROJECTS\\SETUP\\SRC\\Framework\\Logger\\Logger.csproj",
       "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\User\\Godot\\Projects\\Setup\\src\\Framework\\Logger\\obj\\",
+      "outputPath": "C:\\Users\\User\\GODOT\\PROJECTS\\SETUP\\SRC\\Framework\\Logger\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -322,8 +322,8 @@
           "framework": "net8.0",
           "targetAlias": "net8.0",
           "projectReferences": {
-            "C:\\Users\\User\\Godot\\Projects\\Setup\\src\\Framework\\DevConsole\\Console.csproj": {
-              "projectPath": "C:\\Users\\User\\Godot\\Projects\\Setup\\src\\Framework\\DevConsole\\Console.csproj"
+            "C:\\Users\\User\\GODOT\\PROJECTS\\SETUP\\SRC\\Framework\\DevConsole\\Console.csproj": {
+              "projectPath": "C:\\Users\\User\\GODOT\\PROJECTS\\SETUP\\SRC\\Framework\\DevConsole\\Console.csproj"
             }
           }
         }

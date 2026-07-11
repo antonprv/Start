@@ -1,6 +1,7 @@
 // Created by Anton Piruev in 2026.
 // Any direct commercial use of derivative work is strictly prohibited.
 
+using Framework.FastMath;
 using Framework.Physics;
 using Godot;
 using System;
@@ -58,9 +59,8 @@ namespace Physics
 
 			case CapsuleShape3D capsule:
 				{
-					// Godot's Height is the total capsule height including both hemispherical caps;
-					// Core's cylinderLength is just the straight segment between the cap centers.
-					float cylinderLength = MathF.Max( 0.01f, capsule.Height - 2f * capsule.Radius );
+					float cylinderLength = FMath.Max( 0.01f, capsule.Height - 2f * capsule.Radius );
+
 					return new BuiltShape( world.Core.AddCapsuleShape( capsule.Radius, cylinderLength ) );
 				}
 
@@ -74,7 +74,8 @@ namespace Physics
 				return FromConcavePolygonShape3D( world, concavePolygon );
 
 			default:
-				throw new NotSupportedException( $"GodotShapeConverter: unsupported Godot shape '{source.Shape?.GetType().Name}'." );
+				throw new NotSupportedException( $"GodotShapeConverter: " +
+					$"unsupported Godot shape '{source.Shape?.GetType().Name}'." );
 			}
 		}
 
@@ -109,10 +110,14 @@ namespace Physics
 			return new BuiltShape( handle );
 		}
 
-		/// <summary>Builds a static mesh directly from a MeshInstance3D's surface arrays (no baked ConcavePolygonShape3D resource needed).</summary>
+		/// <summary>Builds a static mesh directly from a MeshInstance3D's surface arrays 
+		/// (no baked ConcavePolygonShape3D resource needed).</summary>
 		public static BuiltShape FromMeshInstance3D( IPhysicsWorld world, MeshInstance3D meshInstance, Vector3 scale )
 		{
-			Mesh mesh = meshInstance.Mesh ?? throw new ArgumentException( "MeshInstance3D has no Mesh resource.", nameof( meshInstance ) );
+			Mesh mesh = meshInstance.Mesh ?? throw new ArgumentException( 
+				"MeshInstance3D has no Mesh resource.",
+				nameof( meshInstance ) 
+			);
 
 			int triangleCount = 0;
 			for ( int surface = 0; surface < mesh.GetSurfaceCount(); surface++ )

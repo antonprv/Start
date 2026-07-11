@@ -17,8 +17,8 @@
     <ProjectReference Include="..\Framework\Common\Common.csproj" />
     <ProjectReference Include="..\Framework\Components\Components.csproj" />
     <ProjectReference Include="..\Framework\DevConsole\Console.csproj" />
-    <ProjectReference Include="..\Framework\FastMath\FastMath.csproj" />
     <ProjectReference Include="..\Framework\Logger\Logger.csproj" />
+    <ProjectReference Include="..\Framework\Math\Core\FastMath\FastMath.csproj" />
     <ProjectReference Include="..\Framework\Physics\Core\Physics.Integration.csproj" />
   </ItemGroup>
 </Project>

@@ -34,6 +34,21 @@ namespace Framework.FastMath
         public const float INV_SQRT3 = 0.57735027f;   // 1/√3  - cube-diagonal unit
         public const float GOLDEN_RATIO = 1.61803399f;   // useful for jitter / halton
 
+        // ── Overflow-safety threshold for Normalize / Length / Distance ─
+        // sqrt(float.MaxValue) ≈ 1.8446e19. Any component whose magnitude
+        // is below this threshold can be squared (x*x) without producing
+        // +Infinity. We keep a comfortable margin below that ceiling so the
+        // *sum* of three squared components (x²+y²+z²) also stays finite.
+        //
+        // Below this threshold, Normalize/Length skip an extra division on
+        // the hot path (typical unit-ish game vectors). Above it, they
+        // pre-scale by the largest component first - see SquareRoot.cs.
+        // This matters in practice for large-world-space coordinates
+        // (e.g. orbital/celestial positions far from the origin), where
+        // squaring the raw components can silently overflow to Infinity
+        // and quietly turn every downstream Normalize() into NaN.
+        public const float SAFE_SQUARE_THRESHOLD = 1e17f;
+
         // ── Sign-bit mask (IEEE-754 single precision) ───────────────────
         // Casting through unsafe pointer is the canonical branchless abs/sign trick.
         // Stored as int constant so the compiler embeds it as an immediate operand.

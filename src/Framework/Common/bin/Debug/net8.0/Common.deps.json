@@ -8,10 +8,10 @@
     ".NETCoreApp,Version=v8.0": {
       "Common/1.0.0": {
         "dependencies": {
-          "FastMath": "1.0.0",
+          "FastMath.Godot": "1.0.0",
           "GodotSharp": "4.7.0",
           "Logger": "1.0.0",
-          "NSubstitute": "5.3.0"
+          "NSubstitute": "6.0.0"
         },
         "runtime": {
           "Common.dll": {}
@@ -36,14 +36,14 @@
           }
         }
       },
-      "NSubstitute/5.3.0": {
+      "NSubstitute/6.0.0": {
         "dependencies": {
           "Castle.Core": "5.1.1"
         },
         "runtime": {
-          "lib/net6.0/NSubstitute.dll": {
-            "assemblyVersion": "5.3.0.0",
-            "fileVersion": "5.3.0.0"
+          "lib/net8.0/NSubstitute.dll": {
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "6.0.0.0"
           }
         }
       },
@@ -72,7 +72,7 @@
       "Console/1.0.0": {
         "dependencies": {
           "GodotSharp": "4.7.0",
-          "NSubstitute": "5.3.0"
+          "NSubstitute": "6.0.0"
         },
         "runtime": {
           "Console.dll": {
@@ -81,12 +81,21 @@
           }
         }
       },
-      "FastMath/1.0.0": {
+      "FastMath.Core/1.0.0": {
+        "runtime": {
+          "FastMath.Core.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "FastMath.Godot/1.0.0": {
         "dependencies": {
+          "FastMath.Core": "1.0.0",
           "GodotSharp": "4.7.0"
         },
         "runtime": {
-          "FastMath.dll": {
+          "FastMath.Godot.dll": {
             "assemblyVersion": "1.0.0.0",
             "fileVersion": "1.0.0.0"
           }
@@ -96,7 +105,7 @@
         "dependencies": {
           "Console": "1.0.0",
           "GodotSharp": "4.7.0",
-          "NSubstitute": "5.3.0"
+          "NSubstitute": "6.0.0"
         },
         "runtime": {
           "Logger.dll": {
@@ -127,12 +136,12 @@
       "path": "godotsharp/4.7.0",
       "hashPath": "godotsharp.4.7.0.nupkg.sha512"
     },
-    "NSubstitute/5.3.0": {
+    "NSubstitute/6.0.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-lJ47Cps5Qzr86N99lcwd+OUvQma7+fBgr8+Mn+aOC0WrlqMNkdivaYD9IvnZ5Mqo6Ky3LS7ZI+tUq1/s9ERd0Q==",
-      "path": "nsubstitute/5.3.0",
-      "hashPath": "nsubstitute.5.3.0.nupkg.sha512"
+      "sha512": "sha512-0gvKMbiJ+/WrfbcfBfqRZZrvfLJcd3rqkqVMjjlY5dtmLRVzMY+o/K/rJUStofQ2haSr9Vd04YDfvZtVVGS3/A==",
+      "path": "nsubstitute/6.0.0",
+      "hashPath": "nsubstitute.6.0.0.nupkg.sha512"
     },
     "System.Diagnostics.EventLog/6.0.0": {
       "type": "package",
@@ -146,7 +155,12 @@
       "serviceable": false,
       "sha512": ""
     },
-    "FastMath/1.0.0": {
+    "FastMath.Core/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "FastMath.Godot/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

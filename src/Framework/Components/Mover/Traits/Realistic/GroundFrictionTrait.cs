@@ -3,8 +3,8 @@
 
 using Framework.Components.Mover.Core;
 using Framework.Components.Mover.Core.Resources;
-using Framework.FastMath;
-
+using Framework.FastMath.Godot;
+using Framework.FastMath.Godot.Extensions;
 using Godot;
 
 namespace Framework.Components.Mover.Traits.Realistic

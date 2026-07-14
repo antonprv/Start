@@ -1,6 +1,8 @@
 // Created by Anton Piruev in 2026.
 // Any direct commercial use of derivative work is strictly prohibited.
 
+using Framework.Common.Extensions;
+using Framework.Logger;
 using Framework.Physics;
 using Godot;
 
@@ -37,11 +39,12 @@ namespace Physics.Autoload
 
 		#endregion
 
-		public Framework.Physics.PhysicsWorld Core { get; private set; } = null!;
+		public PhysicsWorld Core { get; private set; } = null!;
 
 		private Vector3Packed _gravityPacked;
 		private int _nextOwnerId = 1;
-		private readonly Dictionary<int, Node3D> _ownerNodes = new Dictionary<int, Node3D>();
+		private readonly Dictionary<int, BepuBody3D> _ownerNodes =
+			new Dictionary<int, BepuBody3D>();
 
 		public override void _EnterTree() =>
 			_gravityPacked = new Vector3Packed( _gravity );
@@ -56,8 +59,8 @@ namespace Physics.Autoload
 				_frictionCoefficient,
 				_maximumRecoveryVelocity );
 
-			Core = new Framework.Physics.PhysicsWorld( settings );
-			GD.Print( $"[framework_physics] PhysicsWorld initialized (threads: {Core.ThreadCount})." );
+			Core = new PhysicsWorld( settings );
+			GameLogger.LogInfo( $"PhysicsWorld initialized (threads: {Core.ThreadCount})." );
 		}
 
 		public override void _PhysicsProcess( double delta )
@@ -69,7 +72,7 @@ namespace Physics.Autoload
 
 		public override void _ExitTree() => Core?.Dispose();
 
-		public int RegisterOwner( Node3D node )
+		public int RegisterOwner( BepuBody3D node )
 		{
 			int id = _nextOwnerId++;
 			_ownerNodes[ id ] = node;
@@ -78,12 +81,13 @@ namespace Physics.Autoload
 
 		public void UnregisterOwner( int ownerId ) => _ownerNodes.Remove( ownerId );
 
-		public Node3D? GetOwner( int ownerId ) => _ownerNodes.TryGetValue( ownerId, out Node3D? node ) ? node : null;
+		public BepuBody3D? GetOwner( int ownerId ) =>
+			_ownerNodes.TryGetValue( ownerId, out BepuBody3D? node ) ? node : null;
 
 		private void Dispatch( OverlapEvent overlapEvent )
 		{
-			Node3D? nodeA = GetOwner( overlapEvent.OwnerIdA );
-			Node3D? nodeB = GetOwner( overlapEvent.OwnerIdB );
+			BepuBody3D? nodeA = GetOwner( overlapEvent.OwnerIdA ).As<BepuBody3D>();
+			BepuBody3D? nodeB = GetOwner( overlapEvent.OwnerIdB ).As<BepuBody3D>();
 			if ( nodeA == null || nodeB == null )
 				return;
 

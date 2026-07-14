@@ -8,7 +8,8 @@ using Framework.Components.Mover.Core;
 using Framework.Components.Mover.Core.Interfaces;
 using Framework.Components.Mover.Debug;
 using Framework.Components.Mover.Presets;
-using Framework.FastMath;
+using Framework.FastMath.Godot;
+using Framework.FastMath.Godot.Extensions;
 using Framework.Logger;
 
 using Godot;

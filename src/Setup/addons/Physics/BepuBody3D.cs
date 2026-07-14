@@ -2,7 +2,6 @@
 // Any direct commercial use of derivative work is strictly prohibited.
 
 using Godot;
-using System;
 using Zenjex;
 
 namespace Physics
@@ -19,9 +18,10 @@ namespace Physics
 		[Export] public CollisionLayer Layer { get; set; } = CollisionLayer.World;
 		[Export] public CollisionLayer Mask { get; set; } = CollisionLayer.All;
 
+		public int PhysicsId { get; private set; }
+
 		private IPhysicsWorld _physicsWorld;
 		protected IPhysicsWorld World => _physicsWorld;
-		protected int OwnerId { get; private set; }
 
 		[Inject]
 		private void Construct( IPhysicsWorld world ) => _physicsWorld = world;
@@ -30,14 +30,14 @@ namespace Physics
 
 		public override void _Ready()
 		{
-			OwnerId = _physicsWorld.RegisterOwner( this );
+			PhysicsId = _physicsWorld.RegisterOwner( this );
 			OnRegister();
 		}
 
 		public override void _ExitTree()
 		{
 			OnUnregister();
-			World.UnregisterOwner( OwnerId );
+			World.UnregisterOwner( PhysicsId );
 		}
 
 		/// <summary>Register this component's body/static with <see cref="World"/>.<see cref="IPhysicsWorld.Core"/> here.</summary>

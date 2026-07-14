@@ -48,9 +48,9 @@ namespace Physics
 
 			PhysicsTransform pose = GodotShapeConverter
 				.ToPhysicsTransform( GlobalTransform, built.LocalOffset );
-			
+
 			Handle = World.Core
-				.AddStatic( pose, built.Handle, (uint)Layer, (uint)Mask, OwnerId );
+				.AddStatic( pose, built.Handle, (uint)Layer, (uint)Mask, PhysicsId );
 		}
 
 		protected override void OnUnregister() => World.Core.RemoveStatic( Handle );

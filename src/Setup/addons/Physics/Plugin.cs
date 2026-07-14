@@ -3,6 +3,7 @@
 
 #if TOOLS
 
+using Framework.Logger;
 using Godot;
 
 namespace Physics
@@ -12,12 +13,12 @@ namespace Physics
 	{
 		public override void _EnterTree()
 		{
-			GD.Print( "[Physics] Plugin loaded successfully" );
+			GameLogger.LogInfo( "[Physics] Plugin loaded successfully" );
 		}
 
 		public override void _ExitTree()
 		{
-			GD.Print( "[Physics] Plugin unloaded" );
+			GameLogger.LogInfo( "[Physics] Plugin unloaded" );
 		}
 	}
 }

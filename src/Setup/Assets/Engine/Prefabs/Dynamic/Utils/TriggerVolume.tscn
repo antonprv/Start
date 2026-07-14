@@ -1,17 +1,44 @@
 [gd_scene format=3 uid="uid://dws6xjgehhcec"]
 
-[ext_resource type="Script" uid="uid://bt3mfk3ykmg6y" path="res://Code/Common/Debug/TestTrigger.cs" id="1_fgbff"]
+[ext_resource type="Script" uid="uid://bt3mfk3ykmg6y" path="res://Engine/Common/Debug/TestTrigger.cs" id="1_fgbff"]
+[ext_resource type="Shape3D" uid="uid://djnldy5ljdr3k" path="res://Assets/Engine/Prefabs/Dynamic/Debug/TriggerVolumeShape.tres" id="2_5nm2s"]
+[ext_resource type="Script" uid="uid://b0v8hklqfqp33" path="res://Engine/Common/Debug/DestroyInGame.cs" id="2_fr5lr"]
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_qvbyi"]
-size = Vector3(5, 3, 5)
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ayqx7"]
+transparency = 4
+blend_mode = 1
+depth_draw_mode = 1
+shading_mode = 0
+specular_mode = 2
+albedo_color = Color(0.34509805, 0.40784314, 0.14901961, 0.33333334)
 
-[node name="TriggerVolume" type="Area3D" unique_id=1009987125 node_paths=PackedStringArray("_collisionShape")]
+[sub_resource type="BoxMesh" id="BoxMesh_cacrm"]
+material = SubResource("StandardMaterial3D_ayqx7")
+size = Vector3(2.6799164, 1.0551758, 1.0269775)
+
+[node name="TriggerVolume" type="Node3D" unique_id=187934479 node_paths=PackedStringArray("ShapeSource")]
 script = ExtResource("1_fgbff")
 RegisterCollisions = true
 LogCollision = true
 DrawDebugCollision = true
-_collisionShape = NodePath("CollisionShape3D")
+ShapeSource = NodePath("Area3D/CollisionShape3D")
+metadata/_custom_type_script = "uid://cpab6wjfawc0f"
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1852773718]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
-shape = SubResource("BoxShape3D_qvbyi")
+[node name="Area3D" type="Area3D" parent="." unique_id=1370293631]
+process_mode = 4
+physics_interpolation_mode = 2
+auto_translate_mode = 2
+input_ray_pickable = false
+monitoring = false
+monitorable = false
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Area3D" unique_id=703307385]
+transform = Transform3D(1.8528973, 0, 0, 0, 2.8039942, 0, 0, 0, 4.841301, -0.0038494952, -0.0004085973, 0.0014678948)
+mesh = SubResource("BoxMesh_cacrm")
+script = ExtResource("2_fr5lr")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" unique_id=1852773718]
+process_mode = 4
+physics_interpolation_mode = 2
+auto_translate_mode = 2
+shape = ExtResource("2_5nm2s")

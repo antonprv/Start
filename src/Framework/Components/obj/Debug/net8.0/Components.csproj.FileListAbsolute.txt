@@ -16,8 +16,6 @@ C:\Users\User\Godot\Projects\Setup\src\Components\obj\Debug\net8.0\ref\Component
 C:\Users\User\GODOT\PROJECTS\SETUP\SRC\Framework\Components\bin\Debug\net8.0\Components.deps.json
 C:\Users\User\GODOT\PROJECTS\SETUP\SRC\Framework\Components\bin\Debug\net8.0\Components.dll
 C:\Users\User\GODOT\PROJECTS\SETUP\SRC\Framework\Components\bin\Debug\net8.0\Components.pdb
-C:\Users\User\GODOT\PROJECTS\SETUP\SRC\Framework\Components\bin\Debug\net8.0\FastMath.dll
-C:\Users\User\GODOT\PROJECTS\SETUP\SRC\Framework\Components\bin\Debug\net8.0\FastMath.pdb
 C:\Users\User\GODOT\PROJECTS\SETUP\SRC\Framework\Components\obj\Debug\net8.0\Components.csproj.AssemblyReference.cache
 C:\Users\User\GODOT\PROJECTS\SETUP\SRC\Framework\Components\obj\Debug\net8.0\Components.GeneratedMSBuildEditorConfig.editorconfig
 C:\Users\User\GODOT\PROJECTS\SETUP\SRC\Framework\Components\obj\Debug\net8.0\Components.AssemblyInfoInputs.cache
@@ -29,3 +27,7 @@ C:\Users\User\GODOT\PROJECTS\SETUP\SRC\Framework\Components\obj\Debug\net8.0\Com
 C:\Users\User\GODOT\PROJECTS\SETUP\SRC\Framework\Components\obj\Debug\net8.0\refint\Components.dll
 C:\Users\User\GODOT\PROJECTS\SETUP\SRC\Framework\Components\obj\Debug\net8.0\Components.pdb
 C:\Users\User\GODOT\PROJECTS\SETUP\SRC\Framework\Components\obj\Debug\net8.0\ref\Components.dll
+C:\Users\User\GODOT\PROJECTS\SETUP\SRC\Framework\Components\bin\Debug\net8.0\FastMath.Core.dll
+C:\Users\User\GODOT\PROJECTS\SETUP\SRC\Framework\Components\bin\Debug\net8.0\FastMath.Godot.dll
+C:\Users\User\GODOT\PROJECTS\SETUP\SRC\Framework\Components\bin\Debug\net8.0\FastMath.Godot.pdb
+C:\Users\User\GODOT\PROJECTS\SETUP\SRC\Framework\Components\bin\Debug\net8.0\FastMath.Core.pdb

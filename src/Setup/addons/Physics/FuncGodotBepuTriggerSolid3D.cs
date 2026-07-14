@@ -27,12 +27,8 @@ namespace Physics
 	///     layer are considered valid activators (defaults to Character layer).
 	/// </summary>
 	[GlobalClass]
-	public partial class FuncGodotBepuTriggerSolid3D : StaticBody3D, IPhysicsCollisionListener
+	public partial class FuncGodotBepuTriggerSolid3D : BepuStaticBody3D, IPhysicsCollisionListener
 	{
-		[ExportGroup( "Collision" )]
-		[Export] public CollisionLayer Layer { get; set; } = Physics.CollisionLayer.Trigger;
-		[Export] public CollisionLayer Mask { get; set; } = Physics.CollisionLayer.Character;
-
 		[ExportGroup( "Behavior" )]
 		[Export] public bool Once { get; set; } = false;
 		[Export] public string Target { get; set; } = "";
@@ -51,10 +47,6 @@ namespace Physics
 		public override void _Ready()
 		{
 			_ownerId = _world.RegisterOwner( this );
-
-			// Purely a sensor - never let Godot's own physics server also collide with this.
-			CollisionLayer = 0;
-			CollisionMask = 0;
 
 			foreach ( Node child in GetChildren() )
 			{
@@ -76,17 +68,17 @@ namespace Physics
 		{
 			BuiltShape built = GodotShapeConverter
 				.FromCollisionShape3D( _world, collisionShape, mass: 0f );
-			
+
 			PhysicsTransform pose = GodotShapeConverter
 				.ToPhysicsTransform( collisionShape.GlobalTransform, built.LocalOffset );
-			
-			StaticHandle handle = _world.Core.AddStatic( 
-				pose: pose, 
-				shape: built.Handle, 
-				layer: (uint)Layer, 
-				mask: (uint)Mask, 
-			 	ownerId: _ownerId, 
-				kind: PhysicsObjectKind.Trigger 
+
+			StaticHandle handle = _world.Core.AddStatic(
+				pose: pose,
+				shape: built.Handle,
+				layer: (uint)Layer,
+				mask: (uint)Mask,
+				 ownerId: _ownerId,
+				kind: PhysicsObjectKind.Trigger
 			);
 
 			_handles.Add( handle );
@@ -102,7 +94,7 @@ namespace Physics
 				Once = onceValue.AsBool();
 		}
 
-		void IPhysicsCollisionListener.OnPhysicsBodyEntered( Node3D other )
+		void IPhysicsCollisionListener.OnPhysicsBodyEntered( BepuBody3D other )
 		{
 			if ( _spent )
 				return;
@@ -113,7 +105,7 @@ namespace Physics
 				_spent = true;
 		}
 
-		void IPhysicsCollisionListener.OnPhysicsBodyExited( Node3D other ) { }
+		void IPhysicsCollisionListener.OnPhysicsBodyExited( BepuBody3D other ) { }
 
 		private void Fire( Node3D activator )
 		{

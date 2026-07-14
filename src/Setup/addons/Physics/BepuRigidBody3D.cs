@@ -42,15 +42,15 @@ namespace Physics
 
 			PhysicsTransform pose = GodotShapeConverter
 				.ToPhysicsTransform( GlobalTransform, _localOffset );
-			Handle = World.Core.AddDynamicBody( 
-				pose: pose, 
-				shape: built.Handle, 
-				mass: _mass, 
-				layer: (uint)Layer, 
-				mask: (uint)Mask, 
-				ownerId: OwnerId, 
-				kind: PhysicsObjectKind.Solid, 
-				continuousDetection: _continuousDetection 
+			Handle = World.Core.AddDynamicBody(
+				pose: pose,
+				shape: built.Handle,
+				mass: _mass,
+				layer: (uint)Layer,
+				mask: (uint)Mask,
+				ownerId: PhysicsId,
+				kind: PhysicsObjectKind.Solid,
+				continuousDetection: _continuousDetection
 			);
 		}
 
@@ -84,10 +84,10 @@ namespace Physics
 		{
 			Vector3 offset = worldPoint - GlobalPosition;
 
-			World.Core.ApplyImpulse( 
-				handle: Handle, 
-				impulse: GodotShapeConverter.ToNumerics( impulse ), 
-				offset: GodotShapeConverter.ToNumerics( offset ) 
+			World.Core.ApplyImpulse(
+				handle: Handle,
+				impulse: GodotShapeConverter.ToNumerics( impulse ),
+				worldOffsetFromCenterOfMass: GodotShapeConverter.ToNumerics( offset )
 			);
 		}
 	}

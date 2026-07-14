@@ -4,6 +4,7 @@
 using Framework.Logger;
 using Framework.Physics;
 using Godot;
+using System.Collections.Generic;
 
 namespace Physics
 {
@@ -30,11 +31,15 @@ namespace Physics
 		[ExportGroup( "Behavior" )]
 		[Export] private bool _buildAsStatic = true;
 
+		private readonly HashSet<int> _bodiesInside = new HashSet<int>();
+
 		[Signal] public delegate void BodyEnteredEventHandler( Node3D body );
 		[Signal] public delegate void BodyExitedEventHandler( Node3D body );
 
 		public StaticHandle StaticHandleValue { get; private set; }
 		public BodyHandle BodyHandleValue { get; private set; }
+
+		public CollisionShape3D ShapeSource { get; private set; }
 
 		protected override void OnRegister()
 		{
@@ -44,6 +49,8 @@ namespace Physics
 					$"a CollisionShape3D assigned to ShapeSource." );
 				return;
 			}
+
+			ShapeSource = _shapeSource;
 
 			BuiltShape built = GodotShapeConverter.FromCollisionShape3D( World, _shapeSource, mass: 0f );
 			PhysicsTransform pose = GodotShapeConverter.ToPhysicsTransform( GlobalTransform, built.LocalOffset );
@@ -55,19 +62,19 @@ namespace Physics
 					shape: built.Handle,
 					layer: (uint)Layer,
 					mask: (uint)Mask,
-					ownerId: OwnerId,
+					ownerId: PhysicsId,
 					kind: PhysicsObjectKind.Trigger
 				);
 			}
 			else
 			{
-				BodyHandleValue = World.Core.AddKinematicBody( 
-					pose: pose, 
-					shape: built.Handle, 
-					layer: (uint)Layer, 
-					mask: (uint)Mask, 
-					ownerId: OwnerId, 
-					kind: PhysicsObjectKind.Trigger 
+				BodyHandleValue = World.Core.AddKinematicBody(
+					pose: pose,
+					shape: built.Handle,
+					layer: (uint)Layer,
+					mask: (uint)Mask,
+					physicsId: PhysicsId,
+					kind: PhysicsObjectKind.Trigger
 				);
 			}
 		}
@@ -85,15 +92,30 @@ namespace Physics
 			if ( _buildAsStatic )
 				return;
 
-			World.Core.SetBodyPose( 
-				BodyHandleValue, 
-				GodotShapeConverter.ToPhysicsTransform( GlobalTransform ) 
+			World.Core.SetBodyPose(
+				BodyHandleValue,
+				GodotShapeConverter.ToPhysicsTransform( GlobalTransform )
 			);
 		}
 
-		void IPhysicsCollisionListener.OnPhysicsBodyEntered( Node3D other ) =>
+		public virtual void OnPhysicsBodyEntered( BepuBody3D other )
+		{
+			int id = other.PhysicsId;
+			if ( _bodiesInside.Contains( id ) )
+				return;
+
+			_bodiesInside.Add( id );
 			EmitSignal( SignalName.BodyEntered, other );
-		void IPhysicsCollisionListener.OnPhysicsBodyExited( Node3D other ) => 
+		}
+
+		public virtual void OnPhysicsBodyExited( BepuBody3D other )
+		{
+			int id = other.PhysicsId;
+			if ( !_bodiesInside.Contains( id ) )
+				return;
+
+			_bodiesInside.Remove( id );
 			EmitSignal( SignalName.BodyExited, other );
+		}
 	}
 }

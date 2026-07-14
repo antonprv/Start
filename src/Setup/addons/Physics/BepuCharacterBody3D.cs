@@ -1,11 +1,12 @@
 // Created by Anton Piruev in 2026.
 // Any direct commercial use of derivative work is strictly prohibited.
 
-using Framework.FastMath;
+using Framework.FastMath.Godot;
 using Framework.Physics;
 using Godot;
+using Physics.Contracts;
 using Physics.Types;
-
+using SVec3 = System.Numerics.Vector3;
 namespace Physics
 {
 	/// <summary>
@@ -24,7 +25,7 @@ namespace Physics
 	public partial class BepuCharacterBody3D : BepuBody3D
 	{
 		[ExportGroup( "Shape" )]
-		[Export] private CapsuleShape3D _capsule;
+		[Export] private CapsuleBearer _capsuleBearer;
 
 		[ExportGroup( "Sliding" )]
 		[Export] private int _maxSlideIterations = 4;
@@ -39,6 +40,7 @@ namespace Physics
 
 		public Vector3Packed Gravity { get; private set; }
 
+		private CapsuleShape3D _capsule;
 		private float _radius;
 		private float _height;
 		private float _halfHeight;
@@ -50,13 +52,29 @@ namespace Physics
 
 			_cylinderLength = FMath.Max( 0.01f, _height - 2f * _radius );
 
-			ShapeHandle shapeHandle = World.Core.AddCapsuleShape( _capsule.Radius, _cylinderLength );
-			PhysicsTransform pose = PhysicsTransform.FromPosition( GodotShapeConverter.ToNumerics( GlobalPosition ) );
-			Handle = World.Core.AddKinematicBody( pose, shapeHandle, (uint)Layer, (uint)Mask, OwnerId, PhysicsObjectKind.Character );
+			ShapeHandle shapeHandle = World.Core
+				.AddCapsuleShape(
+				_capsule.Radius,
+				_cylinderLength
+			);
+
+			PhysicsTransform pose = PhysicsTransform
+				.FromPosition( GodotShapeConverter.ToNumerics( GlobalPosition ) );
+
+			Handle = World.Core.AddKinematicBody(
+				pose,
+				shapeHandle,
+				(uint)Layer,
+				(uint)Mask,
+				PhysicsId,
+				PhysicsObjectKind.Character
+			);
 		}
 
 		private void InitializeFields()
 		{
+			_capsule = _capsuleBearer.Capsule;
+
 			_radius = _capsule.Radius;
 			_height = _capsule.Height;
 			_halfHeight = _capsule.MidHeight;
@@ -73,11 +91,11 @@ namespace Physics
 		/// </summary>
 		public void MoveAndSlide( double delta )
 		{
-			CharacterMoveOptions options = new CharacterMoveOptions( 
-				_maxSlideIterations, 
-				_skinWidth, 
-				_maxFloorAngleDegrees, 
-				_floorProbeDistance 
+			CharacterMoveOptions options = new CharacterMoveOptions(
+				_maxSlideIterations,
+				_skinWidth,
+				_maxFloorAngleDegrees,
+				_floorProbeDistance
 			);
 
 			CharacterMoveResult result = World.Core.MoveCharacter(
@@ -93,13 +111,20 @@ namespace Physics
 
 			IsOnFloor.Value = result.IsOnFloor;
 			FloorNormal = GodotShapeConverter.ToGodot( result.FloorNormal );
+			SVec3 actualDisplacement = result.Position - GodotShapeConverter.ToNumerics( GlobalPosition );
 			GlobalPosition = GodotShapeConverter.ToGodot( result.Position );
 
-			World.Core.SetBodyPose( 
-				Handle, 
+			World.Core.SetBodyPose(
+				Handle,
 				PhysicsTransform
-					.FromPosition( GodotShapeConverter.ToNumerics( GlobalPosition ) ) 
+					.FromPosition( GodotShapeConverter.ToNumerics( GlobalPosition ) )
 			);
+
+			World.Core.SetLinearVelocity(
+				Handle,
+				delta > 0 ? GodotShapeConverter.ToNumerics( Velocity.Value ) : SVec3.Zero
+			);
+
 		}
 
 		/// <summary>Teleport without sliding (e.g. respawn, cutscenes). Keeps the Core body in sync.</summary>
@@ -107,10 +132,10 @@ namespace Physics
 		{
 			GlobalPosition = worldPosition;
 
-			World.Core.SetBodyPose( 
-				Handle, 
+			World.Core.SetBodyPose(
+				Handle,
 				PhysicsTransform
-					.FromPosition( GodotShapeConverter.ToNumerics( worldPosition ) ) 
+					.FromPosition( GodotShapeConverter.ToNumerics( worldPosition ) )
 			);
 		}
 	}

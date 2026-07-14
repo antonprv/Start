@@ -1,7 +1,7 @@
 // Created by Anton Piruev in 2026.
 // Any direct commercial use of derivative work is strictly prohibited.
 
-using Framework.FastMath;
+using Framework.FastMath.Godot;
 using Framework.Physics;
 using Godot;
 using System;
@@ -75,7 +75,7 @@ namespace Physics
 
 			default:
 				throw new NotSupportedException( $"GodotShapeConverter: " +
-					$"unsupported Godot shape '{source.Shape?.GetType().Name}'." );
+					$"unsupported Godot shape '{source?.Shape.GetType().Name}'." );
 			}
 		}
 
@@ -114,9 +114,9 @@ namespace Physics
 		/// (no baked ConcavePolygonShape3D resource needed).</summary>
 		public static BuiltShape FromMeshInstance3D( IPhysicsWorld world, MeshInstance3D meshInstance, Vector3 scale )
 		{
-			Mesh mesh = meshInstance.Mesh ?? throw new ArgumentException( 
+			Mesh mesh = meshInstance.Mesh ?? throw new ArgumentException(
 				"MeshInstance3D has no Mesh resource.",
-				nameof( meshInstance ) 
+				nameof( meshInstance )
 			);
 
 			int triangleCount = 0;

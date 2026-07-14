@@ -4,7 +4,6 @@
 using Framework.Physics;
 using Godot;
 using System.Collections.Generic;
-using Zenjex;
 
 namespace Physics
 {
@@ -32,30 +31,14 @@ namespace Physics
 	/// just don't collide with anything through Godot's own server.
 	/// </summary>
 	[GlobalClass]
-	public partial class FuncGodotBepuStaticBody3D : StaticBody3D
+	public partial class FuncGodotBepuStaticBody3D : BepuStaticBody3D
 	{
-		[ExportGroup( "Collision" )]
-		[Export] public Physics.CollisionLayer Layer { get; set; } = Physics.CollisionLayer.World;
-		[Export] public Physics.CollisionLayer Mask { get; set; } = Physics.CollisionLayer.All;
-		[Export] public bool DisableNativePhysics { get; set; } = true;
-
-		[Inject]
-		private IPhysicsWorld _world = null!;
-
 		private int _ownerId;
 		private readonly List<StaticHandle> _handles = new List<StaticHandle>();
 
-		public override void _EnterTree() => DiContainer.Instance.Inject( this );
-
 		public override void _Ready()
 		{
-			_ownerId = _world.RegisterOwner( this );
-
-			if ( DisableNativePhysics )
-			{
-				CollisionLayer = 0;
-				CollisionMask = 0;
-			}
+			_ownerId = World.RegisterOwner( this );
 
 			// func_godot bakes one CollisionShape3D per brush (Convex mode) or a single combined
 			// one (Concave mode) as direct children.
@@ -69,29 +52,29 @@ namespace Physics
 		public override void _ExitTree()
 		{
 			foreach ( StaticHandle handle in _handles )
-				_world.Core.RemoveStatic( handle );
+				World.Core.RemoveStatic( handle );
 
 			_handles.Clear();
-			_world.UnregisterOwner( _ownerId );
+			World.UnregisterOwner( _ownerId );
 		}
 
 		private void RegisterShape( CollisionShape3D collisionShape )
 		{
 			BuiltShape built = GodotShapeConverter
-				.FromCollisionShape3D( _world, collisionShape, mass: 0f );
-			
+				.FromCollisionShape3D( World, collisionShape, mass: 0f );
+
 			PhysicsTransform pose = GodotShapeConverter
 				.ToPhysicsTransform( collisionShape.GlobalTransform, built.LocalOffset );
-			
-			StaticHandle handle = _world.Core.AddStatic(
-				pose: pose, 
-				shape: built.Handle, 
-				layer: (uint)Layer, 
-				mask: (uint)Mask, 
-				ownerId: _ownerId, 
-				kind: PhysicsObjectKind.Solid 
+
+			StaticHandle handle = World.Core.AddStatic(
+				pose: pose,
+				shape: built.Handle,
+				layer: (uint)Layer,
+				mask: (uint)Mask,
+				ownerId: _ownerId,
+				kind: PhysicsObjectKind.Solid
 			);
-			
+
 			_handles.Add( handle );
 		}
 	}

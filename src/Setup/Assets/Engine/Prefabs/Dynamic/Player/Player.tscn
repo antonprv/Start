@@ -5,6 +5,7 @@
 [ext_resource type="Shape3D" uid="uid://dnrdbwc8amdhu" path="res://Assets/Engine/Prefabs/Dynamic/Player/Mover/PlayerCollisionCapsule.tres" id="2_vg0dt"]
 [ext_resource type="Material" uid="uid://cdkqx8gy7j5c2" path="res://Assets/Engine/Materials/UntexturedMaterial.tres" id="3_aibj7"]
 [ext_resource type="Script" uid="uid://ee5jieaxccnn" path="res://Engine/Components/Camera/CameraComponent.cs" id="3_pqobs"]
+[ext_resource type="Script" uid="uid://c0o077xqaqee" path="res://addons/Physics/Contracts/CapsuleBearer.cs" id="4_vg0dt"]
 [ext_resource type="Script" uid="uid://b85m20g1vh4hr" path="res://addons/Physics/BepuSpringArm3D.cs" id="7_xx87b"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_s3j7c"]
@@ -13,13 +14,28 @@ material = ExtResource("3_aibj7")
 [sub_resource type="BoxMesh" id="BoxMesh_s3j7c"]
 material = ExtResource("3_aibj7")
 
-[node name="Player" type="Node3D" unique_id=472418512 node_paths=PackedStringArray("_playerMesh", "_cameraComponent")]
+[node name="Player" type="Node3D" unique_id=472418512 node_paths=PackedStringArray("_playerMesh", "_cameraComponent", "_capsuleBearer")]
 script = ExtResource("1_tcdex")
 Profile = ExtResource("2_rw73q")
 _playerMesh = NodePath("PlayerMesh")
 _cameraComponent = NodePath("CameraRoot")
-_capsule = ExtResource("2_vg0dt")
-Layer = 3
+_capsuleBearer = NodePath("Area3D/CollisionShape3D")
+Layer = 2
+
+[node name="Area3D" type="Area3D" parent="." unique_id=1901426734]
+process_mode = 4
+physics_interpolation_mode = 2
+auto_translate_mode = 2
+input_ray_pickable = false
+monitoring = false
+monitorable = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" unique_id=493240214]
+process_mode = 4
+physics_interpolation_mode = 2
+auto_translate_mode = 2
+shape = ExtResource("2_vg0dt")
+script = ExtResource("4_vg0dt")
 
 [node name="PlayerMesh" type="MeshInstance3D" parent="." unique_id=521465016]
 mesh = SubResource("CapsuleMesh_s3j7c")

@@ -2,7 +2,7 @@
 // Any direct commercial use of derivative work is strictly prohibited.
 
 using Framework.Components.Mover.Core;
-using Framework.FastMath;
+using Framework.FastMath.Godot.Extensions;
 using Godot;
 
 namespace Framework.Components.Mover.Debug

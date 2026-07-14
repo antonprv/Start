@@ -44,14 +44,14 @@ namespace Physics
 			ShapeHandle shapeHandle = World.Core.AddSphereShape( _radius );
 			PhysicsTransform pose = PhysicsTransform
 				.FromPosition( GodotShapeConverter.ToNumerics( GlobalPosition ) );
-			
-			Handle = World.Core.AddKinematicBody( 
-				pose: pose, 
-				shape: shapeHandle, 
-				layer: (uint)Layer, 
-				mask: (uint)Mask, 
-				ownerId: OwnerId, 
-				kind: PhysicsObjectKind.Projectile 
+
+			Handle = World.Core.AddKinematicBody(
+				pose: pose,
+				shape: shapeHandle,
+				layer: (uint)Layer,
+				mask: (uint)Mask,
+				physicsId: PhysicsId,
+				kind: PhysicsObjectKind.Projectile
 			);
 		}
 
@@ -79,11 +79,11 @@ namespace Physics
 			if ( result.Hit )
 			{
 				_resolved = true;
-				Node3D? hitOwner = World.GetOwner( result.HitOwnerId );
-				HitListener?.OnProjectileHit( 
-					GodotShapeConverter.ToGodot( result.Point ), 
-					GodotShapeConverter.ToGodot( result.Normal ), 
-					hitOwner 
+				BepuBody3D? hitOwner = World.GetOwner( result.HitOwnerId );
+				HitListener?.OnProjectileHit(
+					GodotShapeConverter.ToGodot( result.Point ),
+					GodotShapeConverter.ToGodot( result.Normal ),
+					hitOwner
 				);
 
 				if ( _destroyOnHit )
@@ -91,8 +91,8 @@ namespace Physics
 				return;
 			}
 
-			World.Core.SetBodyPose( 
-				Handle, 
+			World.Core.SetBodyPose(
+				Handle,
 				PhysicsTransform
 					.FromPosition( GodotShapeConverter.ToNumerics( GlobalPosition ) )
 			);

@@ -71,7 +71,16 @@ namespace Physics
 		{
 			ShapeHandle shapeHandle = World.Core.AddBoxShape( GodotShapeConverter.ToNumerics( Size ) );
 			PhysicsTransform pose = GodotShapeConverter.ToPhysicsTransform( GlobalTransform );
-			Handle = World.Core.AddDynamicBody( pose, shapeHandle, Mass, (uint)Layer, (uint)Mask, OwnerId, PhysicsObjectKind.Solid, ContinuousDetection );
+			Handle = World.Core.AddDynamicBody(
+				pose,
+				shapeHandle,
+				Mass,
+				(uint)Layer,
+				(uint)Mask,
+				PhysicsId,
+				PhysicsObjectKind.Solid,
+				ContinuousDetection
+			);
 		}
 
 		protected override void OnUnregister() => World.Core.RemoveBody( Handle );

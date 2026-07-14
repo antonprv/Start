@@ -1,6 +1,7 @@
 // Created by Anton Piruev in 2026.
 // Any direct commercial use of derivative work is strictly prohibited.
 
+using Framework.FastMath.Godot;
 using Framework.Physics;
 using Godot;
 using Zenjex;
@@ -81,7 +82,7 @@ namespace Physics
 			);
 
 			IsColliding = result.Hit;
-			CurrentLength = result.Hit ? Mathf.Max( 0f, result.Distance - Margin ) : SpringLength;
+			CurrentLength = result.Hit ? FMath.Max( 0f, result.Distance - Margin ) : SpringLength;
 
 			Vector3 localTip = new Vector3( 0f, 0f, CurrentLength );
 

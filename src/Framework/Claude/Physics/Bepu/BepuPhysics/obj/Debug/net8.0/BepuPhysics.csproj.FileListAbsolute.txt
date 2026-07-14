@@ -1,0 +1,16 @@
+C:\Users\User\GODOT\PROJECTS\SETUP\SRC\Framework\Physics\Bepu\BepuPhysics\bin\Debug\net8.0\BepuPhysics.deps.json
+C:\Users\User\GODOT\PROJECTS\SETUP\SRC\Framework\Physics\Bepu\BepuPhysics\bin\Debug\net8.0\BepuPhysics.dll
+C:\Users\User\GODOT\PROJECTS\SETUP\SRC\Framework\Physics\Bepu\BepuPhysics\bin\Debug\net8.0\BepuPhysics.pdb
+C:\Users\User\GODOT\PROJECTS\SETUP\SRC\Framework\Physics\Bepu\BepuPhysics\bin\Debug\net8.0\BepuUtilities.dll
+C:\Users\User\GODOT\PROJECTS\SETUP\SRC\Framework\Physics\Bepu\BepuPhysics\bin\Debug\net8.0\BepuUtilities.pdb
+C:\Users\User\GODOT\PROJECTS\SETUP\SRC\Framework\Physics\Bepu\BepuPhysics\obj\Debug\net8.0\BepuPhysics.csproj.AssemblyReference.cache
+C:\Users\User\GODOT\PROJECTS\SETUP\SRC\Framework\Physics\Bepu\BepuPhysics\obj\Debug\net8.0\BepuPhysics.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\User\GODOT\PROJECTS\SETUP\SRC\Framework\Physics\Bepu\BepuPhysics\obj\Debug\net8.0\BepuPhysics.AssemblyInfoInputs.cache
+C:\Users\User\GODOT\PROJECTS\SETUP\SRC\Framework\Physics\Bepu\BepuPhysics\obj\Debug\net8.0\BepuPhysics.AssemblyInfo.cs
+C:\Users\User\GODOT\PROJECTS\SETUP\SRC\Framework\Physics\Bepu\BepuPhysics\obj\Debug\net8.0\BepuPhysics.csproj.CoreCompileInputs.cache
+C:\Users\User\GODOT\PROJECTS\SETUP\SRC\Framework\Physics\Bepu\BepuPhysics\obj\Debug\net8.0\BepuPhysics.sourcelink.json
+C:\Users\User\GODOT\PROJECTS\SETUP\SRC\Framework\Physics\Bepu\BepuPhysics\obj\Debug\net8.0\BepuPhys.33DD29A9.Up2Date
+C:\Users\User\GODOT\PROJECTS\SETUP\SRC\Framework\Physics\Bepu\BepuPhysics\obj\Debug\net8.0\BepuPhysics.dll
+C:\Users\User\GODOT\PROJECTS\SETUP\SRC\Framework\Physics\Bepu\BepuPhysics\obj\Debug\net8.0\refint\BepuPhysics.dll
+C:\Users\User\GODOT\PROJECTS\SETUP\SRC\Framework\Physics\Bepu\BepuPhysics\obj\Debug\net8.0\BepuPhysics.pdb
+C:\Users\User\GODOT\PROJECTS\SETUP\SRC\Framework\Physics\Bepu\BepuPhysics\obj\Debug\net8.0\ref\BepuPhysics.dll

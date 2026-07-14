@@ -1,2 +1,0 @@
-[23:15:43] [Info] [CameraComponent.SetNoclip:61] Got noclip: ON
-[23:15:43] [Info] [MoverComponent.SetNoclip:91] Got noclip: ON

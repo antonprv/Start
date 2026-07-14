@@ -4,11 +4,11 @@
 [ext_resource type="Script" uid="uid://cjxvgfxa5wygf" path="res://addons/Physics/PhysicsWorldNode.cs" id="1_ta0pl"]
 [ext_resource type="PackedScene" uid="uid://crvrwpolm8bgu" path="res://Assets/Engine/Prefabs/Dynamic/Debug/DebugUI.tscn" id="2_056jx"]
 [ext_resource type="PackedScene" uid="uid://bkj0tnt11xvlx" path="res://Assets/Engine/Prefabs/Dynamic/Player/Player.tscn" id="2_57bvl"]
-[ext_resource type="PackedScene" uid="uid://dws6xjgehhcec" path="res://Assets/Engine/Prefabs/Dynamic/Utils/TriggerVolume.tscn" id="4_4esb6"]
 [ext_resource type="PackedScene" uid="uid://g877e3ebix4n" path="res://Assets/Engine/Prefabs/Static/Sky.tscn" id="4_4wal6"]
 [ext_resource type="Texture2D" uid="uid://cjwca3iwwt2ki" path="res://Assets/Engine/Raw/PrefabModels/Sky/Tex_Noise.png" id="5_7j0ct"]
 [ext_resource type="Script" uid="uid://cwu5cf7a0awcd" path="res://addons/func_godot/src/map/func_godot_map.gd" id="5_jg8jc"]
 [ext_resource type="Resource" uid="uid://hb8s5tfwa4qj" path="res://Broom/map.tres" id="6_603ce"]
+[ext_resource type="PackedScene" uid="uid://dws6xjgehhcec" path="res://Assets/Engine/Prefabs/Dynamic/Utils/TriggerVolume.tscn" id="7_ta0pl"]
 [ext_resource type="Material" uid="uid://dlrs8rqti8t68" path="res://Assets/Engine/Materials/torment/str_metalpan6.tres" id="8_hhw4p"]
 [ext_resource type="Material" uid="uid://djjvoffr1w4sg" path="res://Assets/Engine/Materials/delven/dlv_wood7b.tres" id="8_m7ddt"]
 [ext_resource type="Material" uid="uid://dko0mkgy6gmtj" path="res://Assets/Engine/Materials/delven/dlv_woodstp1b.tres" id="9_megay"]
@@ -292,8 +292,9 @@ transform = Transform3D(-0.27433497, 0.8395454, -0.4689389, -0.25265524, 0.40758
 
 [node name="Debug" type="Node" parent="Godot" unique_id=684905218]
 
-[node name="TriggerVolume" parent="Godot/Debug" unique_id=1009987125 instance=ExtResource("4_4esb6")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.1713433, 1.0180848, 9.681349)
+[node name="TriggerVolume" parent="Godot/Debug" unique_id=187934479 node_paths=PackedStringArray("Target") instance=ExtResource("7_ta0pl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.0754902, 1.5535457, 8.4092245)
+Target = NodePath("../../Player")
 
 [node name="Broom" type="Node" parent="." unique_id=1692037393]
 

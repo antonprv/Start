@@ -43,18 +43,18 @@
           "build/Microsoft.NET.ILLink.Tasks.props": {}
         }
       },
-      "NSubstitute/5.3.0": {
+      "NSubstitute/6.0.0": {
         "type": "package",
         "dependencies": {
           "Castle.Core": "5.1.1"
         },
         "compile": {
-          "lib/net6.0/NSubstitute.dll": {
+          "lib/net8.0/NSubstitute.dll": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/net6.0/NSubstitute.dll": {
+          "lib/net8.0/NSubstitute.dll": {
             "related": ".xml"
           }
         }
@@ -88,18 +88,28 @@
           }
         }
       },
-      "FastMath/1.0.0": {
+      "FastMath.Core/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "compile": {
+          "bin/placeholder/FastMath.Core.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/FastMath.Core.dll": {}
+        }
+      },
+      "FastMath.Godot/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v8.0",
         "dependencies": {
-          "Godot.SourceGenerators": "4.7.0",
+          "FastMath.Core": "1.0.0",
           "GodotSharp": "4.7.0"
         },
         "compile": {
-          "bin/placeholder/FastMath.dll": {}
+          "bin/placeholder/FastMath.Godot.dll": {}
         },
         "runtime": {
-          "bin/placeholder/FastMath.dll": {}
+          "bin/placeholder/FastMath.Godot.dll": {}
         }
       }
     }
@@ -206,21 +216,20 @@
         "useSharedDesignerContext.txt"
       ]
     },
-    "NSubstitute/5.3.0": {
-      "sha512": "lJ47Cps5Qzr86N99lcwd+OUvQma7+fBgr8+Mn+aOC0WrlqMNkdivaYD9IvnZ5Mqo6Ky3LS7ZI+tUq1/s9ERd0Q==",
+    "NSubstitute/6.0.0": {
+      "sha512": "0gvKMbiJ+/WrfbcfBfqRZZrvfLJcd3rqkqVMjjlY5dtmLRVzMY+o/K/rJUStofQ2haSr9Vd04YDfvZtVVGS3/A==",
       "type": "package",
-      "path": "nsubstitute/5.3.0",
+      "path": "nsubstitute/6.0.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
+        "README.md",
         "icon.png",
-        "lib/net462/NSubstitute.dll",
-        "lib/net462/NSubstitute.xml",
-        "lib/net6.0/NSubstitute.dll",
-        "lib/net6.0/NSubstitute.xml",
+        "lib/net8.0/NSubstitute.dll",
+        "lib/net8.0/NSubstitute.xml",
         "lib/netstandard2.0/NSubstitute.dll",
         "lib/netstandard2.0/NSubstitute.xml",
-        "nsubstitute.5.3.0.nupkg.sha512",
+        "nsubstitute.6.0.0.nupkg.sha512",
         "nsubstitute.nuspec"
       ]
     },
@@ -272,19 +281,24 @@
         "useSharedDesignerContext.txt"
       ]
     },
-    "FastMath/1.0.0": {
+    "FastMath.Core/1.0.0": {
       "type": "project",
-      "path": "../Math/Core/FastMath/FastMath.csproj",
-      "msbuildProject": "../Math/Core/FastMath/FastMath.csproj"
+      "path": "../Math/Core/FastMath.Core.csproj",
+      "msbuildProject": "../Math/Core/FastMath.Core.csproj"
+    },
+    "FastMath.Godot/1.0.0": {
+      "type": "project",
+      "path": "../Math/Godot/FastMath.Godot.csproj",
+      "msbuildProject": "../Math/Godot/FastMath.Godot.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net8.0": [
-      "FastMath >= 1.0.0",
+      "FastMath.Godot >= 1.0.0",
       "Godot.SourceGenerators >= 4.7.0",
       "GodotSharp >= 4.7.0",
       "Microsoft.NET.ILLink.Tasks >= 8.0.28",
-      "NSubstitute >= 5.3.0",
+      "NSubstitute >= 6.0.0",
       "NSubstitute.Analyzers.CSharp >= 1.0.17"
     ]
   },
@@ -321,8 +335,8 @@
           "framework": "net8.0",
           "targetAlias": "net8.0",
           "projectReferences": {
-            "C:\\Users\\User\\GODOT\\PROJECTS\\SETUP\\SRC\\Framework\\Math\\Core\\FastMath\\FastMath.csproj": {
-              "projectPath": "C:\\Users\\User\\GODOT\\PROJECTS\\SETUP\\SRC\\Framework\\Math\\Core\\FastMath\\FastMath.csproj"
+            "C:\\Users\\User\\GODOT\\PROJECTS\\SETUP\\SRC\\Framework\\Math\\Godot\\FastMath.Godot.csproj": {
+              "projectPath": "C:\\Users\\User\\GODOT\\PROJECTS\\SETUP\\SRC\\Framework\\Math\\Godot\\FastMath.Godot.csproj"
             }
           }
         }
@@ -360,7 +374,7 @@
           },
           "NSubstitute": {
             "target": "Package",
-            "version": "[5.3.0, )"
+            "version": "[6.0.0, )"
           },
           "NSubstitute.Analyzers.CSharp": {
             "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",

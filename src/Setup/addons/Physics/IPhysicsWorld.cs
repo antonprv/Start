@@ -12,14 +12,14 @@ namespace Physics
 	/// </summary>
 	public interface IPhysicsCollisionListener
 	{
-		void OnPhysicsBodyEntered( Node3D other );
-		void OnPhysicsBodyExited( Node3D other );
+		void OnPhysicsBodyEntered( BepuBody3D other );
+		void OnPhysicsBodyExited( BepuBody3D other );
 	}
 
 	/// <summary>Implemented by projectile owners that want a single unambiguous "first hit" callback.</summary>
 	public interface IProjectileHitListener
 	{
-		void OnProjectileHit( Vector3 point, Vector3 normal, Node3D? hitOwner );
+		void OnProjectileHit( Vector3 point, Vector3 normal, BepuBody3D? hitOwner );
 	}
 
 	/// <summary>
@@ -35,8 +35,8 @@ namespace Physics
 		Framework.Physics.PhysicsWorld Core { get; }
 		Vector3Packed Gravity { get; }
 
-		int RegisterOwner( Node3D node );
+		int RegisterOwner( BepuBody3D node );
 		void UnregisterOwner( int ownerId );
-		Node3D? GetOwner( int ownerId );
+		BepuBody3D? GetOwner( int ownerId );
 	}
 }

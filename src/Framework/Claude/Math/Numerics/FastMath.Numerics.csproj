@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFrameworks>net8.0;net462</TargetFrameworks>
+		<ImplicitUsings>disable</ImplicitUsings>
+		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+		<EnableDynamicLoading>false</EnableDynamicLoading>
+		<PublishReadyToRun>true</PublishReadyToRun>
+		<PublishReadyToRunShowWarnings>true</PublishReadyToRunShowWarnings>
+		<RootNamespace>Framework.FastMath.Numerics</RootNamespace>
+		<AssemblyName>FastMath.Numerics</AssemblyName>
+		<Nullable>annotations</Nullable>
+	</PropertyGroup>
+
+	<ItemGroup Condition="'$(TargetFramework)' == 'net462'">
+		<PackageReference Include="System.Memory" Version="4.6.3" />
+		<PackageReference Include="System.Runtime" Version="4.3.1" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Core\FastMath.Core.csproj" />
+	</ItemGroup>
+
+</Project>

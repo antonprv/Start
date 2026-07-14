@@ -2,7 +2,8 @@
 // Any direct commercial use of derivative work is strictly prohibited.
 
 using Engine.Services.Input;
-using Framework.FastMath;
+using Framework.FastMath.Godot;
+using Framework.FastMath.Godot.Extensions;
 using Framework.Logger;
 using Godot;
 using Physics;

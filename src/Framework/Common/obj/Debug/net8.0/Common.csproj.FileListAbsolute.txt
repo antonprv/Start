@@ -21,9 +21,7 @@ C:\Users\User\GODOT\PROJECTS\SETUP\SRC\Framework\Common\bin\Debug\net8.0\Common.
 C:\Users\User\GODOT\PROJECTS\SETUP\SRC\Framework\Common\bin\Debug\net8.0\Common.dll
 C:\Users\User\GODOT\PROJECTS\SETUP\SRC\Framework\Common\bin\Debug\net8.0\Common.pdb
 C:\Users\User\GODOT\PROJECTS\SETUP\SRC\Framework\Common\bin\Debug\net8.0\Console.dll
-C:\Users\User\GODOT\PROJECTS\SETUP\SRC\Framework\Common\bin\Debug\net8.0\FastMath.dll
 C:\Users\User\GODOT\PROJECTS\SETUP\SRC\Framework\Common\bin\Debug\net8.0\Logger.dll
-C:\Users\User\GODOT\PROJECTS\SETUP\SRC\Framework\Common\bin\Debug\net8.0\FastMath.pdb
 C:\Users\User\GODOT\PROJECTS\SETUP\SRC\Framework\Common\bin\Debug\net8.0\Logger.pdb
 C:\Users\User\GODOT\PROJECTS\SETUP\SRC\Framework\Common\bin\Debug\net8.0\Console.pdb
 C:\Users\User\GODOT\PROJECTS\SETUP\SRC\Framework\Common\obj\Debug\net8.0\Common.csproj.AssemblyReference.cache
@@ -37,3 +35,7 @@ C:\Users\User\GODOT\PROJECTS\SETUP\SRC\Framework\Common\obj\Debug\net8.0\Common.
 C:\Users\User\GODOT\PROJECTS\SETUP\SRC\Framework\Common\obj\Debug\net8.0\refint\Common.dll
 C:\Users\User\GODOT\PROJECTS\SETUP\SRC\Framework\Common\obj\Debug\net8.0\Common.pdb
 C:\Users\User\GODOT\PROJECTS\SETUP\SRC\Framework\Common\obj\Debug\net8.0\ref\Common.dll
+C:\Users\User\GODOT\PROJECTS\SETUP\SRC\Framework\Common\bin\Debug\net8.0\FastMath.Core.dll
+C:\Users\User\GODOT\PROJECTS\SETUP\SRC\Framework\Common\bin\Debug\net8.0\FastMath.Godot.dll
+C:\Users\User\GODOT\PROJECTS\SETUP\SRC\Framework\Common\bin\Debug\net8.0\FastMath.Godot.pdb
+C:\Users\User\GODOT\PROJECTS\SETUP\SRC\Framework\Common\bin\Debug\net8.0\FastMath.Core.pdb

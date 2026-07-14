@@ -1,0 +1,17 @@
+[21:39:15] [Info] [PhysicsWorldNode._Ready:63] PhysicsWorld initialized (threads: 19).
+[21:39:18] [Info] [TriggerVolume.HandleBodyEnter:78] <Node3D#45332039296> entered!
+[21:39:20] [Info] [TriggerVolume.HandleBodyExit:97] <Node3D#45332039296> exited!
+[21:39:22] [Info] [TriggerVolume.HandleBodyEnter:78] <Node3D#45332039296> entered!
+[21:39:23] [Info] [TriggerVolume.HandleBodyExit:97] <Node3D#45332039296> exited!
+[21:39:25] [Info] [TriggerVolume.HandleBodyEnter:78] <Node3D#45332039296> entered!
+[21:39:27] [Info] [TriggerVolume.HandleBodyExit:97] <Node3D#45332039296> exited!
+[21:39:29] [Info] [TriggerVolume.HandleBodyEnter:78] <Node3D#45332039296> entered!
+[21:39:30] [Info] [TriggerVolume.HandleBodyExit:97] <Node3D#45332039296> exited!
+[21:39:36] [Info] [TriggerVolume.HandleBodyEnter:78] <Node3D#45332039296> entered!
+[21:39:37] [Info] [TriggerVolume.HandleBodyExit:97] <Node3D#45332039296> exited!
+[21:39:39] [Info] [TriggerVolume.HandleBodyEnter:78] <Node3D#45332039296> entered!
+[21:39:41] [Info] [TriggerVolume.HandleBodyExit:97] <Node3D#45332039296> exited!
+[21:39:51] [Info] [TriggerVolume.HandleBodyEnter:78] <Node3D#45332039296> entered!
+[21:39:52] [Info] [TriggerVolume.HandleBodyExit:97] <Node3D#45332039296> exited!
+[21:40:06] [Info] [TriggerVolume.HandleBodyEnter:78] <Node3D#45332039296> entered!
+[21:40:07] [Info] [TriggerVolume.HandleBodyExit:97] <Node3D#45332039296> exited!

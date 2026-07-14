@@ -34,7 +34,7 @@ namespace Engine.Infrastructure
 
 			builder
 				.Register<IPhysicsWorld>()
-				.FromFactory( () => FindPhysicsWorld()  )
+				.FromFactory( () => FindPhysicsWorld() )
 				.AsSingleton();
 		}
 

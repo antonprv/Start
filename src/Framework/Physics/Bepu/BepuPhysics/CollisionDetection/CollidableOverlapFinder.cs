@@ -2,6 +2,7 @@
 using BepuPhysics.Trees;
 using BepuUtilities;
 using BepuUtilities.Memory;
+using Framework.FastMath.Numerics;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
@@ -133,7 +134,7 @@ namespace BepuPhysics.CollisionDetection
                     narrowPhase.overlapWorkers[ 0 ].Batcher.Flush();
                 //Any workers that we allocated resources for but did not end up using due to a lack of discovered jobs need to be cleaned up. Flushing disposes those resources.
                 //(this complexity could be removed if the preparation phase was aware of the job count, but that's somewhat more difficult.)
-                for ( int i = Math.Max( 1, totalJobCount ); i < threadDispatcher.ThreadCount; ++i )
+                for ( int i = FMath.Max( 1, totalJobCount ); i < threadDispatcher.ThreadCount; ++i )
                 {
                     narrowPhase.overlapWorkers[ i ].Batcher.Flush();
                 }

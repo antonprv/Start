@@ -1,6 +1,7 @@
 ﻿using BepuUtilities;
 using BepuUtilities.Collections;
 using BepuUtilities.Memory;
+using Framework.FastMath.Numerics;
 using System.Diagnostics;
 using System.Numerics;
 using System.Runtime.CompilerServices;
@@ -148,10 +149,10 @@ namespace BepuPhysics.Trees
 
         readonly void GetRefitAndMarkTuning( out int maximumSubtrees, out int estimatedRefinementCandidateCount, out int refinementLeafCountThreshold )
         {
-            maximumSubtrees = (int)( Math.Sqrt( LeafCount ) * 3 );
+            maximumSubtrees = (int)( FMath.FastSqrt( LeafCount ) * 3 );
             estimatedRefinementCandidateCount = ( LeafCount * 2 ) / maximumSubtrees;
 
-            refinementLeafCountThreshold = Math.Min( LeafCount, maximumSubtrees );
+            refinementLeafCountThreshold = FMath.Min( LeafCount, maximumSubtrees );
         }
 
         readonly void GetRefineTuning( int frameIndex, int refinementCandidatesCount, float refineAggressivenessScale, float costChange,
@@ -163,15 +164,15 @@ namespace BepuPhysics.Trees
                     "If this happened in the broad phase's use of the tree, it's likely that there are invalid poses or velocities in the simulation, " +
                     "possibly as a result of bugged input state or constraint configuration. " +
                     "Try running the library with debug asserts enabled to narrow down where the NaNsplosion started." );
-            var refineAggressiveness = Math.Max( 0, costChange * refineAggressivenessScale );
-            float refinePortion = Math.Min( 1, refineAggressiveness * 0.25f );
+            var refineAggressiveness = FMath.Max( 0, costChange * refineAggressivenessScale );
+            float refinePortion = FMath.Min( 1, refineAggressiveness * 0.25f );
 
-            var targetRefinementScale = Math.Min( NodeCount, Math.Max( 2, (float)Math.Ceiling( refinementCandidatesCount * refineAggressivenessScale * 0.03f ) ) + refinementCandidatesCount * refinePortion );
+            var targetRefinementScale = FMath.Min( NodeCount, FMath.Max( 2, (float)FMath.Ceil( refinementCandidatesCount * refineAggressivenessScale * 0.03f ) ) + refinementCandidatesCount * refinePortion );
             //Note that the refinementCandidatesCount is used as a maximum instead of refinementCandidates + 1 for simplicity, since there's a chance
             //that the root would already be a refinementCandidate. Doesn't really have a significant effect either way.
-            refinementPeriod = Math.Max( 1, (int)( refinementCandidatesCount / targetRefinementScale ) );
-            refinementOffset = (int)( ( frameIndex * 236887691L + 104395303L ) % Math.Max( 1, refinementCandidatesCount ) );
-            targetRefinementCount = Math.Min( refinementCandidatesCount, (int)targetRefinementScale );
+            refinementPeriod = FMath.Max( 1, (int)( refinementCandidatesCount / targetRefinementScale ) );
+            refinementOffset = (int)( ( frameIndex * 236887691L + 104395303L ) % FMath.Max( 1, refinementCandidatesCount ) );
+            targetRefinementCount = FMath.Min( refinementCandidatesCount, (int)targetRefinementScale );
         }
 
         public void RefitAndRefine( BufferPool pool, int frameIndex, float refineAggressivenessScale = 1 )

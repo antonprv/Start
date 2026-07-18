@@ -1,6 +1,8 @@
 ﻿using BepuPhysics.CollisionDetection;
 using BepuUtilities;
 using BepuUtilities.Memory;
+using Framework.FastMath.Numerics;
+using Framework.FastMath.Numerics.Extensions;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 
@@ -39,8 +41,8 @@ namespace BepuPhysics.Collidables
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
         public readonly void ComputeAngularExpansionData( out float maximumRadius, out float maximumAngularExpansion )
         {
-            maximumRadius = (float)Math.Sqrt( HalfLength * HalfLength + Radius * Radius );
-            maximumAngularExpansion = maximumRadius - Math.Min( HalfLength, Radius );
+            maximumRadius = (float)FMath.FastSqrt( HalfLength * HalfLength + Radius * Radius );
+            maximumAngularExpansion = maximumRadius - FMath.Min( HalfLength, Radius );
         }
 
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
@@ -81,18 +83,18 @@ namespace BepuPhysics.Collidables
             Matrix3x3.TransformTranspose( direction, orientation, out var d );
 
             //Normalize the direction. Sqrts aren't *that* bad, and it both simplifies things and helps avoid numerical problems.
-            var inverseDLength = 1f / d.Length();
+            var inverseDLength = 1f / d.FastLength();
             d *= inverseDLength;
 
             //Move the origin up to the earliest possible impact time. This isn't necessary for math reasons, but it does help avoid some numerical problems.
-            var tOffset = float.Max( 0, -Vector3.Dot( o, d ) - ( HalfLength + Radius ) );
+            var tOffset = FMath.Max( 0, -FMath.Dot( o, d ) - ( HalfLength + Radius ) );
             o += d * tOffset;
             var oh = new Vector3( o.X, 0, o.Z );
             var dh = new Vector3( d.X, 0, d.Z );
-            var a = Vector3.Dot( dh, dh );
-            var b = Vector3.Dot( oh, dh );
+            var a = FMath.Dot( dh, dh );
+            var b = FMath.Dot( oh, dh );
             var radiusSquared = Radius * Radius;
-            var c = Vector3.Dot( oh, oh ) - radiusSquared;
+            var c = FMath.Dot( oh, oh ) - radiusSquared;
             if ( b > 0 && c > 0 )
             {
                 //Ray is outside and pointing away, no hit.
@@ -112,8 +114,8 @@ namespace BepuPhysics.Collidables
                     normal = new Vector3();
                     return false;
                 }
-                t = ( -b - MathF.Sqrt( discriminant ) ) / a;
-                t = float.Max( t, -tOffset );
+                t = ( -b - FMath.FastSqrt( discriminant ) ) / a;
+                t = FMath.Max( t, -tOffset );
                 var cylinderHitLocation = o + d * t;
                 if ( cylinderHitLocation.Y < -HalfLength )
                 {
@@ -141,7 +143,7 @@ namespace BepuPhysics.Collidables
 
             //Intersect the ray with the plane anchored at discY with normal equal to (0,1,0).
             //t = dot(rayOrigin - (0,discY,0), (0,1,0)) / dot(rayDirection, (0,1,0)
-            if ( float.Abs( o.Y ) > HalfLength && o.Y * d.Y >= 0 )
+            if ( FMath.Abs( o.Y ) > HalfLength && o.Y * d.Y >= 0 )
             {
                 //The ray can only hit the disc if the ray is inside the cylinder or the direction points toward the cylinder.
                 t = 0;

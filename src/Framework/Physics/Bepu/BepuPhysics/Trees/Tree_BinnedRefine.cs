@@ -1,6 +1,7 @@
 ﻿using BepuUtilities;
 using BepuUtilities.Collections;
 using BepuUtilities.Memory;
+using Framework.FastMath.Numerics;
 using System.Diagnostics;
 using System.Numerics;
 using System.Runtime.CompilerServices;
@@ -178,7 +179,7 @@ namespace BepuPhysics.Trees
             //There is no real value in having tons of bins when there are very few children.
             //At low counts, many of them even end up empty.
             //You can get huge speed boosts by simply dropping the bin count adaptively.
-            var binCount = (int)Math.Min( MaximumBinCount, Math.Max( count * .25f, 2 ) );
+            var binCount = (int)FMath.Min( MaximumBinCount, FMath.Max( count * .25f, 2 ) );
 
             //Take into account zero-width cases.
             //This will result in degenerate axes all being dumped into the first bin.

@@ -3,6 +3,7 @@ using BepuPhysics.Constraints;
 using BepuUtilities;
 using BepuUtilities.Collections;
 using BepuUtilities.Memory;
+using Framework.FastMath.Numerics;
 using System.Diagnostics;
 using System.Numerics;
 using System.Runtime.CompilerServices;
@@ -111,7 +112,7 @@ namespace BepuPhysics
             get { return minimumCapacityPerTypeBatch; }
             set
             {
-                minimumCapacityPerTypeBatch = Math.Max( 1, value );
+                minimumCapacityPerTypeBatch = FMath.Max( 1, value );
             }
         }
         int[] minimumInitialCapacityPerTypeBatch = new int[ 0 ];
@@ -172,7 +173,7 @@ namespace BepuPhysics
             Debug.Assert( typeId >= 0, "Type ids must be nonnegative." );
             if ( typeId >= minimumInitialCapacityPerTypeBatch.Length )
                 return minimumCapacityPerTypeBatch;
-            return Math.Max( minimumInitialCapacityPerTypeBatch[ typeId ], minimumCapacityPerTypeBatch );
+            return FMath.Max( minimumInitialCapacityPerTypeBatch[ typeId ], minimumCapacityPerTypeBatch );
         }
         /// <summary>
         /// Resets all per-type initial capacities to zero. Leaves the minimum capacity across all constraints unchanged.
@@ -1568,7 +1569,7 @@ namespace BepuPhysics
         /// <returns>Magnitude of the accumulated impulses associated with the given constraint.</returns>
         public float GetAccumulatedImpulseMagnitude( ConstraintHandle constraintHandle )
         {
-            return (float)Math.Sqrt( GetAccumulatedImpulseMagnitudeSquared( constraintHandle ) );
+            return (float)FMath.FastSqrt( GetAccumulatedImpulseMagnitudeSquared( constraintHandle ) );
         }
 
 
@@ -1875,7 +1876,7 @@ namespace BepuPhysics
 
         internal void GetSynchronizedBatchCount( out int synchronizedBatchCount, out bool fallbackExists )
         {
-            synchronizedBatchCount = Math.Min( ActiveSet.Batches.Count, FallbackBatchThreshold );
+            synchronizedBatchCount = FMath.Min( ActiveSet.Batches.Count, FallbackBatchThreshold );
             fallbackExists = ActiveSet.Batches.Count > FallbackBatchThreshold;
             Debug.Assert( ActiveSet.Batches.Count <= FallbackBatchThreshold + 1,
                 "There cannot be more than FallbackBatchThreshold + 1 constraint batches because that +1 is the fallback batch which contains all remaining constraints." );
@@ -1925,7 +1926,7 @@ namespace BepuPhysics
                 pool.ResizeToAtLeast( ref HandleToConstraint, constraintHandleCapacity, HandlePool.HighestPossiblyClaimedId + 1 );
             }
             //Note that we can't shrink below the bodies handle capacity, since the handle distribution could be arbitrary.
-            var targetBatchReferencedHandleSize = Math.Max( bodies.HandlePool.HighestPossiblyClaimedId + 1, bodyHandleCapacity );
+            var targetBatchReferencedHandleSize = FMath.Max( bodies.HandlePool.HighestPossiblyClaimedId + 1, bodyHandleCapacity );
             for ( int i = 0; i < ActiveSet.Batches.Count; ++i )
             {
                 batchReferencedHandles[ i ].EnsureCapacity( targetBatchReferencedHandleSize, pool );
@@ -1952,19 +1953,19 @@ namespace BepuPhysics
         /// <param name="constraintHandleCapacity">Number of constraint handles to allocate space for. Applies to the handle->constraint mapping table.</param>
         public void ResizeSolverCapacities( int bodyHandleCapacity, int constraintHandleCapacity )
         {
-            var targetConstraintCount = BufferPool.GetCapacityForCount<ConstraintLocation>( Math.Max( constraintHandleCapacity, HandlePool.HighestPossiblyClaimedId + 1 ) );
+            var targetConstraintCount = BufferPool.GetCapacityForCount<ConstraintLocation>( FMath.Max( constraintHandleCapacity, HandlePool.HighestPossiblyClaimedId + 1 ) );
             if ( HandleToConstraint.Length != targetConstraintCount )
             {
                 ResizeHandleCapacity( targetConstraintCount );
             }
             //Note that we can't shrink below the bodies handle capacity, since the handle distribution could be arbitrary.
-            var targetBatchReferencedHandleSize = Math.Max( bodies.HandlePool.HighestPossiblyClaimedId + 1, bodyHandleCapacity );
+            var targetBatchReferencedHandleSize = FMath.Max( bodies.HandlePool.HighestPossiblyClaimedId + 1, bodyHandleCapacity );
             for ( int i = 0; i < ActiveSet.Batches.Count; ++i )
             {
                 batchReferencedHandles[ i ].Resize( targetBatchReferencedHandleSize, pool );
             }
 
-            var targetConstrainedKinematicsCapacity = Math.Max( ConstrainedKinematicHandles.Count, bodyHandleCapacity );
+            var targetConstrainedKinematicsCapacity = FMath.Max( ConstrainedKinematicHandles.Count, bodyHandleCapacity );
             ConstrainedKinematicHandles.Resize( targetConstrainedKinematicsCapacity, pool );
         }
 

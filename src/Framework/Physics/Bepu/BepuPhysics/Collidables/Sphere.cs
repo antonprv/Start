@@ -2,6 +2,8 @@
 using BepuPhysics.Trees;
 using BepuUtilities;
 using BepuUtilities.Memory;
+using Framework.FastMath.Numerics;
+using Framework.FastMath.Numerics.Extensions;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 
@@ -55,17 +57,17 @@ namespace BepuPhysics.Collidables
         public readonly bool RayTest( in RigidPose pose, Vector3 origin, Vector3 direction, out float t, out Vector3 normal )
         {
             //Normalize the direction. Sqrts aren't *that* bad, and it both simplifies things and helps avoid numerical problems.
-            var inverseDLength = 1f / direction.Length();
+            var inverseDLength = 1f / direction.FastLength();
             var d = direction * inverseDLength;
 
             //Move the origin up to the earliest possible impact time. This isn't necessary for math reasons, but it does help avoid some numerical problems.
             var o = origin - pose.Position;
-            var tOffset = -Vector3.Dot( o, d ) - Radius;
+            var tOffset = -FMath.Dot( o, d ) - Radius;
             if ( tOffset < 0 )
                 tOffset = 0;
             o += d * tOffset;
-            var b = Vector3.Dot( o, d );
-            var c = Vector3.Dot( o, o ) - Radius * Radius;
+            var b = FMath.Dot( o, d );
+            var c = FMath.Dot( o, o ) - Radius * Radius;
 
             if ( b > 0 && c > 0 )
             {
@@ -83,7 +85,7 @@ namespace BepuPhysics.Collidables
                 normal = new Vector3();
                 return false;
             }
-            t = -b - (float)Math.Sqrt( discriminant );
+            t = -b - (float)FMath.FastSqrt( discriminant );
             if ( t < -tOffset )
                 t = -tOffset;
             normal = ( o + d * t ) / Radius;

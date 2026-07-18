@@ -5,7 +5,8 @@ using System.Runtime.InteropServices;
 namespace BepuPhysics
 {
     /// <summary>
-    /// Describes the properties of a static object. When added to a simulation, static objects can collide but have no velocity and will not move in response to forces.
+    /// Describes the properties of a static object. 
+    /// When added to a simulation, static objects can collide but have no velocity and will not move in response to forces.
     /// </summary>
     [StructLayout( LayoutKind.Sequential )]
     public struct StaticDescription

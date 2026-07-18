@@ -36,16 +36,29 @@ namespace BepuPhysics.Constraints
         public readonly void ApplyDescription( ref TypeBatch batch, int bundleIndex, int innerIndex )
         {
             ConstraintChecker.AssertValid( Settings, nameof( OneBodyAngularMotor ) );
-            Debug.Assert( ConstraintTypeId == batch.TypeId, "The type batch passed to the description must match the description's expected type." );
-            ref var target = ref GetOffsetInstance( ref Buffer<OneBodyAngularMotorPrestepData>.Get( ref batch.PrestepData, bundleIndex ), innerIndex );
+            Debug.Assert( 
+                ConstraintTypeId == batch.TypeId, 
+                "The type batch passed to the description must match the description's expected type." );
+
+            ref var target = ref GetOffsetInstance( 
+                ref Buffer<OneBodyAngularMotorPrestepData>.Get( ref batch.PrestepData, bundleIndex ), 
+                innerIndex );
+
             Vector3Wide.WriteFirst( TargetVelocity, ref target.TargetVelocity );
             MotorSettingsWide.WriteFirst( Settings, ref target.Settings );
         }
 
         public static void BuildDescription( ref TypeBatch batch, int bundleIndex, int innerIndex, out OneBodyAngularMotor description )
         {
-            Debug.Assert( ConstraintTypeId == batch.TypeId, "The type batch passed to the description must match the description's expected type." );
-            ref var source = ref GetOffsetInstance( ref Buffer<OneBodyAngularMotorPrestepData>.Get( ref batch.PrestepData, bundleIndex ), innerIndex );
+            Debug.Assert( 
+                ConstraintTypeId == batch.TypeId, 
+                "The type batch passed to the description must match the description's expected type." );
+
+            ref var source = ref GetOffsetInstance(
+                ref Buffer<OneBodyAngularMotorPrestepData>.Get( ref batch.PrestepData, bundleIndex ),
+                innerIndex 
+            );
+
             Vector3Wide.ReadFirst( source.TargetVelocity, out description.TargetVelocity );
             MotorSettingsWide.ReadFirst( source.Settings, out description.Settings );
         }
@@ -66,19 +79,40 @@ namespace BepuPhysics.Constraints
             Vector3Wide.Add( angularVelocity, velocityChange, out angularVelocity );
         }
 
-        public static void WarmStart( in Vector3Wide positionA, in QuaternionWide orientationA, in BodyInertiaWide inertiaA, ref OneBodyAngularMotorPrestepData prestep, ref Vector3Wide accumulatedImpulses, ref BodyVelocityWide wsvA )
+        public static void WarmStart( 
+            in Vector3Wide positionA,
+            in QuaternionWide orientationA, 
+            in BodyInertiaWide inertiaA, 
+            ref OneBodyAngularMotorPrestepData prestep, 
+            ref Vector3Wide accumulatedImpulses,
+            ref BodyVelocityWide wsvA )
         {
             ApplyImpulse( ref wsvA.Angular, inertiaA.InverseInertiaTensor, accumulatedImpulses );
         }
 
-        public static void Solve( in Vector3Wide positionA, in QuaternionWide orientationA, in BodyInertiaWide inertiaA, float dt, float inverseDt, ref OneBodyAngularMotorPrestepData prestep, ref Vector3Wide accumulatedImpulses, ref BodyVelocityWide wsvA )
+        public static void Solve( 
+            in Vector3Wide positionA,
+            in QuaternionWide orientationA,
+            in BodyInertiaWide inertiaA, 
+            float dt, float inverseDt,
+            ref OneBodyAngularMotorPrestepData prestep,
+            ref Vector3Wide accumulatedImpulses, 
+            ref BodyVelocityWide wsvA )
         {
             //Jacobians are just the identity matrix.
-            MotorSettingsWide.ComputeSoftness( prestep.Settings, dt, out var effectiveMassCFMScale, out var softnessImpulseScale, out var maximumImpulse );
+            MotorSettingsWide.ComputeSoftness( 
+                prestep.Settings, dt, 
+                out var effectiveMassCFMScale, 
+                out var softnessImpulseScale,
+                out var maximumImpulse );
+
             Symmetric3x3Wide.Invert( inertiaA.InverseInertiaTensor, out var unsoftenedEffectiveMass );
 
             //csi = projection.BiasImpulse - accumulatedImpulse * projection.SoftnessImpulseScale - csiaAngular;
-            Symmetric3x3Wide.TransformWithoutOverlap( prestep.TargetVelocity - wsvA.Angular, unsoftenedEffectiveMass, out var csi );
+            Symmetric3x3Wide.TransformWithoutOverlap( 
+                prestep.TargetVelocity - wsvA.Angular, 
+                unsoftenedEffectiveMass, out var csi );
+
             csi = csi * effectiveMassCFMScale - accumulatedImpulses * softnessImpulseScale;
 
             ServoSettingsWide.ClampImpulse( maximumImpulse, ref accumulatedImpulses, ref csi );
@@ -88,10 +122,20 @@ namespace BepuPhysics.Constraints
 
         public static bool RequiresIncrementalSubstepUpdates => false;
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
-        public static void IncrementallyUpdateForSubstep( in Vector<float> dt, in BodyVelocityWide wsvA, ref OneBodyAngularMotorPrestepData prestepData ) { }
+        public static void IncrementallyUpdateForSubstep( 
+            in Vector<float> dt, in BodyVelocityWide wsvA,
+            ref OneBodyAngularMotorPrestepData prestepData 
+            ) { }
     }
 
-    public class OneBodyAngularMotorTypeProcessor : OneBodyTypeProcessor<OneBodyAngularMotorPrestepData, Vector3Wide, OneBodyAngularMotorFunctions, AccessOnlyAngularWithoutPose, AccessOnlyAngular>
+    public class OneBodyAngularMotorTypeProcessor : OneBodyTypeProcessor
+        <
+            OneBodyAngularMotorPrestepData,
+            Vector3Wide,
+            OneBodyAngularMotorFunctions,
+            AccessOnlyAngularWithoutPose,
+            AccessOnlyAngular
+        >
     {
         public const int BatchTypeId = 43;
     }

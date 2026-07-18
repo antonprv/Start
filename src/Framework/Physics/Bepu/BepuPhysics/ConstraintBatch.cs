@@ -15,27 +15,37 @@ namespace BepuPhysics
         //Note that both active and inactive constraint batches share the same data layout.
         //This means we have a type id->index mapping in inactive islands. 
         //Reasoning:
-        //The type id->index mapping is required because the solver's handle->constraint indirection stores a type id. If it stored a batch-specific type *index*, 
-        //then all mappings associated with a type batch's constraints would have to be updated when a type batch changes slots due to a removal.
-        //Given that there could be hundreds or thousands of such changes required, we instead rely on this last-second remapping.
+        //The type id->index mapping is required because the solver's handle->constraint indirection stores a type id.
+        //If it stored a batch-specific type *index*, 
+        //then all mappings associated with a type batch's constraints would have to be updated
+        //when a type batch changes slots due to a removal.
+        //Given that there could be hundreds or thousands of such changes required,
+        //we instead rely on this last-second remapping.
 
-        //However, an inactive island will never undergo removals under normal conditions, and they can only happen at all by direct user request.
-        //In other words, the risk of moving type batches in inactive islands is pretty much irrelevant. In fact, you could instead store a direct handle->type *index* mapping
+        //However, an inactive island will never undergo removals under normal conditions,
+        //and they can only happen at all by direct user request.
+        //In other words, the risk of moving type batches in inactive islands is pretty much irrelevant.
+        //In fact, you could instead store a direct handle->type *index* mapping
         //pretty safely, even if it meant either not moving type batches when one becomes empty or just brute force updating the mapping associated with every constraint in the type batch.
 
-        //The cost of storing this extra data is not completely trivial. Assuming an average of 128 bytes per type id->index mapping, consider what happens
+        //The cost of storing this extra data is not completely trivial.
+        //Assuming an average of 128 bytes per type id->index mapping, consider what happens
         //when you have 65536 inactive islands: ~10 megabytes of wasted mapping data.
 
         //Right now, we make no attempt to split the storage layout and bite the bullet on the waste, because:
-        //1) While it does require some memory, 10 megabytes is fairly trivial in terms of *capacity* for any platform where you're going to have a simulation with 65536 inactive islands.
-        //2) The memory used by a bunch of different islands isn't really concerning from a bandwidth perspective, because by nature, it is not being accessed every frame (nor all at once).
+        //1) While it does require some memory, 10 megabytes is fairly trivial in terms of *capacity*
+        //for any platform where you're going to have a simulation with 65536 inactive islands.
+        //2) The memory used by a bunch of different islands isn't really concerning from a bandwidth perspective,
+        //because by nature, it is not being accessed every frame (nor all at once).
         //3) Avoiding this waste would require splitting the storage representation and/or complicating the handle->constraint mapping.
         //TODO: So, perhaps one day we'll consider changing this, but for now it's just not worth it.
 
         //That said, we DO store each active constraint batch's BatchReferencedHandles separately from the ConstraintBatch type.
         //Two reasons for the different choice:
-        //1) The handles memory will often end up being an order of magnitude bigger. We're not talking about 10MB for 65536 inactive islands here, but rather 100-400MB and up.
-        //2) Storing the referenced handles separately in the solver doesn't really change anything. We just have to pass them as parameters here and there; no significant complication.
+        //1) The handles memory will often end up being an order of magnitude bigger.
+        //We're not talking about 10MB for 65536 inactive islands here, but rather 100-400MB and up.
+        //2) Storing the referenced handles separately in the solver doesn't really change anything.
+        //We just have to pass them as parameters here and there; no significant complication.
 
         public Buffer<int> TypeIndexToTypeBatchIndex;
         public QuickList<TypeBatch> TypeBatches;

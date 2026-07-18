@@ -2,6 +2,8 @@
 using BepuPhysics.CollisionDetection;
 using BepuUtilities;
 using BepuUtilities.Memory;
+using Framework.FastMath.Numerics;
+using Framework.FastMath.Numerics.Extensions;
 using System.Diagnostics;
 using System.Numerics;
 using System.Runtime.CompilerServices;
@@ -206,7 +208,7 @@ namespace BepuPhysics
                     //Worth checking the performance; if it's undetectable, just swap to the simpler version.
                     if ( continuation.CompoundChild )
                     {
-                        collidable.SpeculativeMargin = MathF.Max( collidable.SpeculativeMargin, speculativeMargin[ innerIndex ] );
+                        collidable.SpeculativeMargin = FMath.Max( collidable.SpeculativeMargin, speculativeMargin[ innerIndex ] );
                         var min = new Vector3( bundleMin.X[ innerIndex ], bundleMin.Y[ innerIndex ], bundleMin.Z[ innerIndex ] );
                         var max = new Vector3( bundleMax.X[ innerIndex ], bundleMax.Y[ innerIndex ], bundleMax.Z[ innerIndex ] );
                         BoundingBox.CreateMerged( *minPointer, *maxPointer, min, max, out *minPointer, out *maxPointer );
@@ -239,18 +241,18 @@ namespace BepuPhysics
                 //we're just going to use a simplistic upper bound for angular expansion. This simplifies the mesh bounding box calculation quite a bit (no dot products).
                 var absMin = Vector3.Abs( min );
                 var absMax = Vector3.Abs( max );
-                var maximumRadius = Vector3.Max( absMin, absMax ).Length();
+                var maximumRadius = Vector3.Max( absMin, absMax ).FastLength();
 
                 var minimumComponents = Vector3.Min( absMin, absMax );
-                var minimumRadius = MathHelper.Min( minimumComponents.X, MathHelper.Min( minimumComponents.Y, minimumComponents.Z ) );
+                var minimumRadius = FMath.Min( minimumComponents.X, FMath.Min( minimumComponents.Y, minimumComponents.Z ) );
                 var maximumAngularExpansion = maximumRadius - minimumRadius;
 
                 //BoundingBoxBatcher is responsible for updating the bounding box AND speculative margin.
                 //In order to know how much we're allowed to expand the bounding box, we need to know the speculative margin.
                 //It's defined by the velocity of the body, and bounded by the body's minimum and maximum.
                 var angularBoundsExpansion = BoundingBoxHelpers.GetAngularBoundsExpansion( motionState.Velocity.Angular.Length(), dt, maximumRadius, maximumAngularExpansion );
-                var speculativeMargin = motionState.Velocity.Linear.Length() * dt + angularBoundsExpansion;
-                speculativeMargin = MathF.Max( collidable.MinimumSpeculativeMargin, MathF.Min( collidable.MaximumSpeculativeMargin, speculativeMargin ) );
+                var speculativeMargin = motionState.Velocity.Linear.FastLength() * dt + angularBoundsExpansion;
+                speculativeMargin = FMath.Max( collidable.MinimumSpeculativeMargin, FMath.Min( collidable.MaximumSpeculativeMargin, speculativeMargin ) );
                 collidable.SpeculativeMargin = speculativeMargin;
                 var maximumAllowedExpansion = collidable.Continuity.AllowExpansionBeyondSpeculativeMargin ? float.MaxValue : speculativeMargin;
                 BoundingBoxHelpers.GetBoundsExpansion( motionState.Velocity.Linear, dt, angularBoundsExpansion, out var minExpansion, out var maxExpansion );

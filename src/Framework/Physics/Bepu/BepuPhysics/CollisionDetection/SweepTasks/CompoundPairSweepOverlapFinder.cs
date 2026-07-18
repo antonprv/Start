@@ -7,7 +7,8 @@ using System.Runtime.CompilerServices;
 namespace BepuPhysics.CollisionDetection.SweepTasks
 {
     //At the moment, this is basically an unused abstraction. But, if you wanted, this allows you to use a special cased overlap finder in certain cases.
-    public interface ICompoundPairSweepOverlapFinder<TCompoundA, TCompoundB> where TCompoundA : struct, ICompoundShape where TCompoundB : struct, IBoundsQueryableCompound
+    public interface ICompoundPairSweepOverlapFinder<TCompoundA, TCompoundB> where TCompoundA : 
+        struct, ICompoundShape where TCompoundB : struct, IBoundsQueryableCompound
     {
         static abstract void FindOverlaps( ref TCompoundA compoundA, Quaternion orientationA, in BodyVelocity velocityA,
               ref TCompoundB compoundB, Vector3 offsetB, Quaternion orientationB, in BodyVelocity velocityB, float maximumT,
@@ -32,7 +33,8 @@ namespace BepuPhysics.CollisionDetection.SweepTasks
                     offsetB, orientationB, velocityB, maximumT, out var sweep, out var min, out var max );
                 ref var childOverlaps = ref overlaps.GetOverlapsForChild( i );
                 childOverlaps.ChildIndex = i;
-                compoundB.FindLocalOverlaps<ChildOverlapsCollection>( min, max, sweep, maximumT, pool, shapes, Unsafe.AsPointer( ref childOverlaps ) );
+                compoundB.FindLocalOverlaps<ChildOverlapsCollection>( 
+                    min, max, sweep, maximumT, pool, shapes, Unsafe.AsPointer( ref childOverlaps ) );
             }
         }
     }

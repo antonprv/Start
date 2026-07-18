@@ -1,6 +1,7 @@
 ﻿using BepuPhysics.Collidables;
 using BepuUtilities;
 using BepuUtilities.Memory;
+using Framework.FastMath.Numerics;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 
@@ -103,7 +104,7 @@ namespace BepuPhysics.CollisionDetection.CollisionTasks
             //To find the contact manifold, we'll clip the box edges against the hull face as usual, but we're dealing with potentially
             //distinct convex hulls. Rather than vectorizing over the different hulls, we vectorize within each hull.
             //There can be no more than 8 contacts from edge intersections, but more can be generated from hull faces with many vertices.
-            int maximumContactCount = Math.Max( 8, maximumFaceVertexCount );
+            int maximumContactCount = FMath.Max( 8, maximumFaceVertexCount );
             var candidates = stackalloc ManifoldCandidateScalar[ maximumContactCount ];
             for ( int slotIndex = 0; slotIndex < pairCount; ++slotIndex )
             {
@@ -162,7 +163,7 @@ namespace BepuPhysics.CollisionDetection.CollisionTasks
                     //Containment of a box vertex is tested by checking the sign of the box vertex against the hull's edge plane normal.
                     //Hull edges wound counterclockwise in right handed coordinates; edge plane normal points outward.
                     //vertexOutsideEdgePlane = dot(hullEdgeOffset x slotLocalNormal, boxVertex - hullEdgeStart) > 0
-                    var hullEdgePlaneNormal = Vector3.Cross( hullEdgeOffset, slotLocalNormal );
+                    var hullEdgePlaneNormal = FMath.Cross( hullEdgeOffset, slotLocalNormal );
                     var hullEdgePlaneNormalX = new Vector4( hullEdgePlaneNormal.X );
                     var hullEdgePlaneNormalY = new Vector4( hullEdgePlaneNormal.Y );
                     var hullEdgePlaneNormalZ = new Vector4( hullEdgePlaneNormal.Z );
@@ -263,8 +264,8 @@ namespace BepuPhysics.CollisionDetection.CollisionTasks
                         var point = hullEdgeOffset * earliestExit + previousVertex - hullFaceOrigin;
                         var newContactIndex = candidateCount++;
                         ref var candidate = ref candidates[ newContactIndex ];
-                        candidate.X = Vector3.Dot( point, hullFaceX );
-                        candidate.Y = Vector3.Dot( point, hullFaceY );
+                        candidate.X = FMath.Dot( point, hullFaceX );
+                        candidate.Y = FMath.Dot( point, hullFaceY );
                         candidate.FeatureId = baseFeatureId + endId;
 
                     }
@@ -274,8 +275,8 @@ namespace BepuPhysics.CollisionDetection.CollisionTasks
                         var point = hullEdgeOffset * latestEntry + previousVertex - hullFaceOrigin;
                         var newContactIndex = candidateCount++;
                         ref var candidate = ref candidates[ newContactIndex ];
-                        candidate.X = Vector3.Dot( point, hullFaceX );
-                        candidate.Y = Vector3.Dot( point, hullFaceY );
+                        candidate.X = FMath.Dot( point, hullFaceX );
+                        candidate.Y = FMath.Dot( point, hullFaceY );
                         candidate.FeatureId = baseFeatureId + startId;
 
                     }
@@ -297,7 +298,7 @@ namespace BepuPhysics.CollisionDetection.CollisionTasks
                     var closestOnHullToBoxEdgeStartY = boxEdgeStartY - hullFaceOriginY;
                     var closestOnHullToBoxEdgeStartZ = boxEdgeStartZ - hullFaceOriginZ;
                     var vertexProjectionNumerator = ( closestOnHullToBoxEdgeStartX ) * hullFaceNormalX + ( closestOnHullToBoxEdgeStartY ) * hullFaceNormalY + ( closestOnHullToBoxEdgeStartZ ) * hullFaceNormalZ;
-                    var vertexProjectionDenominator = new Vector4( Vector3.Dot( slotFaceNormal, slotLocalNormal ) );
+                    var vertexProjectionDenominator = new Vector4( FMath.Dot( slotFaceNormal, slotLocalNormal ) );
                     var vertexProjectionT = vertexProjectionNumerator / vertexProjectionDenominator;
                     //Normal points from B to A.
                     var projectedVertexX = closestOnHullToBoxEdgeStartX - vertexProjectionT * slotLocalNormalX;

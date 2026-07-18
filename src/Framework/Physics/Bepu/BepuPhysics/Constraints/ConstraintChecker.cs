@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using Framework.FastMath.Numerics.Extensions;
+using System.Diagnostics;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 
@@ -68,7 +69,7 @@ namespace BepuPhysics.Constraints
         [Conditional( "DEBUG" )]
         public static void AssertUnitLength( Quaternion q, string typeName, string propertyName )
         {
-            var lengthSquared = q.LengthSquared();
+            var lengthSquared = q.FastLength();
             if ( lengthSquared > 1 + 1e-5f || lengthSquared < 1 - 1e-5f || !IsFiniteNumber( lengthSquared ) )
             {
                 Debug.Fail( $"{typeName}.{propertyName} must be unit length." );

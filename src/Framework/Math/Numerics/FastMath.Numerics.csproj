@@ -9,7 +9,6 @@
 		<PublishReadyToRunShowWarnings>true</PublishReadyToRunShowWarnings>
 		<RootNamespace>Framework.FastMath.Numerics</RootNamespace>
 		<AssemblyName>FastMath.Numerics</AssemblyName>
-		<Nullable>annotations</Nullable>
 	</PropertyGroup>
 
 	<ItemGroup Condition="'$(TargetFramework)' == 'net462'">

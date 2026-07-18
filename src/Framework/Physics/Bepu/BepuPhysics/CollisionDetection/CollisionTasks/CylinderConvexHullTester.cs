@@ -1,5 +1,7 @@
 ﻿using BepuPhysics.Collidables;
 using BepuUtilities;
+using Framework.FastMath.Numerics;
+using Framework.FastMath.Numerics.Extensions;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 
@@ -13,25 +15,31 @@ namespace BepuPhysics.CollisionDetection.CollisionTasks
         static void ProjectOntoCap( Vector3 capCenter, in Matrix3x3 cylinderOrientation, float inverseLocalNormalDotAY, Vector3 localNormal, Vector3 point, out Vector2 projected )
         {
             var pointToCapCenter = capCenter - point;
-            var t = Vector3.Dot( pointToCapCenter, cylinderOrientation.Y ) * inverseLocalNormalDotAY;
+            var t = FMath.Dot( pointToCapCenter, cylinderOrientation.Y ) * inverseLocalNormalDotAY;
             var projectionOffsetB = localNormal * t;
             var projectedPoint = point - projectionOffsetB;
             var capCenterToProjectedPoint = projectedPoint - capCenter;
             projected = new Vector2(
-                Vector3.Dot( capCenterToProjectedPoint, cylinderOrientation.X ),
-                Vector3.Dot( capCenterToProjectedPoint, cylinderOrientation.Z ) );
+                FMath.Dot( capCenterToProjectedPoint, cylinderOrientation.X ),
+                FMath.Dot( capCenterToProjectedPoint, cylinderOrientation.Z ) );
         }
 
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
-        internal static bool IntersectLineCircle( in Vector2 linePosition, in Vector2 lineDirection, float radius, out float tMin, out float tMax )
+        internal static bool IntersectLineCircle( 
+            in Vector2 linePosition,
+            in Vector2 lineDirection,
+            float radius,
+            out float tMin,
+            out float tMax 
+        )
         {
             //||linePosition + lineDirection * t|| = radius
             //dot(linePosition + lineDirection * t, linePosition + lineDirection * t) = radius * radius
             //dot(linePosition, linePosition) - radius * radius + t * 2 * dot(linePosition, lineDirection) + t^2 * dot(lineDirection, lineDirection) = 0
-            var a = Vector2.Dot( lineDirection, lineDirection );
+            var a = FMath.Dot( lineDirection, lineDirection );
             var inverseA = 1f / a;
-            var b = Vector2.Dot( linePosition, lineDirection );
-            var c = Vector2.Dot( linePosition, linePosition );
+            var b = FMath.Dot( linePosition, lineDirection );
+            var c = FMath.Dot( linePosition, linePosition );
             var radiusSquared = radius * radius;
             c -= radiusSquared;
             var d = b * b - a * c;
@@ -41,7 +49,7 @@ namespace BepuPhysics.CollisionDetection.CollisionTasks
                 tMax = 0;
                 return false;
             }
-            var tOffset = (float)Math.Sqrt( d ) * inverseA;
+            var tOffset = (float)FMath.FastSqrt( d ) * inverseA;
             var tBase = -b * inverseA;
             if ( a < 1e-12f && a > -1e-12f )
             {
@@ -70,7 +78,7 @@ namespace BepuPhysics.CollisionDetection.CollisionTasks
             //Create max contact.
             var localPoint = slotSideEdgeCenter + slotCylinderEdgeAxis * t;
             //depth = dot(faceCenterB - pointOnFaceA, faceNormalB) / dot(faceNormalB, normal)
-            var contactDepth = Vector3.Dot( hullFaceOrigin - localPoint, slotHullFaceNormal ) * inverseDepthDenominator;
+            var contactDepth = FMath.Dot( hullFaceOrigin - localPoint, slotHullFaceNormal ) * inverseDepthDenominator;
             Matrix3x3.Transform( localPoint, slotHullOrientation, out var contactOffsetA );
             contactOffsetA += slotOffsetB;
             Vector3Wide.WriteFirst( contactOffsetA, ref contactOffsetAWide );
@@ -305,18 +313,18 @@ namespace BepuPhysics.CollisionDetection.CollisionTasks
                         Vector3Wide.ReadSlot( ref hull.Points[ index.BundleIndex ], index.InnerIndex, out var vertex );
 
                         var edgeOffset = vertex - previousVertex;
-                        var edgePlaneNormal = Vector3.Cross( edgeOffset, slotLocalNormal );
+                        var edgePlaneNormal = FMath.Cross( edgeOffset, slotLocalNormal );
 
                         //t = dot(pointOnPlane - capsuleCenter, planeNormal) / dot(planeNormal, rayDirection)
                         //Note that we can defer the division; we don't need to compute the exact t value of *all* planes.
                         var cylinderSideToHullEdgeStart = previousVertex - slotSideEdgeCenter;
-                        var numerator = Vector3.Dot( cylinderSideToHullEdgeStart, edgePlaneNormal );
-                        var denominator = Vector3.Dot( edgePlaneNormal, slotCylinderEdgeAxis );
+                        var numerator = FMath.Dot( cylinderSideToHullEdgeStart, edgePlaneNormal );
+                        var denominator = FMath.Dot( edgePlaneNormal, slotCylinderEdgeAxis );
                         previousVertex = vertex;
 
                         //A plane is being 'entered' if the ray direction opposes the face normal.
                         //Entry denominators are always negative, exit denominators are always positive. Don't have to worry about comparison sign flips.
-                        var edgePlaneNormalLengthSquared = edgePlaneNormal.LengthSquared();
+                        var edgePlaneNormalLengthSquared = edgePlaneNormal.LengthSq();
                         var denominatorSquared = denominator * denominator;
 
                         const float min = 1e-5f;
@@ -360,7 +368,7 @@ namespace BepuPhysics.CollisionDetection.CollisionTasks
                     var slotSideEdgeHalfLength = a.HalfLength[ slotIndex ];
                     var latestEntry = latestEntryNumerator / latestEntryDenominator;
                     var earliestExit = earliestExitNumerator / earliestExitDenominator;
-                    var inverseDepthDenominator = 1f / Vector3.Dot( slotHullFaceNormal, slotLocalNormal );
+                    var inverseDepthDenominator = 1f / FMath.Dot( slotHullFaceNormal, slotLocalNormal );
                     var negatedEdgeLength = -slotSideEdgeHalfLength;
                     if ( latestEntry < negatedEdgeLength )
                         latestEntry = negatedEdgeLength;

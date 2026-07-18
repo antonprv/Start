@@ -3,6 +3,7 @@ using BepuPhysics.CollisionDetection;
 using BepuUtilities;
 using BepuUtilities.Collections;
 using BepuUtilities.Memory;
+using Framework.FastMath.Numerics;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
@@ -181,7 +182,7 @@ namespace BepuPhysics
 
             //Despite being DFS, there is no guarantee that the visitation stack will be any smaller than the final island itself, and we have no way of knowing how big the island is 
             //ahead of time- except that it can't be larger than the entire active simulation.
-            var initialBodyCapacity = Math.Min( InitialIslandBodyCapacity, bodies.ActiveSet.Count );
+            var initialBodyCapacity = FMath.Min( InitialIslandBodyCapacity, bodies.ActiveSet.Count );
             //Note that we track all considered bodies AND constraints. 
             //While we only need to track one of them for the purposes of traversal, tracking both allows low-overhead collection of unique bodies and constraints.
             //Note that the constraint handle set is initialized to cover the entire handle span. 
@@ -610,8 +611,8 @@ namespace BepuPhysics
             //The multithreaded island search is currently nondeterministic due to the unpredictable termination conditions.
             var workerTraversalThreadCount = deterministic ? 1 : threadCount;
 
-            targetSleptBodyCountPerThread = Math.Max( 1, targetSleptBodyCount / workerTraversalThreadCount );
-            targetTraversedBodyCountPerThread = Math.Max( 1, targetTraversedBodyCount / workerTraversalThreadCount );
+            targetSleptBodyCountPerThread = FMath.Max( 1, targetSleptBodyCount / workerTraversalThreadCount );
+            targetTraversedBodyCountPerThread = FMath.Max( 1, targetTraversedBodyCount / workerTraversalThreadCount );
 
             //1) TRAVERSAL      
             this.traversalStartBodyIndices = traversalStartBodyIndices;
@@ -728,7 +729,7 @@ namespace BepuPhysics
                         //A job also only covers either bodies or constraints, not both at once.
                         //TODO: This job scheduling pattern appears frequently. Would be nice to unify it. Obvious zero overhead approach with generics abuse.
                         {
-                            var jobCount = Math.Max( 1, island.BodyIndices.Count / objectsPerGatherJob );
+                            var jobCount = FMath.Max( 1, island.BodyIndices.Count / objectsPerGatherJob );
                             var bodiesPerJob = island.BodyIndices.Count / jobCount;
                             var remainder = island.BodyIndices.Count - bodiesPerJob * jobCount;
                             var previousEnd = 0;
@@ -753,7 +754,7 @@ namespace BepuPhysics
                             for ( int typeBatchIndex = 0; typeBatchIndex < sourceBatch.TypeBatches.Count; ++typeBatchIndex )
                             {
                                 ref var sourceTypeBatch = ref sourceBatch.TypeBatches[ typeBatchIndex ];
-                                var jobCount = Math.Max( 1, sourceTypeBatch.Handles.Count / objectsPerGatherJob );
+                                var jobCount = FMath.Max( 1, sourceTypeBatch.Handles.Count / objectsPerGatherJob );
                                 var constraintsPerJob = sourceTypeBatch.Handles.Count / jobCount;
                                 var remainder = sourceTypeBatch.Handles.Count - constraintsPerJob * jobCount;
                                 var previousEnd = 0;
@@ -925,7 +926,7 @@ namespace BepuPhysics
             if ( bodies.ActiveSet.Count == 0 )
                 return;
 
-            int candidateCount = (int)Math.Max( 1, bodies.ActiveSet.Count * TestedFractionPerFrame );
+            int candidateCount = (int)FMath.Max( 1, bodies.ActiveSet.Count * TestedFractionPerFrame );
 
             var traversalStartBodyIndices = new QuickList<int>( candidateCount, pool );
 
@@ -955,7 +956,7 @@ namespace BepuPhysics
             if ( bodies.ActiveSet.Count < 2 / TestedFractionPerFrame )
                 threadDispatcher = null;
 
-            Sleep( ref traversalStartBodyIndices, threadDispatcher, deterministic, (int)Math.Ceiling( bodies.ActiveSet.Count * TargetSleptFraction ), (int)Math.Ceiling( bodies.ActiveSet.Count * TargetTraversedFraction ), false );
+            Sleep( ref traversalStartBodyIndices, threadDispatcher, deterministic, (int)FMath.Ceil( bodies.ActiveSet.Count * TargetSleptFraction ), (int)FMath.Ceil( bodies.ActiveSet.Count * TargetTraversedFraction ), false );
 
             traversalStartBodyIndices.Dispose( pool );
         }
@@ -966,7 +967,7 @@ namespace BepuPhysics
         /// <param name="setsCapacity">Number of sets to guarantee space for.</param>
         public void EnsureSetsCapacity( int setsCapacity )
         {
-            var potentiallyAllocatedCount = Math.Min( setIdPool.HighestPossiblyClaimedId + 1, Math.Min( bodies.Sets.Length, Math.Min( solver.Sets.Length, pairCache.SleepingSets.Length ) ) );
+            var potentiallyAllocatedCount = FMath.Min( setIdPool.HighestPossiblyClaimedId + 1, FMath.Min( bodies.Sets.Length, FMath.Min( solver.Sets.Length, pairCache.SleepingSets.Length ) ) );
             if ( setsCapacity > bodies.Sets.Length )
             {
                 bodies.ResizeSetsCapacity( setsCapacity, potentiallyAllocatedCount );
@@ -990,8 +991,13 @@ namespace BepuPhysics
         /// <param name="setsCapacity">Target number of sets to allocate space for.</param>
         public void ResizeSetsCapacity( int setsCapacity )
         {
-            var potentiallyAllocatedCount = Math.Min( setIdPool.HighestPossiblyClaimedId + 1, Math.Min( bodies.Sets.Length, Math.Min( solver.Sets.Length, pairCache.SleepingSets.Length ) ) );
-            setsCapacity = Math.Max( potentiallyAllocatedCount, setsCapacity );
+            var potentiallyAllocatedCount = FMath.Min( 
+                setIdPool.HighestPossiblyClaimedId + 1,
+                FMath.Min( bodies.Sets.Length,
+                FMath.Min( solver.Sets.Length, pairCache.SleepingSets.Length ) ) );
+
+            setsCapacity = FMath.Max( potentiallyAllocatedCount, setsCapacity );
+
             bodies.ResizeSetsCapacity( setsCapacity, potentiallyAllocatedCount );
             solver.ResizeSetsCapacity( setsCapacity, potentiallyAllocatedCount );
             pairCache.ResizeSetsCapacity( setsCapacity, potentiallyAllocatedCount );
@@ -1008,8 +1014,5 @@ namespace BepuPhysics
         {
             setIdPool.Dispose( pool );
         }
-
-
-
     }
 }

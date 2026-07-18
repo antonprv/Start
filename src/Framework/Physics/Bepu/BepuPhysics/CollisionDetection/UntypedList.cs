@@ -1,4 +1,5 @@
 ﻿using BepuUtilities.Memory;
+using Framework.FastMath.Numerics;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
@@ -97,7 +98,7 @@ namespace BepuPhysics.CollisionDetection
             {
                 //This didn't exist at all before; create a new entry for this type.
                 ElementSizeInBytes = elementSizeInBytes;
-                pool.TakeAtLeast( Math.Max( newSize, minimumElementCount * elementSizeInBytes ), out Buffer );
+                pool.TakeAtLeast( FMath.Max( newSize, minimumElementCount * elementSizeInBytes ), out Buffer );
             }
             else
             {

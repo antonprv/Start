@@ -137,6 +137,9 @@ namespace Framework.FastMath.Core
         // ----------------------------------------------------------------
 
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
+        public static float FastLog2( float x ) => FastLog2Mineiro( x );
+
+        [MethodImpl( MethodImplOptions.AggressiveInlining )]
         private static unsafe float FastLog2Mineiro( float x )
         {
             int vxi = *(int*)&x;

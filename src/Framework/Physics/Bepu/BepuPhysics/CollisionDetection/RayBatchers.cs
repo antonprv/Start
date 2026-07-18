@@ -1,6 +1,7 @@
 ﻿using BepuPhysics.Collidables;
 using BepuPhysics.Trees;
 using BepuUtilities.Memory;
+using Framework.FastMath.Numerics;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 
@@ -59,7 +60,7 @@ namespace BepuPhysics.CollisionDetection
             staticTester = new LeafTester { Leaves = broadPhase.StaticLeaves, RayTester = rayTester };
             this.broadPhase = broadPhase;
             batcher = new RayBatcher( pool, batcherRayCapacity,
-                Math.Max( 8, 2 * SpanHelper.GetContainingPowerOf2( Math.Max( broadPhase.StaticTree.LeafCount, broadPhase.ActiveTree.LeafCount ) ) ) );
+                FMath.Max( 8, 2 * SpanHelper.GetContainingPowerOf2( FMath.Max( broadPhase.StaticTree.LeafCount, broadPhase.ActiveTree.LeafCount ) ) ) );
         }
 
         /// <summary>

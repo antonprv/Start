@@ -2,6 +2,7 @@
 using BepuUtilities.Collections;
 using BepuUtilities.Memory;
 using BepuUtilities.TaskScheduling;
+using Framework.FastMath.Core;
 using System.Diagnostics;
 using System.Numerics;
 using System.Runtime.CompilerServices;
@@ -520,7 +521,7 @@ partial struct Tree
             int minimumSlotsPerTask, int targetTaskCount )
         {
             WorkerCount = workerCount;
-            var taskSize = int.Max( minimumSlotsPerTask, slotCount / targetTaskCount );
+            var taskSize = FMath.Max( minimumSlotsPerTask, slotCount / targetTaskCount );
             TaskCount = ( slotCount + taskSize - 1 ) / taskSize;
             SubtreeStartIndex = subtreeStartIndex;
             SubtreeCount = slotCount;
@@ -531,7 +532,7 @@ partial struct Tree
 
         public void GetSlotInterval( long taskId, out int start, out int count )
         {
-            var remainderedTaskCount = int.Min( SlotRemainder, (int)taskId );
+            var remainderedTaskCount = FMath.Min( SlotRemainder, (int)taskId );
             var earlySlotCount = ( SlotsPerTaskBase + 1 ) * remainderedTaskCount;
             var lateSlotCount = SlotsPerTaskBase * ( taskId - remainderedTaskCount );
             start = SubtreeStartIndex + (int)( earlySlotCount + lateSlotCount );
@@ -771,7 +772,7 @@ partial struct Tree
 
         //Don't bother initializing more slots than we have tasks. Note that this requires special handling on the task level;
         //if we have less tasks than workers, then the task needs to distinguish that fact.
-        var activeWorkerCount = int.Min( context->Workers.Length, taskContext.TaskData.TaskCount );
+        var activeWorkerCount = FMath.Min( context->Workers.Length, taskContext.TaskData.TaskCount );
         if ( !taskContext.TaskData.TaskCountFitsInWorkerCount )
         {
             //If there are more tasks than workers, then we need to preinitialize all the worker caches.
@@ -1099,7 +1100,7 @@ partial struct Tree
         var permuteMask = Vector128.Create( useX ? 0 : useY ? 1 : 2, 0, 0, 0 );
         var axisIndex = useX ? 0 : useY ? 1 : 2;
 
-        var binCount = int.Min( context->MaximumBinCount, int.Max( (int)( subtreeCount * context->LeafToBinMultiplier ), context->MinimumBinCount ) );
+        var binCount = FMath.Min( context->MaximumBinCount, FMath.Max( (int)( subtreeCount * context->LeafToBinMultiplier ), context->MinimumBinCount ) );
 
         var offsetToBinIndex = new Vector4( binCount ) / centroidSpan;
         //Avoid letting NaNs into the offsetToBinIndex scale.
@@ -1372,10 +1373,10 @@ partial struct Tree
 
         //Don't let the user pick values that will just cause an explosion.
         Debug.Assert( minimumBinCount >= 2 && maximumBinCount >= 2, "At least two bins are required. In release mode, this will be clamped up to 2, but where did lower values come from?" );
-        minimumBinCount = int.Max( 2, minimumBinCount );
-        maximumBinCount = int.Max( 2, maximumBinCount );
+        minimumBinCount = FMath.Max( 2, minimumBinCount );
+        maximumBinCount = FMath.Max( 2, maximumBinCount );
         //The microsweep uses the same resources as the bin allocations, so expand to hold whichever is larger.
-        var allocatedBinCount = int.Max( maximumBinCount, microsweepThreshold );
+        var allocatedBinCount = FMath.Max( maximumBinCount, microsweepThreshold );
 
 
         if ( dispatcher == null && taskStackPointer == null )

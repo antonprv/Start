@@ -265,9 +265,21 @@ namespace Framework.FastMath.Godot
         public static int NextPowerOfTwo( int v ) => CoreMath.NextPowerOfTwo( v );
 
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
+        public static float Power( float x, float p, bool precise = false ) =>
+            CoreMath.FastPow( x, p, precise );
+
+        [MethodImpl( MethodImplOptions.AggressiveInlining )]
+        public static float Log2( float x ) =>
+            CoreMath.FastLog2( x );
+
+        [MethodImpl( MethodImplOptions.AggressiveInlining )]
         public static float ByteToFloat( byte b ) => CoreMath.ByteToFloat( b );
 
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
         public static byte FloatToByte( float f ) => CoreMath.FloatToByte( f );
+
+        [MethodImpl( MethodImplOptions.AggressiveInlining )]
+        public static float FastAcos( float x, bool precise = false ) => 
+            CoreMath.FastAcos( x, precise );
     }
 }

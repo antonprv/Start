@@ -1,6 +1,7 @@
 ﻿using BepuUtilities;
 using BepuUtilities.Collections;
 using BepuUtilities.Memory;
+using Framework.FastMath.Numerics;
 using System.Diagnostics;
 using System.Numerics;
 using System.Runtime.CompilerServices;
@@ -220,7 +221,7 @@ namespace BepuPhysics.Constraints
         internal static int GetCountInBundle( ref TypeBatch typeBatch, int bundleStartIndex )
         {
             //TODO: May want to check codegen on this. Min vs explicit branch. Theoretically, it could do this branchlessly...
-            return Math.Min( Vector<float>.Count, typeBatch.ConstraintCount - ( bundleStartIndex << BundleIndexing.VectorShift ) );
+            return FMath.Min( Vector<float>.Count, typeBatch.ConstraintCount - ( bundleStartIndex << BundleIndexing.VectorShift ) );
         }
 
     }
@@ -555,7 +556,7 @@ namespace BepuPhysics.Constraints
                 GatherScatter.ClearLane<TAccumulatedImpulse, float>( ref Buffer<TAccumulatedImpulse>.Get( ref typeBatch.AccumulatedImpulses, targetBundleIndex ), targetInnerIndex );
                 var indexInTypeBatch = targetBundleIndex * Vector<int>.Count + targetInnerIndex;
                 //If the constraint was added after the highest index currently existing constraint, the constraint count needs to be boosted.
-                typeBatch.ConstraintCount = Math.Max( indexInTypeBatch + 1, typeBatch.ConstraintCount );
+                typeBatch.ConstraintCount = FMath.Max( indexInTypeBatch + 1, typeBatch.ConstraintCount );
                 Debug.Assert( typeBatch.IndexToHandle.Length >= typeBatch.ConstraintCount );
                 typeBatch.IndexToHandle[ indexInTypeBatch ] = handle;
                 Debug.Assert( typeBatch.ConstraintCount <= typeBatch.IndexToHandle.Length );
@@ -1127,7 +1128,7 @@ namespace BepuPhysics.Constraints
             var bodiesPerConstraint = InternalBodiesPerConstraint;
             for ( int bundleIndex = 0; bundleIndex < bundleCount; ++bundleIndex )
             {
-                var bundleSize = Math.Min( Vector<float>.Count, typeBatch.ConstraintCount - ( bundleIndex << BundleIndexing.VectorShift ) );
+                var bundleSize = FMath.Min( Vector<float>.Count, typeBatch.ConstraintCount - ( bundleIndex << BundleIndexing.VectorShift ) );
                 ref var bundleBase = ref Unsafe.As<TBodyReferences, Vector<int>>( ref bodyReferences[ bundleIndex ] );
                 for ( int constraintBodyIndex = 0; constraintBodyIndex < bodiesPerConstraint; ++constraintBodyIndex )
                 {

@@ -3,6 +3,8 @@ using BepuPhysics.CollisionDetection;
 using BepuUtilities;
 using BepuUtilities.Collections;
 using BepuUtilities.Memory;
+using Framework.FastMath.Numerics;
+using Framework.FastMath.Numerics.Extensions;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
@@ -161,7 +163,7 @@ namespace BepuPhysics
         public Statics( BufferPool pool, Shapes shapes, Bodies bodies, BroadPhase broadPhase, int initialCapacity = 4096 )
         {
             this.pool = pool;
-            InternalResize( Math.Max( 1, initialCapacity ) );
+            InternalResize( FMath.Max( 1, initialCapacity ) );
 
             this.shapes = shapes;
             this.bodies = bodies;
@@ -404,7 +406,12 @@ namespace BepuPhysics
                 var newSize = HandleToIndex.Length << 1;
                 InternalResize( newSize );
             }
-            Debug.Assert( Math.Abs( description.Pose.Orientation.Length() - 1 ) < 1e-6f, "Orientation should be initialized to a unit length quaternion." );
+            //NOTE: FastLength() (FastInvSqrt, non-precise mode) has a documented worst-case
+            //relative error of ~0.065% - see the header comment in FastQuaternion.cs. The old
+            //1e-6f tolerance assumed exact Length() and was failing on perfectly valid unit
+            //quaternions. FMath.KINDA_SMALL_NUMBER (1e-3f) gives a comfortable margin over that
+            //error while still catching genuinely non-normalized input.
+            Debug.Assert( FMath.Abs( description.Pose.Orientation.FastLength() - 1 ) < FMath.KINDA_SMALL_NUMBER, "Orientation should be initialized to a unit length quaternion." );
             var handle = new StaticHandle( HandlePool.Take() );
             var index = Count++;
             HandleToIndex[ handle.Value ] = index;
@@ -566,7 +573,7 @@ namespace BepuPhysics
         /// <param name="capacity">Target static data capacity.</param>
         public void Resize( int capacity )
         {
-            var targetCapacity = BufferPool.GetCapacityForCount<int>( Math.Max( capacity, Count ) );
+            var targetCapacity = BufferPool.GetCapacityForCount<int>( FMath.Max( capacity, Count ) );
             if ( IndexToHandle.Length != targetCapacity )
             {
                 InternalResize( targetCapacity );

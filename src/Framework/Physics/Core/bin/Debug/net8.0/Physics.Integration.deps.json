@@ -18,7 +18,8 @@
       },
       "BepuPhysics/1.0.0": {
         "dependencies": {
-          "BepuUtilities": "1.0.0"
+          "BepuUtilities": "1.0.0",
+          "FastMath.Numerics": "1.0.0"
         },
         "runtime": {
           "BepuPhysics.dll": {
@@ -28,6 +29,9 @@
         }
       },
       "BepuUtilities/1.0.0": {
+        "dependencies": {
+          "FastMath.Numerics": "1.0.0"
+        },
         "runtime": {
           "BepuUtilities.dll": {
             "assemblyVersion": "1.0.0.0",

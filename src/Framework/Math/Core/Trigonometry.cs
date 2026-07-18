@@ -265,5 +265,28 @@ namespace Framework.FastMath.Core
         /// </summary>
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
         public static float FastCos( float x ) => FastSin( x + HALF_PI );
+
+        /// <summary>
+        /// Fast arccosine. Returns angle in radians, range [0, π].
+        /// Implemented via FastAtan2, so shares its error bounds and avoids
+        /// a separate polynomial fit to keep in sync.
+        /// <para>Fast mode error:    &lt; 0.005 rad (≈ 0.28°)</para>
+        /// <para>Precise mode error: &lt; 0.001 rad  (≈ 0.06°)</para>
+        /// </summary>
+        /// <param name="x">Input value, clamped to [−1, 1].</param>
+        /// <param name="precise">Use higher-order polynomial for better accuracy.</param>
+        [MethodImpl( MethodImplOptions.AggressiveInlining )]
+        public static float FastAcos( float x, bool precise = false )
+        {
+            // Clamp defensively - callers routinely pass dot products that drift
+            // a hair outside [-1, 1] due to float error; Sqrt would return NaN otherwise.
+            if ( x < -1f ) x = -1f;
+            else if ( x > 1f ) x = 1f;
+
+            // acos(x) = atan2(sqrt(1 - x²), x) - reuses the same octant-reduction
+            // machinery and polynomial as FastAtan2 instead of a separate fit.
+            float s = FastSqrt( 1f - x * x );
+            return FastAtan2( s, x, precise );
+        }
     }
 }

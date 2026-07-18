@@ -2,6 +2,7 @@
 using BepuPhysics.Trees;
 using BepuUtilities;
 using BepuUtilities.Memory;
+using Framework.FastMath.Numerics;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
@@ -206,12 +207,14 @@ public struct Compound : ICompoundShape
         {
             ref var child = ref children[ i ];
             GetRotatedChildPose( child.LocalPosition, child.LocalOrientation, pose.Orientation, out var childPose );
-            var angularContributionToChildLinear = Vector3.Cross( velocity.Angular, childPose.Position );
+            var angularContributionToChildLinear = FMath.Cross( velocity.Angular, childPose.Position );
             var contributionLengthSquared = angularContributionToChildLinear.LengthSquared();
             var localPoseRadiusSquared = childPose.Position.LengthSquared();
             if ( contributionLengthSquared > localPoseRadiusSquared )
             {
-                angularContributionToChildLinear *= (float)( Math.Sqrt( localPoseRadiusSquared ) / Math.Sqrt( contributionLengthSquared ) );
+                angularContributionToChildLinear *=
+                    (float)( FMath.FastSqrt( localPoseRadiusSquared ) /
+                    FMath.FastSqrt( contributionLengthSquared ) );
             }
             childVelocity.Linear = velocity.Linear + angularContributionToChildLinear;
             childPose.Position += pose.Position;
@@ -225,7 +228,14 @@ public struct Compound : ICompoundShape
         AddChildBoundsToBatcher( Children, ref batcher, pose, velocity, bodyIndex );
     }
 
-    public void RayTest<TRayHitHandler>( in RigidPose pose, in RayData ray, ref float maximumT, Shapes shapeBatches, BufferPool pool, ref TRayHitHandler hitHandler ) where TRayHitHandler : struct, IShapeRayHitHandler
+    public void RayTest<TRayHitHandler>(
+        in RigidPose pose,
+        in RayData ray,
+        ref float maximumT,
+        Shapes shapeBatches,
+        BufferPool pool,
+        ref TRayHitHandler hitHandler
+    ) where TRayHitHandler : struct, IShapeRayHitHandler
     {
         Matrix3x3.CreateFromQuaternion( pose.Orientation, out var orientation );
         RayData localRay;
@@ -252,7 +262,13 @@ public struct Compound : ICompoundShape
         }
     }
 
-    public unsafe void RayTest<TRayHitHandler>( in RigidPose pose, ref RaySource rays, Shapes shapeBatches, BufferPool pool, ref TRayHitHandler hitHandler ) where TRayHitHandler : struct, IShapeRayHitHandler
+    public unsafe void RayTest<TRayHitHandler>(
+        in RigidPose pose,
+        ref RaySource rays,
+        Shapes shapeBatches,
+        BufferPool pool,
+        ref TRayHitHandler hitHandler
+    ) where TRayHitHandler : struct, IShapeRayHitHandler
     {
         //TODO: Note that we dispatch a bunch of scalar tests here. You could be more clever than this- batched tests are possible.
         //It's relatively easy to do batching for this compound type since there is no hierarchy traversal, but we refactored things to avoid an infinite generic expansion issue in AOT compilation.

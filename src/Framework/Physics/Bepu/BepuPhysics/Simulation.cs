@@ -3,6 +3,7 @@ using BepuPhysics.CollisionDetection;
 using BepuPhysics.Trees;
 using BepuUtilities;
 using BepuUtilities.Memory;
+using Framework.FastMath.Numerics;
 using System.Diagnostics;
 
 #if !DEBUG
@@ -356,7 +357,7 @@ public partial class Simulation : IDisposable
     public void EnsureCapacity( SimulationAllocationSizes allocationTarget )
     {
         Solver.EnsureSolverCapacities( allocationTarget.Bodies, allocationTarget.Constraints );
-        Solver.MinimumCapacityPerTypeBatch = Math.Max( allocationTarget.ConstraintsPerTypeBatch, Solver.MinimumCapacityPerTypeBatch );
+        Solver.MinimumCapacityPerTypeBatch = FMath.Max( allocationTarget.ConstraintsPerTypeBatch, Solver.MinimumCapacityPerTypeBatch );
         Solver.EnsureTypeBatchCapacities();
         NarrowPhase.PairCache.EnsureConstraintToPairMappingCapacity( Solver, allocationTarget.Constraints );
         //Note that the bodies set has to come before the body layout optimizer; the body layout optimizer's sizes are dependent upon the bodies set.

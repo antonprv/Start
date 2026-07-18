@@ -90,8 +90,18 @@ namespace BepuPhysics.Constraints
     {
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
         static void ComputeJacobians(
-            in Vector3Wide ab, in QuaternionWide orientationA, in QuaternionWide orientationB, in Vector3Wide localPlaneNormal, in Vector3Wide localOffsetA, in Vector3Wide localOffsetB, in Vector<float> minimumOffset, in Vector<float> maximumOffset,
-            out Vector<float> error, out Vector3Wide normal, out Vector3Wide angularJA, out Vector3Wide angularJB )
+            in Vector3Wide ab,
+            in QuaternionWide orientationA,
+            in QuaternionWide orientationB,
+            in Vector3Wide localPlaneNormal,
+            in Vector3Wide localOffsetA,
+            in Vector3Wide localOffsetB,
+            in Vector<float> minimumOffset, 
+            in Vector<float> maximumOffset,
+            out Vector<float> error, 
+            out Vector3Wide normal, 
+            out Vector3Wide angularJA, 
+            out Vector3Wide angularJB )
         {
             //Linear jacobians are just normal and -normal. Angular jacobians are offsetA x normal and offsetB x normal.
             Matrix3x3Wide.CreateFromQuaternion( orientationA, out var orientationMatrixA );
@@ -117,39 +127,88 @@ namespace BepuPhysics.Constraints
             Vector3Wide.CrossWithoutOverlap( normal, offsetB, out angularJB );
         }
 
-        public static void WarmStart( in Vector3Wide positionA, in QuaternionWide orientationA, in BodyInertiaWide inertiaA, in Vector3Wide positionB, in QuaternionWide orientationB, in BodyInertiaWide inertiaB, ref LinearAxisLimitPrestepData prestep, ref Vector<float> accumulatedImpulses, ref BodyVelocityWide wsvA, ref BodyVelocityWide wsvB )
+        public static void WarmStart( 
+            in Vector3Wide positionA, in QuaternionWide orientationA, 
+            in BodyInertiaWide inertiaA, in Vector3Wide positionB, 
+            in QuaternionWide orientationB, in BodyInertiaWide inertiaB, 
+            ref LinearAxisLimitPrestepData prestep, ref Vector<float> accumulatedImpulses,
+            ref BodyVelocityWide wsvA, ref BodyVelocityWide wsvB )
         {
-            ComputeJacobians( positionB - positionA, orientationA, orientationB, prestep.LocalPlaneNormal, prestep.LocalOffsetA, prestep.LocalOffsetB, prestep.MinimumOffset, prestep.MaximumOffset, out _, out var normal, out var angularJA, out var angularJB );
+            ComputeJacobians( 
+                positionB - positionA, 
+                orientationA, orientationB, 
+                prestep.LocalPlaneNormal, prestep.LocalOffsetA, 
+                prestep.LocalOffsetB, prestep.MinimumOffset, 
+                prestep.MaximumOffset, out _, out var normal, 
+                out var angularJA, out var angularJB 
+            );
+
             Symmetric3x3Wide.TransformWithoutOverlap( angularJA, inertiaA.InverseInertiaTensor, out var angularImpulseToVelocityA );
             Symmetric3x3Wide.TransformWithoutOverlap( angularJB, inertiaB.InverseInertiaTensor, out var angularImpulseToVelocityB );
-            LinearAxisServoFunctions.ApplyImpulse( normal, angularImpulseToVelocityA, angularImpulseToVelocityB, inertiaA, inertiaB, accumulatedImpulses, ref wsvA, ref wsvB );
+            LinearAxisServoFunctions.ApplyImpulse(
+                normal, angularImpulseToVelocityA,
+                angularImpulseToVelocityB, inertiaA,
+                inertiaB, accumulatedImpulses, 
+                ref wsvA, ref wsvB 
+            );
         }
 
-        public static void Solve( in Vector3Wide positionA, in QuaternionWide orientationA, in BodyInertiaWide inertiaA, in Vector3Wide positionB, in QuaternionWide orientationB, in BodyInertiaWide inertiaB, float dt, float inverseDt, ref LinearAxisLimitPrestepData prestep, ref Vector<float> accumulatedImpulses, ref BodyVelocityWide wsvA, ref BodyVelocityWide wsvB )
+        public static void Solve( 
+            in Vector3Wide positionA, 
+            in QuaternionWide orientationA, 
+            in BodyInertiaWide inertiaA, 
+            in Vector3Wide positionB, in QuaternionWide orientationB, 
+            in BodyInertiaWide inertiaB, float dt, float inverseDt, 
+            ref LinearAxisLimitPrestepData prestep, ref Vector<float> accumulatedImpulses,
+            ref BodyVelocityWide wsvA, ref BodyVelocityWide wsvB 
+        )
         {
-            ComputeJacobians( positionB - positionA, orientationA, orientationB, prestep.LocalPlaneNormal, prestep.LocalOffsetA, prestep.LocalOffsetB, prestep.MinimumOffset, prestep.MaximumOffset, out var error, out var normal, out var angularJA, out var angularJB );
+            ComputeJacobians( 
+                positionB - positionA, orientationA,
+                orientationB, prestep.LocalPlaneNormal, prestep.LocalOffsetA, 
+                prestep.LocalOffsetB, prestep.MinimumOffset, prestep.MaximumOffset,
+                out var error, out var normal, out var angularJA, out var angularJB
+            );
 
-            SpringSettingsWide.ComputeSpringiness( prestep.SpringSettings, dt, out var positionErrorToVelocity, out var effectiveMassCFMScale, out var softnessImpulseScale );
-            LinearAxisServoFunctions.ComputeEffectiveMass( angularJA, angularJB, inertiaA, inertiaB, effectiveMassCFMScale,
-                out var angularImpulseToVelocityA, out var angularImpulseToVelocityB, out var effectiveMass );
+            SpringSettingsWide.ComputeSpringiness( 
+                prestep.SpringSettings, dt, out var positionErrorToVelocity,
+                out var effectiveMassCFMScale, out var softnessImpulseScale 
+            );
+
+            LinearAxisServoFunctions.ComputeEffectiveMass( 
+                angularJA, angularJB, inertiaA,
+                inertiaB, effectiveMassCFMScale,
+                out var angularImpulseToVelocityA, 
+                out var angularImpulseToVelocityB, out var effectiveMass 
+            );
 
             InequalityHelpers.ComputeBiasVelocity( error, positionErrorToVelocity, inverseDt, out var biasVelocity );
 
-            //csi = projection.BiasImpulse - accumulatedImpulse * projection.SoftnessImpulseScale - (csiaLinear + csiaAngular + csibLinear + csibAngular);
-            var csv = Vector3Wide.Dot( wsvA.Linear - wsvB.Linear, normal ) + Vector3Wide.Dot( wsvA.Angular, angularJA ) + Vector3Wide.Dot( wsvB.Angular, angularJB );
+            //csi = projection.BiasImpulse - accumulatedImpulse * projection.SoftnessImpulseScale
+            //- (csiaLinear + csiaAngular + csibLinear + csibAngular);
+
+            var csv = Vector3Wide.Dot( wsvA.Linear - wsvB.Linear, normal ) + 
+                Vector3Wide.Dot( wsvA.Angular, angularJA ) + 
+                Vector3Wide.Dot( wsvB.Angular, angularJB );
 
             var csi = effectiveMass * ( biasVelocity - csv ) - accumulatedImpulses * softnessImpulseScale;
 
             InequalityHelpers.ClampPositive( ref accumulatedImpulses, ref csi );
-            LinearAxisServoFunctions.ApplyImpulse( normal, angularImpulseToVelocityA, angularImpulseToVelocityB, inertiaA, inertiaB, csi, ref wsvA, ref wsvB );
+            LinearAxisServoFunctions.ApplyImpulse( 
+                normal, angularImpulseToVelocityA,
+                angularImpulseToVelocityB, inertiaA,
+                inertiaB, csi, ref wsvA, ref wsvB );
         }
 
         public static bool RequiresIncrementalSubstepUpdates => false;
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
-        public static void IncrementallyUpdateForSubstep( in Vector<float> dt, in BodyVelocityWide wsvA, in BodyVelocityWide wsvB, ref LinearAxisLimitPrestepData prestepData ) { }
+        public static void IncrementallyUpdateForSubstep( 
+            in Vector<float> dt, in BodyVelocityWide wsvA,
+            in BodyVelocityWide wsvB, ref LinearAxisLimitPrestepData prestepData ) { }
     }
 
-    public class LinearAxisLimitTypeProcessor : TwoBodyTypeProcessor<LinearAxisLimitPrestepData, Vector<float>, LinearAxisLimitFunctions, AccessAll, AccessAll, AccessAll, AccessAll>
+    public class LinearAxisLimitTypeProcessor : TwoBodyTypeProcessor<LinearAxisLimitPrestepData,
+        Vector<float>, LinearAxisLimitFunctions, AccessAll, AccessAll, AccessAll, AccessAll>
     {
         public const int BatchTypeId = 40;
     }

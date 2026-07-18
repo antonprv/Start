@@ -1,5 +1,6 @@
 ﻿using BepuPhysics.Collidables;
 using BepuUtilities.Memory;
+using Framework.FastMath.Core;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
@@ -116,7 +117,14 @@ namespace BepuPhysics
             {
                 var targetCount = BufferPool.GetCapacityForCount<T>( simulation.Bodies.HandlePool.HighestPossiblyClaimedId + 1 );
                 Debug.Assert( targetCount > bodyData.Length, "Given what just happened, we must require a resize." );
-                pool.ResizeToAtLeast( ref bodyData, targetCount, Math.Min( simulation.Bodies.HandlePool.HighestPossiblyClaimedId + 1, bodyData.Length ) );
+                pool.ResizeToAtLeast( 
+                    ref bodyData, 
+                    targetCount, 
+                    FMath.Min( 
+                        simulation.Bodies.HandlePool.HighestPossiblyClaimedId + 1,
+                        bodyData.Length 
+                    ) 
+                );
             }
             return ref bodyData[ bodyHandle.Value ];
         }
@@ -134,7 +142,8 @@ namespace BepuPhysics
             {
                 var targetCount = BufferPool.GetCapacityForCount<T>( simulation.Statics.HandlePool.HighestPossiblyClaimedId + 1 );
                 Debug.Assert( targetCount > staticData.Length, "Given what just happened, we must require a resize." );
-                pool.ResizeToAtLeast( ref staticData, targetCount, Math.Min( simulation.Statics.HandlePool.HighestPossiblyClaimedId + 1, staticData.Length ) );
+                pool.ResizeToAtLeast( ref staticData, targetCount, FMath.Min(
+                    simulation.Statics.HandlePool.HighestPossiblyClaimedId + 1, staticData.Length ) );
             }
             return ref staticData[ handle.Value ];
         }
@@ -160,10 +169,12 @@ namespace BepuPhysics
         /// <param name="capacity">Capacity to ensure.</param>
         public void EnsureBodyCapacity( int capacity )
         {
-            var targetCount = BufferPool.GetCapacityForCount<T>( Math.Max( simulation.Bodies.HandlePool.HighestPossiblyClaimedId + 1, capacity ) );
+            var targetCount = BufferPool.GetCapacityForCount<T>( FMath.Max( 
+                simulation.Bodies.HandlePool.HighestPossiblyClaimedId + 1, capacity ) );
             if ( targetCount > bodyData.Length )
             {
-                pool.ResizeToAtLeast( ref bodyData, targetCount, Math.Min( bodyData.Length, simulation.Bodies.HandlePool.HighestPossiblyClaimedId + 1 ) );
+                pool.ResizeToAtLeast( ref bodyData, targetCount, FMath.Min( 
+                    bodyData.Length, simulation.Bodies.HandlePool.HighestPossiblyClaimedId + 1 ) );
             }
         }
         /// <summary>
@@ -172,10 +183,12 @@ namespace BepuPhysics
         /// <param name="capacity">Capacity to ensure.</param>
         public void EnsureStaticCapacity( int capacity )
         {
-            var targetCount = BufferPool.GetCapacityForCount<T>( Math.Max( simulation.Statics.HandlePool.HighestPossiblyClaimedId + 1, capacity ) );
+            var targetCount = BufferPool.GetCapacityForCount<T>( FMath.Max( 
+                simulation.Statics.HandlePool.HighestPossiblyClaimedId + 1, capacity ) );
             if ( targetCount > staticData.Length )
             {
-                pool.ResizeToAtLeast( ref staticData, targetCount, Math.Min( staticData.Length, simulation.Statics.HandlePool.HighestPossiblyClaimedId + 1 ) );
+                pool.ResizeToAtLeast( ref staticData, targetCount, FMath.Min( 
+                    staticData.Length, simulation.Statics.HandlePool.HighestPossiblyClaimedId + 1 ) );
             }
         }
 

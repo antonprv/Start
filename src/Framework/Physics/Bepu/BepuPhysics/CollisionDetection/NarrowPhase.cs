@@ -3,6 +3,8 @@ using BepuPhysics.Constraints.Contact;
 using BepuUtilities;
 using BepuUtilities.Collections;
 using BepuUtilities.Memory;
+using Framework.FastMath.Numerics;
+using Framework.FastMath.Numerics.Extensions;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
@@ -526,9 +528,9 @@ namespace BepuPhysics.CollisionDetection
                     ref var bTree = ref bInStaticTree ? ref Simulation.BroadPhase.StaticTree : ref Simulation.BroadPhase.ActiveTree;
                     aTree.GetBoundsPointers( broadPhaseIndexA, out var aMin, out var aMax );
                     bTree.GetBoundsPointers( broadPhaseIndexB, out var bMin, out var bMax );
-                    var maximumRadiusA = ( *aMax - *aMin ).Length() * 0.5f;
-                    var maximumRadiusB = ( *bMax - *bMin ).Length() * 0.5f;
-                    if ( ( velocityA.Angular.Length() * maximumRadiusA + velocityB.Angular.Length() * maximumRadiusB + ( velocityB.Linear - velocityA.Linear ).Length() ) * timestepDuration > speculativeMargin )
+                    var maximumRadiusA = ( *aMax - *aMin ).FastLength() * 0.5f;
+                    var maximumRadiusB = ( *bMax - *bMin ).FastLength() * 0.5f;
+                    if ( ( velocityA.Angular.FastLength() * maximumRadiusA + velocityB.Angular.FastLength() * maximumRadiusB + ( velocityB.Linear - velocityA.Linear ).FastLength() ) * timestepDuration > speculativeMargin )
                     {
                         Simulation.Shapes[ shapeA.Type ].GetShapeData( shapeA.Index, out var shapeDataA, out var shapeSizeA );
                         Simulation.Shapes[ shapeB.Type ].GetShapeData( shapeB.Index, out var shapeDataB, out var shapeSizeB );
@@ -560,8 +562,8 @@ namespace BepuPhysics.CollisionDetection
                             shapeDataB, shapeB.Type, poseB.Position - poseA.Position, poseB.Orientation, velocityB,
                             timestepDuration,
                             //Note that we use the *smaller* thresholds. This allows high fidelity objects to demand more time even if paired with low fidelity objects.
-                            Math.Min( minimumSweepTimestepA, minimumSweepTimestepB ),
-                            Math.Min( sweepConvergenceThresholdA, sweepConvergenceThresholdB ), 25, //Note the fixed but high iteration threshold.
+                            FMath.Min( minimumSweepTimestepA, minimumSweepTimestepB ),
+                            FMath.Min( sweepConvergenceThresholdA, sweepConvergenceThresholdB ), 25, //Note the fixed but high iteration threshold.
                             ref filter, Simulation.Shapes, SweepTaskRegistry, overlapWorker.Batcher.Pool, out _, out var t1, out _, out _ ) )
                         {
                             //Create the pair at a position known to be intersecting from the sweep test. t0 and t1 are the bounding region of the first time of impact,

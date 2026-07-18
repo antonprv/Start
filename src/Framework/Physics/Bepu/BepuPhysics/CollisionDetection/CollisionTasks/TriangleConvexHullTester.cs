@@ -1,6 +1,7 @@
 ﻿using BepuPhysics.Collidables;
 using BepuUtilities;
 using BepuUtilities.Memory;
+using Framework.FastMath.Numerics;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 
@@ -200,7 +201,7 @@ namespace BepuPhysics.CollisionDetection.CollisionTasks
             var inverseTriangleNormalDotLocalNormal = Vector<float>.One / triangleNormalDotLocalNormal;
 
             //Maximum number of edge-related contacts is 6. Maximum number of triangle vertex contacts is 3. Maximum number of hull vertex contacts is whatever the largest face is.
-            int maximumContactCount = Math.Max( 6, maximumFaceVertexCount );
+            int maximumContactCount = FMath.Max( 6, maximumFaceVertexCount );
             var candidates = stackalloc ManifoldCandidateScalar[ maximumContactCount ];
             //To find the contact manifold, we'll clip the triangle edges against the hull face as usual, but we're dealing with potentially
             //distinct convex hulls. Rather than vectorizing over the different hulls, we vectorize within each hull.
@@ -258,27 +259,27 @@ namespace BepuPhysics.CollisionDetection.CollisionTasks
                     var bp = vertex - slotBOnHull;
                     //Note that the edge planes could be zero if the projected edge has zero length. In that case, containment is impossible, because the projected triangle is degenerate.
                     //So, use strict inequality.
-                    var vertexContained = Vector3.Dot( ap, slotABEdgePlaneOnHull ) < 0 && Vector3.Dot( bp, slotBCEdgePlaneOnHull ) < 0 && Vector3.Dot( ap, slotCAEdgePlaneOnHull ) < 0;
+                    var vertexContained = FMath.Dot( ap, slotABEdgePlaneOnHull ) < 0 && FMath.Dot( bp, slotBCEdgePlaneOnHull ) < 0 && FMath.Dot( ap, slotCAEdgePlaneOnHull ) < 0;
                     if ( vertexContained && candidateCount < maximumContactCount )
                     {
                         //Project the hull vertex down to the triangle's surface. The fact that we determined the vertex was contained means the local normal isn't dangerously perpendicular.
-                        var projectionT = Vector3.Dot( vertex - slotTriangleA, slotTriangleNormal ) * slotInverseTriangleNormalDotLocalNormal;
+                        var projectionT = FMath.Dot( vertex - slotTriangleA, slotTriangleNormal ) * slotInverseTriangleNormalDotLocalNormal;
                         var projectedVertex = vertex - slotLocalNormal * projectionT;
                         var newContactIndex = candidateCount++;
                         ref var candidate = ref candidates[ newContactIndex ];
                         //Use triangle.A as the surface basis origin.
                         var toVertex = projectedVertex - slotTriangleA;
-                        candidate.X = Vector3.Dot( toVertex, slotTriangleTangentX );
-                        candidate.Y = Vector3.Dot( toVertex, slotTriangleTangentY );
+                        candidate.X = FMath.Dot( toVertex, slotTriangleTangentX );
+                        candidate.Y = FMath.Dot( toVertex, slotTriangleTangentY );
                         //Vertex contacts occupy the feature indices after the edge slots.
                         candidate.FeatureId = 6 + i;
                     }
 
                     //Intersect the three triangle edges against the hull edge.
                     //Use the sign of the denominator to determine if a triangle edge is entering or exiting a given hull edge.
-                    var hullEdgePlaneNormal = Vector3.Cross( hullEdgeOffset, slotLocalNormal );
-                    var abNumerator = Vector3.Dot( ap, hullEdgePlaneNormal );
-                    var abDenominator = Vector3.Dot( hullEdgePlaneNormal, slotABOnHull );
+                    var hullEdgePlaneNormal = FMath.Cross( hullEdgeOffset, slotLocalNormal );
+                    var abNumerator = FMath.Dot( ap, hullEdgePlaneNormal );
+                    var abDenominator = FMath.Dot( hullEdgePlaneNormal, slotABOnHull );
                     if ( abDenominator < 0 )
                     {
                         if ( latestEntryAB * abDenominator > abNumerator ) //Note sign flip for comparison.
@@ -298,8 +299,8 @@ namespace BepuPhysics.CollisionDetection.CollisionTasks
                             latestEntryAB = float.MaxValue;
                         }
                     }
-                    var bcNumerator = Vector3.Dot( bp, hullEdgePlaneNormal );
-                    var bcDenominator = Vector3.Dot( hullEdgePlaneNormal, slotBCOnHull );
+                    var bcNumerator = FMath.Dot( bp, hullEdgePlaneNormal );
+                    var bcDenominator = FMath.Dot( hullEdgePlaneNormal, slotBCOnHull );
                     if ( bcDenominator < 0 )
                     {
                         if ( latestEntryBC * bcDenominator > bcNumerator ) //Note sign flip for comparison.
@@ -319,8 +320,8 @@ namespace BepuPhysics.CollisionDetection.CollisionTasks
                             latestEntryBC = float.MaxValue;
                         }
                     }
-                    var caNumerator = Vector3.Dot( vertex - slotCOnHull, hullEdgePlaneNormal );
-                    var caDenominator = Vector3.Dot( hullEdgePlaneNormal, slotCAOnHull );
+                    var caNumerator = FMath.Dot( vertex - slotCOnHull, hullEdgePlaneNormal );
+                    var caDenominator = FMath.Dot( hullEdgePlaneNormal, slotCAOnHull );
                     if ( caDenominator < 0 )
                     {
                         if ( latestEntryCA * caDenominator > caNumerator ) //Note sign flip for comparison.
@@ -343,12 +344,12 @@ namespace BepuPhysics.CollisionDetection.CollisionTasks
                 }
 
                 //We now have triangle edge intervals. Add contacts for them.
-                latestEntryAB = MathF.Max( latestEntryAB, 0 );
-                latestEntryBC = MathF.Max( latestEntryBC, 0 );
-                latestEntryCA = MathF.Max( latestEntryCA, 0 );
-                earliestExitAB = MathF.Min( earliestExitAB, 1 );
-                earliestExitBC = MathF.Min( earliestExitBC, 1 );
-                earliestExitCA = MathF.Min( earliestExitCA, 1 );
+                latestEntryAB = FMath.Max( latestEntryAB, 0 );
+                latestEntryBC = FMath.Max( latestEntryBC, 0 );
+                latestEntryCA = FMath.Max( latestEntryCA, 0 );
+                earliestExitAB = FMath.Min( earliestExitAB, 1 );
+                earliestExitBC = FMath.Min( earliestExitBC, 1 );
+                earliestExitCA = FMath.Min( earliestExitCA, 1 );
                 //Create max contact if max >= min.
                 //Create min if min < max and min > 0.  
                 if ( earliestExitAB >= latestEntryAB && candidateCount < maximumContactCount )
@@ -357,8 +358,8 @@ namespace BepuPhysics.CollisionDetection.CollisionTasks
                     var point = slotTriangleAB * earliestExitAB; //Note triangle A is origin for surface basis.
                     var newContactIndex = candidateCount++;
                     ref var candidate = ref candidates[ newContactIndex ];
-                    candidate.X = Vector3.Dot( point, slotTriangleTangentX );
-                    candidate.Y = Vector3.Dot( point, slotTriangleTangentY );
+                    candidate.X = FMath.Dot( point, slotTriangleTangentX );
+                    candidate.Y = FMath.Dot( point, slotTriangleTangentY );
                     candidate.FeatureId = 0;
 
                 }
@@ -368,8 +369,8 @@ namespace BepuPhysics.CollisionDetection.CollisionTasks
                     var point = slotTriangleAB * latestEntryAB; //Note triangle A is origin for surface basis.
                     var newContactIndex = candidateCount++;
                     ref var candidate = ref candidates[ newContactIndex ];
-                    candidate.X = Vector3.Dot( point, slotTriangleTangentX );
-                    candidate.Y = Vector3.Dot( point, slotTriangleTangentY );
+                    candidate.X = FMath.Dot( point, slotTriangleTangentX );
+                    candidate.Y = FMath.Dot( point, slotTriangleTangentY );
                     candidate.FeatureId = 1;
                 }
                 if ( earliestExitBC >= latestEntryBC && candidateCount < maximumContactCount )
@@ -378,8 +379,8 @@ namespace BepuPhysics.CollisionDetection.CollisionTasks
                     var point = slotTriangleBC * earliestExitBC + slotTriangleAB;
                     var newContactIndex = candidateCount++;
                     ref var candidate = ref candidates[ newContactIndex ];
-                    candidate.X = Vector3.Dot( point, slotTriangleTangentX );
-                    candidate.Y = Vector3.Dot( point, slotTriangleTangentY );
+                    candidate.X = FMath.Dot( point, slotTriangleTangentX );
+                    candidate.Y = FMath.Dot( point, slotTriangleTangentY );
                     candidate.FeatureId = 2;
 
                 }
@@ -389,8 +390,8 @@ namespace BepuPhysics.CollisionDetection.CollisionTasks
                     var point = slotTriangleBC * latestEntryBC + slotTriangleAB;
                     var newContactIndex = candidateCount++;
                     ref var candidate = ref candidates[ newContactIndex ];
-                    candidate.X = Vector3.Dot( point, slotTriangleTangentX );
-                    candidate.Y = Vector3.Dot( point, slotTriangleTangentY );
+                    candidate.X = FMath.Dot( point, slotTriangleTangentX );
+                    candidate.Y = FMath.Dot( point, slotTriangleTangentY );
                     candidate.FeatureId = 3;
                 }
                 if ( earliestExitCA >= latestEntryCA && candidateCount < maximumContactCount )
@@ -399,8 +400,8 @@ namespace BepuPhysics.CollisionDetection.CollisionTasks
                     var point = slotTriangleCA * earliestExitCA - slotTriangleCA;
                     var newContactIndex = candidateCount++;
                     ref var candidate = ref candidates[ newContactIndex ];
-                    candidate.X = Vector3.Dot( point, slotTriangleTangentX );
-                    candidate.Y = Vector3.Dot( point, slotTriangleTangentY );
+                    candidate.X = FMath.Dot( point, slotTriangleTangentX );
+                    candidate.Y = FMath.Dot( point, slotTriangleTangentY );
                     candidate.FeatureId = 4;
 
                 }
@@ -410,8 +411,8 @@ namespace BepuPhysics.CollisionDetection.CollisionTasks
                     var point = slotTriangleCA * latestEntryCA - slotTriangleCA;
                     var newContactIndex = candidateCount++;
                     ref var candidate = ref candidates[ newContactIndex ];
-                    candidate.X = Vector3.Dot( point, slotTriangleTangentX );
-                    candidate.Y = Vector3.Dot( point, slotTriangleTangentY );
+                    candidate.X = FMath.Dot( point, slotTriangleTangentX );
+                    candidate.Y = FMath.Dot( point, slotTriangleTangentY );
                     candidate.FeatureId = 5;
                 }
 
@@ -419,7 +420,7 @@ namespace BepuPhysics.CollisionDetection.CollisionTasks
                 //Note the potential use of an effective normal means the triangle face representative is chosen as the closest point.
                 Vector3Wide.ReadSlot( ref offsetB, slotIndex, out var slotOffsetB );
                 Matrix3x3Wide.ReadSlot( ref hullOrientation, slotIndex, out var slotHullOrientation );
-                ManifoldCandidateHelper.Reduce( candidates, candidateCount, slotFaceNormal, -1f / Vector3.Dot( slotFaceNormal, slotLocalNormal ), previousVertex, slotTriangleA, slotTriangleTangentX, slotTriangleTangentY, epsilonScale[ slotIndex ], depthThreshold[ slotIndex ],
+                ManifoldCandidateHelper.Reduce( candidates, candidateCount, slotFaceNormal, -1f / FMath.Dot( slotFaceNormal, slotLocalNormal ), previousVertex, slotTriangleA, slotTriangleTangentX, slotTriangleTangentY, epsilonScale[ slotIndex ], depthThreshold[ slotIndex ],
                    slotHullOrientation, slotOffsetB, slotIndex, ref manifold );
             }
 

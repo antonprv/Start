@@ -1,6 +1,8 @@
 ﻿using BepuPhysics.CollisionDetection;
 using BepuUtilities;
 using BepuUtilities.Memory;
+using Framework.FastMath.Numerics;
+using Framework.FastMath.Numerics.Extensions;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 
@@ -63,19 +65,19 @@ namespace BepuPhysics.Collidables
             Matrix3x3.TransformTranspose( direction, orientation, out var d );
 
             //Normalize the direction. Sqrts aren't *that* bad, and it both simplifies things and helps avoid numerical problems.
-            var inverseDLength = 1f / d.Length();
+            var inverseDLength = 1f / d.FastLength();
             d *= inverseDLength;
 
             //Move the origin up to the earliest possible impact time. This isn't necessary for math reasons, but it does help avoid some numerical problems.
-            var tOffset = -Vector3.Dot( o, d ) - ( HalfLength + Radius );
+            var tOffset = -FMath.Dot( o, d ) - ( HalfLength + Radius );
             tOffset = float.Max( 0, tOffset );
             o += d * tOffset;
             var oh = new Vector3( o.X, 0, o.Z );
             var dh = new Vector3( d.X, 0, d.Z );
-            var a = Vector3.Dot( dh, dh );
-            var b = Vector3.Dot( oh, dh );
+            var a = FMath.Dot( dh, dh );
+            var b = FMath.Dot( oh, dh );
             var radiusSquared = Radius * Radius;
-            var c = Vector3.Dot( oh, oh ) - radiusSquared;
+            var c = FMath.Dot( oh, oh ) - radiusSquared;
             if ( b > 0 && c > 0 )
             {
                 //Ray is outside and pointing away, no hit.
@@ -95,7 +97,7 @@ namespace BepuPhysics.Collidables
                     normal = new Vector3();
                     return false;
                 }
-                t = ( -b - MathF.Sqrt( discriminant ) ) / a;
+                t = ( -b - FMath.FastSqrt( discriminant ) ) / a;
                 if ( t < -tOffset )
                     t = -tOffset;
                 var cylinderHitLocation = o + d * t;
@@ -122,13 +124,13 @@ namespace BepuPhysics.Collidables
                 //Note that the sphere cap is nudged forward to match the origin of the ray.
                 //This is just a simple way to capture the case where the ray starts inside the capsule, but too far to up/down to hit the cap chosen by d.Y.
                 sphereY = d.Y > 0 ?
-                    float.Max( float.Min( HalfLength, o.Y ), -HalfLength ) :
-                    float.Min( float.Max( -HalfLength, o.Y ), HalfLength );
+                    FMath.Max( FMath.Min( HalfLength, o.Y ), -HalfLength ) :
+                    FMath.Min( FMath.Max( -HalfLength, o.Y ), HalfLength );
             }
 
             var os = o - new Vector3( 0, sphereY, 0 );
-            var capB = Vector3.Dot( os, d );
-            var capC = Vector3.Dot( os, os ) - radiusSquared;
+            var capB = FMath.Dot( os, d );
+            var capC = FMath.Dot( os, os ) - radiusSquared;
 
             if ( capB > 0 && capC > 0 )
             {
@@ -146,8 +148,8 @@ namespace BepuPhysics.Collidables
                 normal = new Vector3();
                 return false;
             }
-            t = -capB - MathF.Sqrt( capDiscriminant );
-            t = float.Max( t, -tOffset );
+            t = -capB - FMath.FastSqrt( capDiscriminant );
+            t = FMath.Max( t, -tOffset );
             normal = ( os + d * t ) / Radius;
             t = ( t + tOffset ) * inverseDLength;
             Matrix3x3.Transform( normal, orientation, out normal );
@@ -161,8 +163,8 @@ namespace BepuPhysics.Collidables
             inertia.InverseMass = 1f / mass;
             var r2 = Radius * Radius;
             var h2 = HalfLength * HalfLength;
-            var cylinderVolume = 2 * HalfLength * r2 * MathHelper.Pi;
-            var sphereVolume = ( 4f / 3f ) * r2 * Radius * MathHelper.Pi;
+            var cylinderVolume = 2 * HalfLength * r2 * FMath.PI;
+            var sphereVolume = ( 4f / 3f ) * r2 * Radius * FMath.PI;
             var inverseTotal = 1f / ( cylinderVolume + sphereVolume );
             //Volume is in units of the capsule's whole volume.
             cylinderVolume *= inverseTotal;

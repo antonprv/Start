@@ -1,6 +1,7 @@
 ﻿using BepuUtilities;
 using BepuUtilities.Memory;
 using BepuUtilities.TaskScheduling;
+using Framework.FastMath.Numerics;
 using System.Diagnostics;
 
 using Task = BepuUtilities.TaskScheduling.Task;
@@ -104,12 +105,12 @@ partial struct Tree
         if ( targetTaskCount < 0 )
             targetTaskCount = dispatcher.ThreadCount;
         const int minimumTaskSize = 32;
-        var leafCountPerTask = int.Max( minimumTaskSize, (int)float.Ceiling( LeafCount / (float)targetTaskCount ) );
+        var leafCountPerTask = FMath.Max( minimumTaskSize, (int)float.Ceiling( LeafCount / (float)targetTaskCount ) );
         var refitContext = new RefitContext { LeafCountPerTask = leafCountPerTask, TaskStack = taskStack, Tree = this };
         if ( internallyDispatch )
         {
             taskStack->PushUnsafely( new Task( &RefitRootEntryTask, &refitContext ), workerIndex, dispatcher );
-            TaskStack.DispatchWorkers( dispatcher, taskStack, int.Min( dispatcher.ThreadCount, targetTaskCount ) );
+            TaskStack.DispatchWorkers( dispatcher, taskStack, FMath.Min( dispatcher.ThreadCount, targetTaskCount ) );
         }
         else
         {
@@ -329,7 +330,7 @@ partial struct Tree
             targetTaskCount = dispatcher.ThreadCount;
 
         const int minimumTaskSize = 32;
-        var leafCountPerTask = int.Max( minimumTaskSize, (int)float.Ceiling( LeafCount / (float)targetTaskCount ) );
+        var leafCountPerTask = FMath.Max( minimumTaskSize, (int)FMath.Ceil( LeafCount / (float)targetTaskCount ) );
         var refitContext = new RefitWithCacheOptimizationContext
         {
             SourceNodes = sourceNodes,
@@ -340,7 +341,7 @@ partial struct Tree
         if ( internallyDispatch )
         {
             taskStack->PushUnsafely( new Task( &RefitWithCacheOptimizationRootEntryTask, &refitContext ), workerIndex, dispatcher );
-            TaskStack.DispatchWorkers( dispatcher, taskStack, int.Min( dispatcher.ThreadCount, targetTaskCount ) );
+            TaskStack.DispatchWorkers( dispatcher, taskStack, FMath.Min( dispatcher.ThreadCount, targetTaskCount ) );
         }
         else
         {

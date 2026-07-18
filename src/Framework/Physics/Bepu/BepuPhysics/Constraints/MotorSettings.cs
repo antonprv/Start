@@ -15,12 +15,16 @@ namespace BepuPhysics.Constraints
         /// </summary>
         public float MaximumForce;
         /// <summary>
-        /// Mass-scaled damping constant. If you want to simulate a viscous damping coefficient of D with an object of mass M, set this damping value to D / M.
+        /// Mass-scaled damping constant.
+        /// If you want to simulate a viscous damping coefficient of D
+        /// with an object of mass M, set this damping value to D / M.
         /// </summary>
         public float Damping;
 
         /// <summary>
-        /// Gets or sets how soft the constraint is. Values range from 0 to infinity. Softness is inverse damping; 0 is perfectly rigid, 1 is very soft, float.MaxValue is effectively nonexistent.
+        /// Gets or sets how soft the constraint is. Values range from 0 to infinity. 
+        /// Softness is inverse damping; 0 is perfectly rigid, 1 is very soft, 
+        /// float.MaxValue is effectively nonexistent.
         /// </summary>
         public float Softness { get { return 1f / Damping; } set { Damping = value <= 0 ? float.MaxValue : 1f / value; } }
 
@@ -31,14 +35,17 @@ namespace BepuPhysics.Constraints
         /// <returns>True if the settings are valid, false otherwise.</returns>
         public static bool Validate( in MotorSettings settings )
         {
-            return ConstraintChecker.IsNonnegativeNumber( settings.MaximumForce ) && ConstraintChecker.IsNonnegativeNumber( settings.Damping );
+            return ConstraintChecker.IsNonnegativeNumber( settings.MaximumForce ) 
+                && ConstraintChecker.IsNonnegativeNumber( settings.Damping );
         }
 
         /// <summary>
         /// Defines settings for a motor constraint.
         /// </summary>
         /// <param name="maximumForce">Maximum amount of force the motor can apply in one unit of time.</param>
-        /// <param name="softness">Gets or sets how soft the constraint is. Values range from 0 to infinity. Softness is inverse damping; 0 is perfectly rigid, 1 is very soft, float.MaxValue is effectively nonexistent.</param>
+        /// <param name="softness">Gets or sets how soft the constraint is. Values range from 0 to infinity. 
+        /// Softness is inverse damping; 0 is perfectly rigid, 1 is very soft, 
+        /// float.MaxValue is effectively nonexistent.</param>
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
         public MotorSettings( float maximumForce, float softness ) : this()
         {
@@ -69,9 +76,11 @@ namespace BepuPhysics.Constraints
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
         public static void ComputeSoftness( in MotorSettingsWide settings, float dt, out Vector<float> effectiveMassCFMScale, out Vector<float> softnessImpulseScale, out Vector<float> maximumImpulse )
         {
-            //We can't use damping ratio for a velocity motor; there is no position goal, so there is no such thing as critical damping.
+            //We can't use damping ratio for a velocity motor; there is no position goal,
+            //so there is no such thing as critical damping.
             //Instead, we start with the damping constant.
-            //However, just as we use damping ratio and frequency to avoid dealing with mass tuning, the user tunes the damping constant *divided by mass*.
+            //However, just as we use damping ratio and frequency to avoid dealing with mass tuning,
+            //the user tunes the damping constant *divided by mass*.
             //d = user damping constant, representing the predivided value
             //CFM = 1 / raw damping constant
             //CFM = (d * effectiveMass)^-1 = effectiveMass^-1 * d^-1
@@ -82,7 +91,8 @@ namespace BepuPhysics.Constraints
             //softenedEffectiveMass = effectiveMass / (1 + 1 / (d * dt))
 
             //For the accumulated impulse scaling component:
-            //impulse = bias * softenedEffectiveMass - accumulatedImpulse * CFM/dt * softenedEffectiveMass - wsv * JT * softenedEffectiveMass
+            //impulse = bias * softenedEffectiveMass - accumulatedImpulse * CFM/dt * softenedEffectiveMass - wsv *
+            //JT * softenedEffectiveMass
             //Focusing on softness term:
             //CFM/dt * softenedEffectiveMass = (effectiveMass^-1 / (d * dt)) * effectiveMass / (1 + 1 / (d * dt))
             //CFM/dt * softenedEffectiveMass = effectiveMass^-1 * (effectiveMass / (1 + 1 / (d * dt))) / (d * dt)

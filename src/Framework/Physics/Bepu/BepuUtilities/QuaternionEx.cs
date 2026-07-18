@@ -1,4 +1,6 @@
-﻿using System.Numerics;
+﻿using Framework.FastMath.Numerics;
+using Framework.FastMath.Numerics.Extensions;
+using System.Numerics;
 using System.Runtime.CompilerServices;
 namespace BepuUtilities
 {
@@ -143,7 +145,7 @@ namespace BepuUtilities
                     q.W = t;
                 }
             }
-            Scale( q, 0.5f / (float)Math.Sqrt( t ), out q );
+            Scale( q, 0.5f / (float)FMath.FastSqrt( t ), out q );
         }
 
         /// <summary>
@@ -182,103 +184,6 @@ namespace BepuUtilities
             CreateFromRotationMatrix( rotation3x3, out var q );
             return q;
         }
-
-        /// <summary>
-        /// Ensures the quaternion has unit length.
-        /// </summary>
-        /// <param name="quaternion">Quaternion to normalize.</param>
-        [MethodImpl( MethodImplOptions.AggressiveInlining )]
-        public static void Normalize( ref Quaternion quaternion )
-        {
-            ref var q = ref Unsafe.As<Quaternion, Vector4>( ref quaternion );
-            q = q / (float)Math.Sqrt( Vector4.Dot( q, q ) ); //not great; MathF when available or perhaps alternatives?
-        }
-
-        [MethodImpl( MethodImplOptions.AggressiveInlining )]
-        public static Quaternion Normalize( Quaternion quaternion )
-        {
-            Normalize( ref quaternion );
-            return quaternion;
-        }
-
-        /// <summary>
-        /// Computes the squared length of the quaternion.
-        /// </summary>
-        /// <returns>Squared length of the quaternion.</returns>
-        [MethodImpl( MethodImplOptions.AggressiveInlining )]
-        public static float LengthSquared( ref Quaternion quaternion )
-        {
-            return Unsafe.As<Quaternion, Vector4>( ref quaternion ).LengthSquared();
-        }
-
-        /// <summary>
-        /// Computes the length of the quaternion.
-        /// </summary>
-        /// <returns>Length of the quaternion.</returns>
-        [MethodImpl( MethodImplOptions.AggressiveInlining )]
-        public static float Length( ref Quaternion quaternion )
-        {
-            return Unsafe.As<Quaternion, Vector4>( ref quaternion ).Length();
-        }
-
-        /// <summary>
-        /// Blends two quaternions together to get an intermediate state.
-        /// </summary>
-        /// <param name="start">Starting point of the interpolation.</param>
-        /// <param name="end">Ending point of the interpolation.</param>
-        /// <param name="interpolationAmount">Amount of the end point to use.</param>
-        /// <param name="result">Interpolated intermediate quaternion.</param>
-        [MethodImpl( MethodImplOptions.AggressiveInlining )]
-        public static void Slerp( Quaternion start, Quaternion end, float interpolationAmount, out Quaternion result )
-        {
-            double cosHalfTheta = start.W * end.W + start.X * end.X + start.Y * end.Y + start.Z * end.Z;
-            if ( cosHalfTheta < 0 )
-            {
-                //Negating a quaternion results in the same orientation, 
-                //but we need cosHalfTheta to be positive to get the shortest path.
-                end.X = -end.X;
-                end.Y = -end.Y;
-                end.Z = -end.Z;
-                end.W = -end.W;
-                cosHalfTheta = -cosHalfTheta;
-            }
-            // If the orientations are similar enough, then just pick one of the inputs.
-            if ( cosHalfTheta > ( 1.0 - 1e-12 ) )
-            {
-                result.W = start.W;
-                result.X = start.X;
-                result.Y = start.Y;
-                result.Z = start.Z;
-                return;
-            }
-            // Calculate temporary values.
-            double halfTheta = Math.Acos( cosHalfTheta );
-            double sinHalfTheta = Math.Sqrt( 1.0 - cosHalfTheta * cosHalfTheta );
-
-            double aFraction = Math.Sin( ( 1 - interpolationAmount ) * halfTheta ) / sinHalfTheta;
-            double bFraction = Math.Sin( interpolationAmount * halfTheta ) / sinHalfTheta;
-
-            //Blend the two quaternions to get the result!
-            result.X = (float)( start.X * aFraction + end.X * bFraction );
-            result.Y = (float)( start.Y * aFraction + end.Y * bFraction );
-            result.Z = (float)( start.Z * aFraction + end.Z * bFraction );
-            result.W = (float)( start.W * aFraction + end.W * bFraction );
-        }
-
-        /// <summary>
-        /// Blends two quaternions together to get an intermediate state.
-        /// </summary>
-        /// <param name="start">Starting point of the interpolation.</param>
-        /// <param name="end">Ending point of the interpolation.</param>
-        /// <param name="interpolationAmount">Amount of the end point to use.</param>
-        /// <returns>Interpolated intermediate quaternion.</returns>
-        [MethodImpl( MethodImplOptions.AggressiveInlining )]
-        public static Quaternion Slerp( Quaternion start, Quaternion end, float interpolationAmount )
-        {
-            Slerp( start, end, interpolationAmount, out Quaternion toReturn );
-            return toReturn;
-        }
-
 
         /// <summary>
         /// Computes the conjugate of the quaternion.
@@ -667,7 +572,7 @@ namespace BepuUtilities
                 var axis = Vector3.Cross( v1, v2 );
                 q = new Quaternion( axis.X, axis.Y, axis.Z, dot + 1 );
             }
-            Normalize( ref q );
+            q.FastNormalize();
         }
 
         //The following two functions are highly similar, but it's a bit of a brain teaser to phrase one in terms of the other.

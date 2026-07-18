@@ -2,6 +2,7 @@
 using BepuUtilities;
 using BepuUtilities.Collections;
 using BepuUtilities.Memory;
+using Framework.FastMath.Numerics;
 using System.Diagnostics;
 using System.Numerics;
 using System.Runtime.CompilerServices;
@@ -609,7 +610,7 @@ namespace BepuPhysics
                 {
                     const int bodyJobSize = 64;
                     ref var sourceSet = ref bodies.Sets[ sourceSetIndex ];
-                    var setJobCount = Math.Max( 1, sourceSet.Count / bodyJobSize );
+                    var setJobCount = FMath.Max( 1, sourceSet.Count / bodyJobSize );
                     var baseBodiesPerJob = sourceSet.Count / setJobCount;
                     var remainder = sourceSet.Count - baseBodiesPerJob * setJobCount;
                     phaseOneJobs.EnsureCapacity( phaseOneJobs.Count + setJobCount, pool );
@@ -656,7 +657,7 @@ namespace BepuPhysics
                             var targetTypeBatchIndex = targetBatch.TypeIndexToTypeBatchIndex[ sourceTypeBatch.TypeId ];
                             ref var targetTypeBatch = ref targetBatch.TypeBatches[ targetTypeBatchIndex ];
                             //TODO: It would be nice to be a little more clever about scheduling start and end points for the sake of avoiding partial bundles.
-                            var jobCount = Math.Max( 1, sourceTypeBatch.ConstraintCount / constraintJobSize );
+                            var jobCount = FMath.Max( 1, sourceTypeBatch.ConstraintCount / constraintJobSize );
                             var baseConstraintsPerJob = sourceTypeBatch.ConstraintCount / jobCount;
                             var remainder = sourceTypeBatch.ConstraintCount - baseConstraintsPerJob * jobCount;
                             phaseTwoJobs.EnsureCapacity( phaseTwoJobs.Count + jobCount, pool );

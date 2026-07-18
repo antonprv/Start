@@ -4,7 +4,8 @@
     /// Marks a type as a description of a constraint associated with a particular batch.
     /// </summary>
     /// <remarks>
-    /// Note that one batch may have multiple description types associated with it, each one potentially offering a different subset of properties or translation logic.
+    /// Note that one batch may have multiple description types associated with it,
+    /// each one potentially offering a different subset of properties or translation logic.
     /// </remarks>
     /// <typeparam name="TDescription">Type of the description object.</typeparam>
     public interface IConstraintDescription<TDescription>
@@ -26,7 +27,8 @@
         /// <param name="bundleIndex">Index of the source constraint's bundle.</param>
         /// <param name="innerIndex">Index of the source constraint within its bundle.</param>
         /// <param name="description">Description of the constraint.</param>
-        static abstract void BuildDescription( ref TypeBatch batch, int bundleIndex, int innerIndex, out TDescription description );
+        static abstract void BuildDescription( 
+            ref TypeBatch batch, int bundleIndex, int innerIndex, out TDescription description );
 
         /// <summary>
         /// Gets the type id of the constraint that this is a description of.
@@ -46,8 +48,12 @@
     /// Marks a type as a one body constraint description.
     /// </summary>
     /// <typeparam name="TDescription">Type of the description.</typeparam>
-    /// <remarks>This and the other body-count aware interfaces exist to give the compiler a way to report errors when using Solver.Add with different body counts.</remarks>
-    public interface IOneBodyConstraintDescription<TDescription> : IConstraintDescription<TDescription> where TDescription : unmanaged, IOneBodyConstraintDescription<TDescription>
+    /// <remarks>This and the other body-count aware interfaces exist to
+    /// give the compiler a way to report errors when using Solver.
+    /// Add with different body counts.</remarks>
+    public interface IOneBodyConstraintDescription<TDescription> : 
+        IConstraintDescription<TDescription> where TDescription :
+        unmanaged, IOneBodyConstraintDescription<TDescription>
     {
     }
 
@@ -55,8 +61,12 @@
     /// Marks a type as a two body constraint description.
     /// </summary>
     /// <typeparam name="TDescription">Type of the description.</typeparam>
-    /// <remarks>This and the other body-count aware interfaces exist to give the compiler a way to report errors when using Solver.Add with different body counts.</remarks>
-    public interface ITwoBodyConstraintDescription<TDescription> : IConstraintDescription<TDescription> where TDescription : unmanaged, ITwoBodyConstraintDescription<TDescription>
+    /// <remarks>This and the other body-count aware interfaces 
+    /// exist to give the compiler a way to report errors when using Solver.
+    /// Add with different body counts.</remarks>
+    public interface ITwoBodyConstraintDescription<TDescription> :
+        IConstraintDescription<TDescription> where TDescription : 
+        unmanaged, ITwoBodyConstraintDescription<TDescription>
     {
     }
 
@@ -64,8 +74,12 @@
     /// Marks a type as a three body constraint description.
     /// </summary>
     /// <typeparam name="TDescription">Type of the description.</typeparam>
-    /// <remarks>This and the other body-count aware interfaces exist to give the compiler a way to report errors when using Solver.Add with different body counts.</remarks>
-    public interface IThreeBodyConstraintDescription<TDescription> : IConstraintDescription<TDescription> where TDescription : unmanaged, IThreeBodyConstraintDescription<TDescription>
+    /// <remarks>This and the other body-count aware interfaces exist to give
+    /// the compiler a way to report errors when using Solver.
+    /// Add with different body counts.</remarks>
+    public interface IThreeBodyConstraintDescription<TDescription> : 
+        IConstraintDescription<TDescription> where TDescription : 
+        unmanaged, IThreeBodyConstraintDescription<TDescription>
     {
     }
 
@@ -73,8 +87,12 @@
     /// Marks a type as a four body constraint description.
     /// </summary>
     /// <typeparam name="TDescription">Type of the description.</typeparam>
-    /// <remarks>This and the other body-count aware interfaces exist to give the compiler a way to report errors when using Solver.Add with different body counts.</remarks>
-    public interface IFourBodyConstraintDescription<TDescription> : IConstraintDescription<TDescription> where TDescription : unmanaged, IFourBodyConstraintDescription<TDescription>
+    /// <remarks>This and the other body-count aware interfaces exist to give 
+    /// the compiler a way to report errors when using Solver.
+    /// Add with different body counts.</remarks>
+    public interface IFourBodyConstraintDescription<TDescription> : 
+        IConstraintDescription<TDescription> where TDescription :
+        unmanaged, IFourBodyConstraintDescription<TDescription>
     {
     }
 }

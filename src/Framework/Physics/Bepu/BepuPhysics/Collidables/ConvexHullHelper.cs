@@ -2,6 +2,8 @@
 using BepuUtilities;
 using BepuUtilities.Collections;
 using BepuUtilities.Memory;
+using Framework.FastMath.Numerics;
+using Framework.FastMath.Numerics.Extensions;
 using System.Diagnostics;
 using System.Numerics;
 using System.Runtime.CompilerServices;
@@ -165,7 +167,7 @@ namespace BepuPhysics.Collidables
             //Note: in unusual corner cases, the above may have accepted zero candidates resulting in a bestXNarrow = 1 and bestYNarrow = float.MinValue.
             //Catching that and ensuring that a reasonable face normal is output avoids a bad face.
             var candidateNormalDirection = new Vector2( -bestYNarrow, bestXNarrow );
-            var length = candidateNormalDirection.Length();
+            var length = candidateNormalDirection.FastLength();
             var projectedPlaneNormalNarrow = float.IsFinite( length ) ? candidateNormalDirection / length : new Vector2( 1, 0 );
             Vector2Wide.Broadcast( projectedPlaneNormalNarrow, out var projectedPlaneNormal );
             Vector3Wide.ReadFirst( basisX, out var basisXNarrow );
@@ -243,8 +245,8 @@ namespace BepuPhysics.Collidables
                 var toCandidate = candidate - start;
                 //If x is negative, that means some numerical issue has resulted in a point beyond the bounding plane that generated this face request.
                 //We'll treat it as if it's on the plane. (The reason we bother with this clamp is the sign assumption built into our angle comparison, detailed above.)
-                var x = float.Max( 0, Vector2.Dot( toCandidate, basisX ) );
-                var y = Vector2.Dot( toCandidate, basisY );
+                var x = FMath.Max( 0, FMath.Dot( toCandidate, basisX ) );
+                var y = FMath.Dot( toCandidate, basisY );
 
                 //Note that any slot that would have been coplanar with the generating face *and* behind the edge (that is, a vertex almost certainly associated with the generating face) is ignored.
                 //Without this condition, it's possible for numerical cycles to occur where a face finds itself over and over again.
@@ -270,7 +272,7 @@ namespace BepuPhysics.Collidables
             //Note: in unusual corner cases, the above may have accepted zero candidates resulting in a bestXNarrow = 1 and bestYNarrow = float.MinValue.
             //Catching that and ensuring that a reasonable face normal is output avoids a bad face.
             var projectedBestEdgeDirection = new Vector2( bestX, bestY );
-            var length = projectedBestEdgeDirection.Length();
+            var length = projectedBestEdgeDirection.FastLength();
             //Note that the projected face normal is in terms of basisX and basisY, not the original basis facePoints are built on.
             projectedBestEdgeDirection = float.IsFinite( length ) ? projectedBestEdgeDirection / length : new Vector2( 1, 0 );
             //Transform the projected normal back into the basis of facePoints.
@@ -283,10 +285,10 @@ namespace BepuPhysics.Collidables
             {
                 var candidate = facePoints[ i ];
                 var toCandidate = candidate - start;
-                var alongNormal = Vector2.Dot( toCandidate, faceNormal );
+                var alongNormal = FMath.Dot( toCandidate, faceNormal );
                 if ( alongNormal > -planeEpsilon )
                 {
-                    var alongEdge = Vector2.Dot( toCandidate, edgeDirection );
+                    var alongEdge = FMath.Dot( toCandidate, edgeDirection );
                     if ( alongEdge > distance )
                     {
                         distance = alongEdge;
@@ -299,7 +301,15 @@ namespace BepuPhysics.Collidables
 
         }
 
-        static void ReduceFace( ref QuickList<int> faceVertexIndices, Vector3 faceNormal, Span<Vector3> points, float planeEpsilon, ref QuickList<Vector2> facePoints, ref Buffer<int> allowVertex, ref QuickList<int> reducedIndices )
+        static void ReduceFace(
+            ref QuickList<int> faceVertexIndices,
+            Vector3 faceNormal,
+            Span<Vector3> points,
+            float planeEpsilon,
+            ref QuickList<Vector2> facePoints,
+            ref Buffer<int> allowVertex,
+            ref QuickList<int> reducedIndices 
+        )
         {
             Debug.Assert( facePoints.Count == 0 && reducedIndices.Count == 0 && facePoints.Span.Length >= faceVertexIndices.Count && reducedIndices.Span.Length >= faceVertexIndices.Count );
             for ( int i = faceVertexIndices.Count - 1; i >= 0; --i )
@@ -328,16 +338,16 @@ namespace BepuPhysics.Collidables
                     //Counterclockwise should result in face normal pointing outward.
                     var ab = b - a;
                     var ac = c - a;
-                    var uncalibratedNormal = Vector3.Cross( ab, ac );
-                    if ( uncalibratedNormal.LengthSquared() < 1e-14f )
+                    var uncalibratedNormal = FMath.Cross( ab, ac );
+                    if ( uncalibratedNormal.LengthSq() < FMath.ACTUALLY_SMALL_NUMBER )
                     {
                         //The face is degenerate.
-                        if ( ab.LengthSquared() > 1e-14f )
+                        if ( ab.LengthSq() > FMath.ACTUALLY_SMALL_NUMBER )
                         {
                             allowVertex[ reducedIndices[ 2 ] ] = 0;
                             reducedIndices.FastRemoveAt( 2 );
                         }
-                        else if ( ac.LengthSquared() > 1e-14f )
+                        else if ( ac.LengthSq() > FMath.ACTUALLY_SMALL_NUMBER )
                         {
                             allowVertex[ reducedIndices[ 1 ] ] = 0;
                             reducedIndices.FastRemoveAt( 1 );
@@ -351,7 +361,7 @@ namespace BepuPhysics.Collidables
                     }
                     else
                     {
-                        if ( Vector3.Dot( faceNormal, uncalibratedNormal ) < 0 )
+                        if ( FMath.Dot( faceNormal, uncalibratedNormal ) < 0 )
                             Helpers.Swap( ref reducedIndices[ 0 ], ref reducedIndices[ 1 ] );
                     }
                 }
@@ -363,7 +373,7 @@ namespace BepuPhysics.Collidables
             {
                 ref var source = ref points[ faceVertexIndices[ i ] ];
                 ref var facePoint = ref facePoints.AllocateUnsafely();
-                facePoint = new Vector2( Vector3.Dot( basisX, source ), Vector3.Dot( basisY, source ) );
+                facePoint = new Vector2( FMath.Dot( basisX, source ), FMath.Dot( basisY, source ) );
                 centroid += facePoint;
             }
             centroid /= faceVertexIndices.Count;
@@ -372,7 +382,7 @@ namespace BepuPhysics.Collidables
             for ( int i = 0; i < faceVertexIndices.Count; ++i )
             {
                 ref var facePoint = ref facePoints[ i ];
-                var distanceSquared = ( facePoint - centroid ).LengthSquared();
+                var distanceSquared = ( facePoint - centroid ).LengthSq();
                 if ( greatestDistanceSquared < distanceSquared )
                 {
                     greatestDistanceSquared = distanceSquared;
@@ -389,7 +399,7 @@ namespace BepuPhysics.Collidables
                 }
                 return;
             }
-            var greatestDistance = (float)Math.Sqrt( greatestDistanceSquared );
+            var greatestDistance = (float)FMath.FastSqrt( greatestDistanceSquared );
             var initialOffsetDirection = ( facePoints[ initialIndex ] - centroid ) / greatestDistance;
             var previousEdgeDirection = new Vector2( initialOffsetDirection.Y, -initialOffsetDirection.X );
             reducedIndices.AllocateUnsafely() = faceVertexIndices[ initialIndex ];
@@ -695,7 +705,7 @@ namespace BepuPhysics.Collidables
             //All further points will be found by picking an plane on which to project all vertices down onto, and then measuring the angle on that plane.
             //We pick to basis directions along which to measure. For the second point, we choose a perpendicular direction arbitrarily.
             var initialToCentroid = centroid - initialVertex;
-            var initialDistance = initialToCentroid.Length();
+            var initialDistance = initialToCentroid.FastLength();
             if ( initialDistance < 1e-7f )
             {
                 //The point set lacks any volume or area.
@@ -767,9 +777,9 @@ namespace BepuPhysics.Collidables
                 edgeToAdd.Endpoints.B = reducedFaceIndices[ 1 ];
                 edgeToAdd.FaceNormal = initialFaceNormal;
                 var edgeOffset = points[ edgeToAdd.Endpoints.B ] - points[ edgeToAdd.Endpoints.A ];
-                var basisY = Vector3.Cross( edgeOffset, edgeToAdd.FaceNormal );
-                var basisX = Vector3.Cross( edgeOffset, basisY );
-                if ( Vector3.Dot( basisX, edgeToAdd.FaceNormal ) > 0 )
+                var basisY = FMath.Cross( edgeOffset, edgeToAdd.FaceNormal );
+                var basisX = FMath.Cross( edgeOffset, basisY );
+                if ( FMath.Dot( basisX, edgeToAdd.FaceNormal ) > 0 )
                     Helpers.Swap( ref edgeToAdd.Endpoints.A, ref edgeToAdd.Endpoints.B );
             }
 #if DEBUG_STEPS
@@ -792,11 +802,11 @@ namespace BepuPhysics.Collidables
                 var edgeOffset = edgeB - edgeA;
                 //The face normal points outward, and the edges should be wound counterclockwise.
                 //basisY should point away from the source face.
-                var basisY = Vector3.Cross( edgeOffset, edgeToTest.FaceNormal );
+                var basisY = FMath.Cross( edgeOffset, edgeToTest.FaceNormal );
                 //basisX should point inward.
-                var basisX = Vector3.Cross( edgeOffset, basisY );
-                basisX = Vector3.Normalize( basisX );
-                basisY = Vector3.Normalize( basisY );
+                var basisX = FMath.Cross( edgeOffset, basisY );
+                basisX = basisX.FastNormalized();
+                basisY = basisY.FastNormalized();
                 Vector3Wide.Broadcast( basisX, out var basisXBundle );
                 Vector3Wide.Broadcast( basisY, out var basisYBundle );
                 Vector3Wide.Broadcast( edgeA, out var basisOrigin );
@@ -823,7 +833,7 @@ namespace BepuPhysics.Collidables
                 for ( int i = 0; i < faces.Count; ++i )
                 {
                     ref var face = ref faces[ i ];
-                    if ( Vector3.Dot( face.Normal, faceNormal ) > normalCoplanarityEpsilon )
+                    if ( FMath.Dot( face.Normal, faceNormal ) > normalCoplanarityEpsilon )
                     {
 #if DEBUG_STEPS
                         Console.WriteLine($"Merging face {i} with new face, dot {Vector3.Dot(face.Normal, faceNormal)}:");

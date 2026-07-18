@@ -1,6 +1,7 @@
 ﻿using BepuUtilities;
 using BepuUtilities.Collections;
 using BepuUtilities.Memory;
+using Framework.FastMath.Numerics;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -237,7 +238,7 @@ namespace BepuPhysics.CollisionDetection
                 //Given the sizes involved, a fixed guess of 128 should be just fine for essentially any simulation. Overkill, but not in a concerning way.
                 //Temporarily allocating 1KB of memory isn't a big deal, and we will only touch the necessary subset of it anyway.
                 //(There are pathological cases where resizes are still possible, but the constraint remover handles them by not adding unsafely.)
-                preflushJobs = new QuickList<PreflushJob>( 128 + Math.Max( awakenerPhaseOneJobCount, awakenerPhaseTwoJobCount ), Pool );
+                preflushJobs = new QuickList<PreflushJob>( 128 + FMath.Max( awakenerPhaseOneJobCount, awakenerPhaseTwoJobCount ), Pool );
 
                 //FIRST PHASE: 
                 //1) If deterministic, sort each type batch.

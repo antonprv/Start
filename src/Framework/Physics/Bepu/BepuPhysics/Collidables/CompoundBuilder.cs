@@ -1,6 +1,7 @@
 ﻿using BepuUtilities;
 using BepuUtilities.Collections;
 using BepuUtilities.Memory;
+using Framework.FastMath.Numerics;
 using System.Diagnostics;
 using System.Numerics;
 using System.Runtime.CompilerServices;
@@ -130,7 +131,7 @@ namespace BepuPhysics.Collidables
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
         public static void GetOffsetInertiaContribution( Vector3 offset, float mass, out Symmetric3x3 contribution )
         {
-            var innerProduct = Vector3.Dot( offset, offset );
+            var innerProduct = FMath.Dot( offset, offset );
             contribution.XX = mass * ( innerProduct - offset.X * offset.X );
             contribution.YX = -mass * ( offset.Y * offset.X );
             contribution.YY = mass * ( innerProduct - offset.Y * offset.Y );
@@ -325,7 +326,8 @@ namespace BepuPhysics.Collidables
         /// <param name="children">Children of the compound.</param>
         /// <param name="childMasses">Masses of the children in the compound.</param>
         /// <returns>The compound's center of mass.</returns>
-        public static Vector3 ComputeCenterOfMass( Span<CompoundChild> children, Span<float> childMasses ) => ComputeCenterOfMass( children, childMasses, out _ );
+        public static Vector3 ComputeCenterOfMass( Span<CompoundChild> children, Span<float> childMasses ) => 
+            ComputeCenterOfMass( children, childMasses, out _ );
 
         /// <summary>
         /// Computes the center of mass of a compound.
@@ -333,7 +335,8 @@ namespace BepuPhysics.Collidables
         /// <param name="childPoses">Poses of the children in the compound.</param>
         /// <param name="childMasses">Masses of the children in the compound.</param>
         /// <returns>The compound's center of mass.</returns>
-        public static Vector3 ComputeCenterOfMass( Span<RigidPose> childPoses, Span<float> childMasses ) => ComputeCenterOfMass( childPoses, childMasses, out _ );
+        public static Vector3 ComputeCenterOfMass( Span<RigidPose> childPoses, Span<float> childMasses ) =>
+            ComputeCenterOfMass( childPoses, childMasses, out _ );
 
         /// <summary>
         /// Computes the inertia for a set of compound children based on their poses and the provided inverse inertias. Recenters the children onto the computed center of mass.
@@ -343,7 +346,12 @@ namespace BepuPhysics.Collidables
         /// <param name="childMasses">Masses of each child in the compound.</param>
         /// <param name="centerOfMass">Computed center of mass that was subtracted from the child positions.</param>
         /// <returns><see cref="BodyInertia"/> of the compound.</returns>
-        public static BodyInertia ComputeInverseInertia( Span<CompoundChild> children, Span<Symmetric3x3> inverseLocalInertias, Span<float> childMasses, out Vector3 centerOfMass )
+        public static BodyInertia ComputeInverseInertia( 
+            Span<CompoundChild> children,
+            Span<Symmetric3x3> inverseLocalInertias,
+            Span<float> childMasses,
+            out Vector3 centerOfMass 
+        )
         {
             Symmetric3x3 summedInertia = default;
             BodyInertia inertia;

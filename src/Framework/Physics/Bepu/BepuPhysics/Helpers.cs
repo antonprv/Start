@@ -21,9 +21,12 @@ namespace BepuPhysics
         public static void BuildOrthonormalBasis( in Vector3Wide normal, out Vector3Wide t1, out Vector3Wide t2 )
         {
             //This could probably be improved.
-            var sign = Vector.ConditionalSelect( Vector.LessThan( normal.Z, Vector<float>.Zero ), -Vector<float>.One, Vector<float>.One );
+            var sign = Vector.ConditionalSelect(
+                Vector.LessThan( normal.Z, Vector<float>.Zero ),
+                -Vector<float>.One, Vector<float>.One );
 
-            //This has a discontinuity at z==0. Raw frisvad has only one discontinuity, though that region is more unpredictable than the revised version.
+            //This has a discontinuity at z==0.
+            //Raw frisvad has only one discontinuity, though that region is more unpredictable than the revised version.
             var scale = -Vector<float>.One / ( sign + normal.Z );
             t1.X = normal.X * normal.Y * scale;
             t1.Y = sign + normal.Y * normal.Y * scale;

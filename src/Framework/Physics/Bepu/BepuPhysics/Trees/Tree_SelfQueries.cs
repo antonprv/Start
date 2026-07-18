@@ -2,6 +2,7 @@
 using BepuUtilities.Collections;
 using BepuUtilities.Memory;
 using BepuUtilities.TaskScheduling;
+using Framework.FastMath.Numerics;
 using System.Diagnostics;
 using System.Numerics;
 using System.Runtime.CompilerServices;
@@ -546,7 +547,7 @@ namespace BepuPhysics.Trees
             if ( targetTaskBudget < 0 )
                 targetTaskBudget = threadDispatcher.ThreadCount;
             targetTaskBudget *= 16;
-            targetTaskBudget = int.Min( NodeCount, targetTaskBudget );
+            targetTaskBudget = FMath.Min( NodeCount, targetTaskBudget );
 
             const int leafThresholdForTask = 256;
 
@@ -557,7 +558,7 @@ namespace BepuPhysics.Trees
             //(This isn't guaranteed, or even intended, to catch all large individual nodes. It's just an easy way to get some of them.)
             var earlyIsolatedNodeIntervalEnd = 0;
             const int maximumIsolatedNodeCapacity = 32;
-            int isolatedNodeCapacity = int.Min( maximumIsolatedNodeCapacity, targetTaskBudget / 4 );
+            int isolatedNodeCapacity = FMath.Min( maximumIsolatedNodeCapacity, targetTaskBudget / 4 );
             var earlyIsolatedNodesMemory = stackalloc int[ isolatedNodeCapacity ];
             var earlyIsolatedNodes = new QuickList<int>( new Buffer<int>( earlyIsolatedNodesMemory, isolatedNodeCapacity ) );
             for ( int i = 0; i < NodeCount && earlyIsolatedNodes.Count < isolatedNodeCapacity; ++i )

@@ -1,5 +1,7 @@
 ﻿using BepuUtilities.Collections;
 using BepuUtilities.Memory;
+using Framework.FastMath.Numerics;
+using Framework.FastMath.Numerics.Extensions;
 using System.Diagnostics;
 using System.Numerics;
 using System.Runtime.CompilerServices;
@@ -66,14 +68,14 @@ namespace BepuPhysics.CollisionDetection
             //The more distant a contact is from another contact, or the more different its normal is, the more distinct it is considered.
             //The goal is for distinctiveness to range from around 0 to 2. The exact values aren't extremely important- we just want a rough range
             //so that we can meaningfully blend in a depth heuristic.
-            var normalDot = Vector3.Dot( contactNormal, reducedContact.Normal );
+            var normalDot = FMath.Dot( contactNormal, reducedContact.Normal );
             const float normalInterpolationSpan = -0.99999f;
             //Normal dots above a threshold are considered completely redundant. acos(0.99999) is about 0.25 degrees.
             //Normals pointing at a 90 degree angle are given a value of ~1, while being completely opposed gives a value of ~2.
             var normalDistinctiveness = ( normalDot - 0.99999f ) * ( 1f / normalInterpolationSpan );
 
             //Below a threshold, the offset is considered completely redundant.
-            var offsetDistinctiveness = ( ( reducedContact.Offset - candidate.Offset ).LengthSquared() - distanceSquaredInterpolationMin ) * inverseDistanceSquaredInterpolationSpan;
+            var offsetDistinctiveness = ( ( reducedContact.Offset - candidate.Offset ).LengthSq() - distanceSquaredInterpolationMin ) * inverseDistanceSquaredInterpolationSpan;
 
             //We use a three way max across the normal, offset, and normal * offset distinctiveness. Both normal and offset scores can go above 1 sometimes, so it's possible for normal * offset to be higher than the other two.
             //Note that a point in the exact same position but a significantly different normal is still considered distinct.
@@ -116,7 +118,7 @@ namespace BepuPhysics.CollisionDetection
                 for ( int j = 0; j < child.Manifold.Count; ++j )
                 {
                     ref var position = ref Unsafe.Add( ref child.Manifold.Contact0, j ).Offset;
-                    var extent = Vector3.Dot( position, extentAxis );
+                    var extent = FMath.Dot( position, extentAxis );
                     if ( extent < minimumExtent )
                     {
                         minimumExtent = extent;
@@ -130,12 +132,14 @@ namespace BepuPhysics.CollisionDetection
                 ref var child = ref Children[ i ];
                 for ( int j = 0; j < child.Manifold.Count; ++j )
                 {
-                    var distanceSquared = ( Unsafe.Add( ref child.Manifold.Contact0, j ).Offset - minimumExtentPosition ).LengthSquared();
+                    var distanceSquared = ( Unsafe.Add( ref child.Manifold.Contact0, j )
+                        .Offset - minimumExtentPosition ).LengthSq();
+
                     if ( distanceSquared > maximumDistanceSquared )
                         maximumDistanceSquared = distanceSquared;
                 }
             }
-            var maximumDistance = (float)Math.Sqrt( maximumDistanceSquared );
+            var maximumDistance = (float)FMath.FastSqrt( maximumDistanceSquared );
             float initialBestScore = -float.MaxValue;
             int initialBestScoreIndex = 0;
             var maximumAllocatedCandidateCount = ChildCount * 4;
@@ -166,7 +170,7 @@ namespace BepuPhysics.CollisionDetection
                     if ( contact.Depth >= 0 )
                     {
                         //Note that we assume that the contact offsets have already been moved into the parent's space in compound pairs so that we can validly compare extents across manifolds.
-                        var extent = Vector3.Dot( contact.Offset, extentAxis ) - minimumExtent;
+                        var extent = FMath.Dot( contact.Offset, extentAxis ) - minimumExtent;
                         candidateScore = contact.Depth + extent * extremityScale;
                     }
                     else

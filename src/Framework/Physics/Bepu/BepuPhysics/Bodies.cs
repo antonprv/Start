@@ -192,7 +192,11 @@ namespace BepuPhysics
                 //Out of room; need to resize.
                 ResizeHandles( HandleToLocation.Length << 1 );
             }
-            Debug.Assert( FMath.Abs( description.Pose.Orientation.FastLength() - 1 ).IsNearlyEqual( 1e-6f ), "Orientation should be initialized to a unit length quaternion." );
+            //NOTE: see matching comment in Statics.cs.Add() - FastLength()'s ~0.065% worst-case
+            //error needs FMath.KINDA_SMALL_NUMBER (1e-3f), not 1e-6f. Also fixed the comparison
+            //itself: IsNearlyEqual(1e-6f) was comparing the error against 1e-6f with a *default*
+            //0.001f epsilon, i.e. effectively always true - it wasn't actually checking anything.
+            Debug.Assert( FMath.Abs( description.Pose.Orientation.FastLength() - 1 ) < FMath.KINDA_SMALL_NUMBER, "Orientation should be initialized to a unit length quaternion." );
 
             //All new bodies are active for simplicity. Someday, it may be worth offering an optimized path for inactives, but it adds complexity.
             //(Directly adding inactive bodies can be helpful in some networked open world scenarios.)
@@ -832,7 +836,7 @@ namespace BepuPhysics
             if ( newCapacity != HandleToLocation.Length )
             {
                 var oldCapacity = HandleToLocation.Length;
-                Pool.ResizeToAtLeast( ref HandleToLocation, newCapacity, Math.Min( oldCapacity, newCapacity ) );
+                Pool.ResizeToAtLeast( ref HandleToLocation, newCapacity, FMath.Min( oldCapacity, newCapacity ) );
                 if ( HandleToLocation.Length > oldCapacity )
                 {
                     Unsafe.InitBlockUnaligned(
@@ -848,12 +852,12 @@ namespace BepuPhysics
         /// <param name="capacity">Target body data capacity.</param>
         public void Resize( int capacity )
         {
-            var targetBodyCapacity = BufferPool.GetCapacityForCount<int>( Math.Max( capacity, ActiveSet.Count ) );
+            var targetBodyCapacity = BufferPool.GetCapacityForCount<int>( FMath.Max( capacity, ActiveSet.Count ) );
             if ( ActiveSet.IndexToHandle.Length != targetBodyCapacity )
             {
                 ActiveSet.InternalResize( targetBodyCapacity, Pool );
             }
-            var targetHandleCapacity = BufferPool.GetCapacityForCount<int>( Math.Max( capacity, HandlePool.HighestPossiblyClaimedId + 1 ) );
+            var targetHandleCapacity = BufferPool.GetCapacityForCount<int>( FMath.Max( capacity, HandlePool.HighestPossiblyClaimedId + 1 ) );
             if ( HandleToLocation.Length != targetHandleCapacity )
             {
                 ResizeHandles( targetHandleCapacity );

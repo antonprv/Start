@@ -1,5 +1,6 @@
 ﻿using BepuUtilities;
 using BepuUtilities.Memory;
+using Framework.FastMath.Numerics;
 using System.Runtime.CompilerServices;
 
 namespace BepuPhysics.CollisionDetection.CollisionTasks
@@ -14,7 +15,7 @@ namespace BepuPhysics.CollisionDetection.CollisionTasks
         {
             if ( Overlaps.Length == Count )
             {
-                pool.ResizeToAtLeast( ref Overlaps, MathHelper.Max( 64, Count * 2 ), Count );
+                pool.ResizeToAtLeast( ref Overlaps, FMath.Max( 64, Count * 2 ), Count );
             }
             return ref Overlaps[ Count++ ];
         }

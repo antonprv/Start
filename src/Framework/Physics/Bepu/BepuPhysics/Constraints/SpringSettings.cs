@@ -1,4 +1,5 @@
 ﻿using BepuUtilities;
+using Framework.FastMath.Numerics;
 using System.Diagnostics;
 using System.Numerics;
 using System.Runtime.CompilerServices;
@@ -69,7 +70,11 @@ namespace BepuPhysics.Constraints
         /// <summary>
         /// Gets or sets the target number of undamped oscillations per unit of time.
         /// </summary>
-        public float Frequency { get { return AngularFrequency / MathHelper.TwoPi; } set { AngularFrequency = value * MathHelper.TwoPi; } }
+        public float Frequency
+        {
+            get => AngularFrequency / FMath.TWO_PI; 
+            set => AngularFrequency = value * FMath.TWO_PI;
+        }
 
         /// <summary>
         /// Gets or sets the ratio of the spring's actual damping to its critical damping. 0 is undamped, 1 is critically damped, and higher values are overdamped.
@@ -93,7 +98,7 @@ namespace BepuPhysics.Constraints
         /// <param name="dampingRatio">Ratio of the spring's actual damping to its critical damping. 0 is undamped, 1 is critically damped, and higher values are overdamped.</param>
         public SpringSettings( float frequency, float dampingRatio )
         {
-            AngularFrequency = frequency * MathHelper.TwoPi;
+            AngularFrequency = frequency * FMath.TWO_PI;
             TwiceDampingRatio = dampingRatio * 2;
             Debug.Assert( Validate( this ), "Spring settings must have positive frequency and nonnegative damping ratio." );
         }

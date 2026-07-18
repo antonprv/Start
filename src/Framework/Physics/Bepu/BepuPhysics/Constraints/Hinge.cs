@@ -49,8 +49,14 @@ namespace BepuPhysics.Constraints
             ConstraintChecker.AssertUnitLength( LocalHingeAxisA, nameof( Hinge ), nameof( LocalHingeAxisA ) );
             ConstraintChecker.AssertUnitLength( LocalHingeAxisB, nameof( Hinge ), nameof( LocalHingeAxisB ) );
             ConstraintChecker.AssertValid( SpringSettings, nameof( Hinge ) );
-            Debug.Assert( ConstraintTypeId == batch.TypeId, "The type batch passed to the description must match the description's expected type." );
-            ref var target = ref GetOffsetInstance( ref Buffer<HingePrestepData>.Get( ref batch.PrestepData, bundleIndex ), innerIndex );
+            Debug.Assert( 
+                ConstraintTypeId == batch.TypeId, 
+                "The type batch passed to the description must match the description's expected type." );
+
+            ref var target = ref GetOffsetInstance( 
+                ref Buffer<HingePrestepData>.Get( ref batch.PrestepData, bundleIndex ),
+                innerIndex );
+
             Vector3Wide.WriteFirst( LocalOffsetA, ref target.LocalOffsetA );
             Vector3Wide.WriteFirst( LocalHingeAxisA, ref target.LocalHingeAxisA );
             Vector3Wide.WriteFirst( LocalOffsetB, ref target.LocalOffsetB );
@@ -60,8 +66,14 @@ namespace BepuPhysics.Constraints
 
         public static void BuildDescription( ref TypeBatch batch, int bundleIndex, int innerIndex, out Hinge description )
         {
-            Debug.Assert( ConstraintTypeId == batch.TypeId, "The type batch passed to the description must match the description's expected type." );
-            ref var source = ref GetOffsetInstance( ref Buffer<HingePrestepData>.Get( ref batch.PrestepData, bundleIndex ), innerIndex );
+            Debug.Assert( 
+                ConstraintTypeId == batch.TypeId,
+                "The type batch passed to the description must match the description's expected type." );
+
+            ref var source = ref GetOffsetInstance( 
+                ref Buffer<HingePrestepData>.Get( ref batch.PrestepData, bundleIndex ),
+                innerIndex );
+
             Vector3Wide.ReadFirst( source.LocalOffsetA, out description.LocalOffsetA );
             Vector3Wide.ReadFirst( source.LocalHingeAxisA, out description.LocalHingeAxisA );
             Vector3Wide.ReadFirst( source.LocalOffsetB, out description.LocalOffsetB );
@@ -88,8 +100,16 @@ namespace BepuPhysics.Constraints
     public struct HingeFunctions : ITwoBodyConstraintFunctions<HingePrestepData, HingeAccumulatedImpulses>
     {
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
-        private static void ApplyImpulse( in Vector3Wide offsetA, in Vector3Wide offsetB, in Matrix2x3Wide hingeJacobian, in BodyInertiaWide inertiaA, in BodyInertiaWide inertiaB, in HingeAccumulatedImpulses csi,
-            ref BodyVelocityWide velocityA, ref BodyVelocityWide velocityB )
+        private static void ApplyImpulse( 
+            in Vector3Wide offsetA,
+            in Vector3Wide offsetB,
+            in Matrix2x3Wide hingeJacobian,
+            in BodyInertiaWide inertiaA,
+            in BodyInertiaWide inertiaB,
+            in HingeAccumulatedImpulses csi,
+            ref BodyVelocityWide velocityA,
+            ref BodyVelocityWide velocityB 
+        )
         {
             //[ csi ] * [ I, skew(offsetA),   -I, -skew(offsetB)    ]
             //          [ 0, constraintAxisAX, 0, -constraintAxisAX ]
@@ -112,7 +132,18 @@ namespace BepuPhysics.Constraints
             Vector3Wide.Add( velocityB.Angular, angularChangeB, out velocityB.Angular );
         }
 
-        public static void WarmStart( in Vector3Wide positionA, in QuaternionWide orientationA, in BodyInertiaWide inertiaA, in Vector3Wide positionB, in QuaternionWide orientationB, in BodyInertiaWide inertiaB, ref HingePrestepData prestep, ref HingeAccumulatedImpulses accumulatedImpulses, ref BodyVelocityWide wsvA, ref BodyVelocityWide wsvB )
+        public static void WarmStart( 
+            in Vector3Wide positionA, 
+            in QuaternionWide orientationA, 
+            in BodyInertiaWide inertiaA,
+            in Vector3Wide positionB, 
+            in QuaternionWide orientationB, 
+            in BodyInertiaWide inertiaB, 
+            ref HingePrestepData prestep,
+            ref HingeAccumulatedImpulses accumulatedImpulses, 
+            ref BodyVelocityWide wsvA,
+            ref BodyVelocityWide wsvB 
+        )
         {
             Matrix3x3Wide.CreateFromQuaternion( orientationA, out var orientationMatrixA );
             Matrix3x3Wide.TransformWithoutOverlap( prestep.LocalOffsetA, orientationMatrixA, out var offsetA );
@@ -124,7 +155,13 @@ namespace BepuPhysics.Constraints
             ApplyImpulse( offsetA, offsetB, hingeJacobian, inertiaA, inertiaB, accumulatedImpulses, ref wsvA, ref wsvB );
         }
 
-        public static void Solve( in Vector3Wide positionA, in QuaternionWide orientationA, in BodyInertiaWide inertiaA, in Vector3Wide positionB, in QuaternionWide orientationB, in BodyInertiaWide inertiaB, float dt, float inverseDt, ref HingePrestepData prestep, ref HingeAccumulatedImpulses accumulatedImpulses, ref BodyVelocityWide wsvA, ref BodyVelocityWide wsvB )
+        public static void Solve( 
+            in Vector3Wide positionA, in QuaternionWide orientationA, 
+            in BodyInertiaWide inertiaA, in Vector3Wide positionB,
+            in QuaternionWide orientationB, in BodyInertiaWide inertiaB,
+            float dt, float inverseDt, ref HingePrestepData prestep,
+            ref HingeAccumulatedImpulses accumulatedImpulses, 
+            ref BodyVelocityWide wsvA, ref BodyVelocityWide wsvB )
         {
             //5x12 jacobians, from BallSocket and AngularHinge:
             //[ I, skew(offsetA),   -I, -skew(offsetB)    ]
@@ -143,10 +180,18 @@ namespace BepuPhysics.Constraints
             Matrix3x3Wide.TransformWithoutOverlap( localAY, orientationMatrixA, out hingeJacobian.Y );
 
             //The upper left 3x3 block is just the ball socket.
-            Symmetric3x3Wide.SkewSandwichWithoutOverlap( offsetA, inertiaA.InverseInertiaTensor, out var ballSocketContributionAngularA );
-            Symmetric3x3Wide.SkewSandwichWithoutOverlap( offsetB, inertiaB.InverseInertiaTensor, out var ballSocketContributionAngularB );
+            Symmetric3x3Wide.SkewSandwichWithoutOverlap( 
+                offsetA, inertiaA.InverseInertiaTensor,
+                out var ballSocketContributionAngularA );
+
+            Symmetric3x3Wide.SkewSandwichWithoutOverlap( 
+                offsetB, inertiaB.InverseInertiaTensor, 
+                out var ballSocketContributionAngularB );
+
             Symmetric5x5Wide inverseEffectiveMass;
+
             Symmetric3x3Wide.Add( ballSocketContributionAngularA, ballSocketContributionAngularB, out inverseEffectiveMass.A );
+
             var linearContribution = inertiaA.InverseMass + inertiaB.InverseMass;
             inverseEffectiveMass.A.XX += linearContribution;
             inverseEffectiveMass.A.YY += linearContribution;
@@ -172,19 +217,28 @@ namespace BepuPhysics.Constraints
 
             //TODO: Could consider an LDLT solve here. Helped a little bit in Weld; probably would still be worth it for a 5x5.
             Symmetric5x5Wide.InvertWithoutOverlap( inverseEffectiveMass, out var effectiveMass );
-            SpringSettingsWide.ComputeSpringiness( prestep.SpringSettings, dt, out var positionErrorToVelocity, out var effectiveMassCFMScale, out var softnessImpulseScale );
+            SpringSettingsWide.ComputeSpringiness(
+                prestep.SpringSettings, dt,
+                out var positionErrorToVelocity,
+                out var effectiveMassCFMScale, 
+                out var softnessImpulseScale 
+            );
+
             //Note that the effective mass is *not* scaled by the effectiveMassCFMScale here; instead, we scale the impulse later.
 
-            //Compute the position error and bias velocities. Note the order of subtraction when calculating error- we want the bias velocity to counteract the separation.
+            //Compute the position error and bias velocities. Note the order of subtraction when calculating
+            //error- we want the bias velocity to counteract the separation.
             Vector3Wide.Add( positionB - positionA, offsetB, out var anchorB );
             Vector3Wide.Subtract( anchorB, offsetA, out var ballSocketError );
             Vector3Wide.Scale( ballSocketError, positionErrorToVelocity, out var ballSocketBiasVelocity );
 
             AngularHingeFunctions.GetErrorAngles( hingeAxisA, hingeAxisB, hingeJacobian, out var errorAngles );
-            //Note the negation: we want to oppose the separation. TODO: arguably, should bake the negation into positionErrorToVelocity, given its name.
+            //Note the negation: we want to oppose the separation. TODO: arguably,
+            //should bake the negation into positionErrorToVelocity, given its name.
             Vector2Wide.Scale( errorAngles, -positionErrorToVelocity, out var hingeBiasVelocity );
 
-            //csi = projection.BiasImpulse - accumulatedImpulse * projection.SoftnessImpulseScale - (csiaLinear + csiaAngular + csibLinear + csibAngular);
+            //csi = projection.BiasImpulse - accumulatedImpulse * projection.SoftnessImpulseScale -
+            //(csiaLinear + csiaAngular + csibLinear + csibAngular);
             //    [ I, skew(offsetA),   -I, -skew(offsetB)    ]
             //J = [ 0, constraintAxisAX, 0, -constraintAxisAX ]
             //    [ 0, constraintAxisAY, 0, -constraintAxisAY ]
@@ -217,10 +271,16 @@ namespace BepuPhysics.Constraints
 
         public static bool RequiresIncrementalSubstepUpdates => false;
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
-        public static void IncrementallyUpdateForSubstep( in Vector<float> dt, in BodyVelocityWide wsvA, in BodyVelocityWide wsvB, ref HingePrestepData prestepData ) { }
+        public static void IncrementallyUpdateForSubstep( 
+            in Vector<float> dt,
+            in BodyVelocityWide wsvA,
+            in BodyVelocityWide wsvB,
+            ref HingePrestepData prestepData ) { }
     }
 
-    public class HingeTypeProcessor : TwoBodyTypeProcessor<HingePrestepData, HingeAccumulatedImpulses, HingeFunctions, AccessNoPosition, AccessNoPosition, AccessAll, AccessAll>
+    public class HingeTypeProcessor : TwoBodyTypeProcessor<
+        HingePrestepData, HingeAccumulatedImpulses,
+        HingeFunctions, AccessNoPosition, AccessNoPosition, AccessAll, AccessAll>
     {
         public const int BatchTypeId = 47;
     }

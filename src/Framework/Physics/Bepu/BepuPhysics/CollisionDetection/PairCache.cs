@@ -2,6 +2,7 @@
 using BepuUtilities;
 using BepuUtilities.Collections;
 using BepuUtilities.Memory;
+using Framework.FastMath.Numerics;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -134,7 +135,7 @@ namespace BepuPhysics.CollisionDetection
             var threadCount = threadDispatcher != null ? threadDispatcher.ThreadCount : 1;
             cachedDispatcher = threadDispatcher;
 
-            var pendingSize = Math.Max( minimumPendingSize, previousPendingSize );
+            var pendingSize = FMath.Max( minimumPendingSize, previousPendingSize );
             pool.Take( threadCount, out WorkerPendingChanges );
             if ( threadDispatcher != null )
             {
@@ -159,7 +160,7 @@ namespace BepuPhysics.CollisionDetection
 
         internal void EnsureConstraintToPairMappingCapacity( Solver solver, int targetCapacity )
         {
-            targetCapacity = Math.Max( solver.HandlePool.HighestPossiblyClaimedId + 1, targetCapacity );
+            targetCapacity = FMath.Max( solver.HandlePool.HighestPossiblyClaimedId + 1, targetCapacity );
             if ( ConstraintHandleToPair.Length < targetCapacity )
             {
                 pool.ResizeToAtLeast( ref ConstraintHandleToPair, targetCapacity, ConstraintHandleToPair.Length );
@@ -168,10 +169,10 @@ namespace BepuPhysics.CollisionDetection
 
         internal void ResizeConstraintToPairMappingCapacity( Solver solver, int targetCapacity )
         {
-            targetCapacity = BufferPool.GetCapacityForCount<CollisionPairLocation>( Math.Max( solver.HandlePool.HighestPossiblyClaimedId + 1, targetCapacity ) );
+            targetCapacity = BufferPool.GetCapacityForCount<CollisionPairLocation>( FMath.Max( solver.HandlePool.HighestPossiblyClaimedId + 1, targetCapacity ) );
             if ( ConstraintHandleToPair.Length != targetCapacity )
             {
-                pool.ResizeToAtLeast( ref ConstraintHandleToPair, targetCapacity, Math.Min( targetCapacity, ConstraintHandleToPair.Length ) );
+                pool.ResizeToAtLeast( ref ConstraintHandleToPair, targetCapacity, FMath.Min( targetCapacity, ConstraintHandleToPair.Length ) );
             }
         }
 

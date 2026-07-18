@@ -20,7 +20,8 @@ namespace BepuPhysics
 
         public void LoopBody( int encodedBodyIndex )
         {
-            //Note that this enumerator is used with prefiltered body indices and with raw body indices. A redundant & isn't much of a concern; lets us share more frequently.
+            //Note that this enumerator is used with prefiltered body indices and with raw body indices.
+            //A redundant & isn't much of a concern; lets us share more frequently.
             Handles[ Count++ ] = Bodies.ActiveSet.IndexToHandle[ encodedBodyIndex & Bodies.BodyReferenceMask ].Value;
         }
     }

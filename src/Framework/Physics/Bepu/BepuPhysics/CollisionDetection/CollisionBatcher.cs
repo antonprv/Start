@@ -266,7 +266,18 @@ namespace BepuPhysics.CollisionDetection
 
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
         public unsafe void Add(
-           int shapeTypeA, int shapeTypeB, int shapeSizeA, int shapeSizeB, void* shapeA, void* shapeB, Vector3 offsetB, Quaternion orientationA, Quaternion orientationB, float speculativeMargin, int pairId )
+           int shapeTypeA, 
+           int shapeTypeB, 
+           int shapeSizeA, 
+           int shapeSizeB, 
+           void* shapeA, 
+           void* shapeB, 
+           Vector3 offsetB, 
+           Quaternion orientationA, 
+           Quaternion orientationB, 
+           float speculativeMargin, 
+           int pairId 
+        )
         {
             ref var reference = ref typeMatrix.GetTaskReference( shapeTypeA, shapeTypeB );
             CacheShapes( ref reference, shapeA, shapeB, shapeSizeA, shapeSizeB, out var cachedShapeA, out var cachedShapeB );
@@ -280,7 +291,8 @@ namespace BepuPhysics.CollisionDetection
             //that's actually used by the narrowphase (and which will likely be used for most performance sensitive cases).
             //TODO: You could recover the performance and safety once generic pointers exist. By having pointers in the parameter list, we can require that the user handle GC safety.
             //(We could also have an explicit 'unsafe' overload, but that API complexity doesn't seem worthwhile. My guess is nontrivial uses will all use the underlying function directly.)
-            Add( TShapeA.TypeId, TShapeB.TypeId, Unsafe.SizeOf<TShapeA>(), Unsafe.SizeOf<TShapeB>(), Unsafe.AsPointer( ref shapeA ), Unsafe.AsPointer( ref shapeB ),
+            Add( TShapeA.TypeId, TShapeB.TypeId, Unsafe.SizeOf<TShapeA>(), Unsafe.SizeOf<TShapeB>(), 
+                Unsafe.AsPointer( ref shapeA ), Unsafe.AsPointer( ref shapeB ),
                 offsetB, orientationA, orientationB, speculativeMargin, pairId );
         }
 

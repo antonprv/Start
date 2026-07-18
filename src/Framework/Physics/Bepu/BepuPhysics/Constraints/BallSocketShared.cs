@@ -16,8 +16,10 @@ namespace BepuPhysics.Constraints
         //There are very few cases where a combo constraint will have less than 3DOFs...)
         //The only reason not to do that is codegen concerns. But we may want to stop holding back just because of some hopefully-not-permanent quirks in the JIT.
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
-        public static void ComputeEffectiveMass( in BodyInertiaWide inertiaA, in BodyInertiaWide inertiaB,
-            in Vector3Wide offsetA, in Vector3Wide offsetB, in Vector<float> effectiveMassCFMScale, out Symmetric3x3Wide effectiveMass )
+        public static void ComputeEffectiveMass( 
+            in BodyInertiaWide inertiaA, in BodyInertiaWide inertiaB,
+            in Vector3Wide offsetA, in Vector3Wide offsetB,
+            in Vector<float> effectiveMassCFMScale, out Symmetric3x3Wide effectiveMass )
         {
             //Anchor points attached to each body are constrained to stay in the same position, yielding a position constraint of:
             //C = positionA + anchorOffsetA - (positionB + anchorOffsetB) = 0

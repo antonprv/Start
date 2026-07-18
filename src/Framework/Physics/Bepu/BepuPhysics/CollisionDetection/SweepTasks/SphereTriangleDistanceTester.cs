@@ -7,8 +7,12 @@ namespace BepuPhysics.CollisionDetection.SweepTasks
 {
     public struct SphereTriangleDistanceTester : IPairDistanceTester<SphereWide, TriangleWide>
     {
-        public void Test( in SphereWide a, in TriangleWide b, in Vector3Wide offsetB, in QuaternionWide orientationA, in QuaternionWide orientationB, in Vector<int> inactiveLanes,
-            out Vector<int> intersected, out Vector<float> distance, out Vector3Wide closestA, out Vector3Wide normal )
+        public void Test( 
+            in SphereWide a, in TriangleWide b, in Vector3Wide offsetB,
+            in QuaternionWide orientationA, in QuaternionWide orientationB,
+            in Vector<int> inactiveLanes,
+            out Vector<int> intersected, out Vector<float> distance,
+            out Vector3Wide closestA, out Vector3Wide normal )
         {
             //Note that we're borrowing a lot here from the SphereTriangleCollisionTask. Could share more if you find yourself needing to change things dramatically.
             //Main difficulty in fully sharing is that sweep tests do not honor one sidedness, so some of the conditions change.

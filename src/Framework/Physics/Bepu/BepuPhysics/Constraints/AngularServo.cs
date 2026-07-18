@@ -97,12 +97,23 @@ namespace BepuPhysics.Constraints
         //}
 
 
-        public static void WarmStart( in Vector3Wide positionA, in QuaternionWide orientationA, in BodyInertiaWide inertiaA, in Vector3Wide positionB, in QuaternionWide orientationB, in BodyInertiaWide inertiaB, ref AngularServoPrestepData prestep, ref Vector3Wide accumulatedImpulses, ref BodyVelocityWide wsvA, ref BodyVelocityWide wsvB )
+        public static void WarmStart( 
+            in Vector3Wide positionA, in QuaternionWide orientationA,
+            in BodyInertiaWide inertiaA, in Vector3Wide positionB,
+            in QuaternionWide orientationB, in BodyInertiaWide inertiaB,
+            ref AngularServoPrestepData prestep, ref Vector3Wide accumulatedImpulses,
+            ref BodyVelocityWide wsvA, ref BodyVelocityWide wsvB )
         {
             ApplyImpulse( ref wsvA.Angular, ref wsvB.Angular, inertiaA.InverseInertiaTensor, inertiaB.InverseInertiaTensor, accumulatedImpulses );
         }
 
-        public static void Solve( in Vector3Wide positionA, in QuaternionWide orientationA, in BodyInertiaWide inertiaA, in Vector3Wide positionB, in QuaternionWide orientationB, in BodyInertiaWide inertiaB, float dt, float inverseDt, ref AngularServoPrestepData prestep, ref Vector3Wide accumulatedImpulses, ref BodyVelocityWide wsvA, ref BodyVelocityWide wsvB )
+        public static void Solve( 
+            in Vector3Wide positionA, in QuaternionWide orientationA,
+            in BodyInertiaWide inertiaA, in Vector3Wide positionB, 
+            in QuaternionWide orientationB, in BodyInertiaWide inertiaB,
+            float dt, float inverseDt, ref AngularServoPrestepData prestep, 
+            ref Vector3Wide accumulatedImpulses, ref BodyVelocityWide wsvA, 
+            ref BodyVelocityWide wsvB )
         {
             //Jacobians are just I and -I.
             QuaternionWide.ConcatenateWithoutOverlap( prestep.TargetRelativeRotationLocalA, orientationA, out var targetOrientationB );
@@ -133,10 +144,20 @@ namespace BepuPhysics.Constraints
 
         public static bool RequiresIncrementalSubstepUpdates => false;
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
-        public static void IncrementallyUpdateForSubstep( in Vector<float> dt, in BodyVelocityWide wsvA, in BodyVelocityWide wsvB, ref AngularServoPrestepData prestepData ) { }
+        public static void IncrementallyUpdateForSubstep(
+            in Vector<float> dt,
+            in BodyVelocityWide wsvA,
+            in BodyVelocityWide wsvB,
+            ref AngularServoPrestepData prestepData ) { }
     }
 
-    public class AngularServoTypeProcessor : TwoBodyTypeProcessor<AngularServoPrestepData, Vector3Wide, AngularServoFunctions, AccessOnlyAngularWithoutPose, AccessOnlyAngularWithoutPose, AccessOnlyAngular, AccessOnlyAngular>
+    public class AngularServoTypeProcessor : TwoBodyTypeProcessor<AngularServoPrestepData,
+        Vector3Wide,
+        AngularServoFunctions,
+        AccessOnlyAngularWithoutPose,
+        AccessOnlyAngularWithoutPose,
+        AccessOnlyAngular, 
+        AccessOnlyAngular>
     {
         public const int BatchTypeId = 29;
     }

@@ -29,26 +29,45 @@ namespace BepuPhysics.Constraints
             in Vector3Wide positionB, in QuaternionWide orientationB, in BodyInertiaWide inertiaB,
             in Vector3Wide positionC, in QuaternionWide orientationC, in BodyInertiaWide inertiaC,
             in Vector3Wide positionD, in QuaternionWide orientationD, in BodyInertiaWide inertiaD,
-            ref TPrestepData prestep, ref TAccumulatedImpulse accumulatedImpulses, ref BodyVelocityWide wsvA, ref BodyVelocityWide wsvB, ref BodyVelocityWide wsvC, ref BodyVelocityWide wsvD );
+            ref TPrestepData prestep,
+            ref TAccumulatedImpulse accumulatedImpulses,
+            ref BodyVelocityWide wsvA,
+            ref BodyVelocityWide wsvB,
+            ref BodyVelocityWide wsvC,
+            ref BodyVelocityWide wsvD );
+
         static abstract void Solve(
             in Vector3Wide positionA, in QuaternionWide orientationA, in BodyInertiaWide inertiaA,
             in Vector3Wide positionB, in QuaternionWide orientationB, in BodyInertiaWide inertiaB,
             in Vector3Wide positionC, in QuaternionWide orientationC, in BodyInertiaWide inertiaC,
-            in Vector3Wide positionD, in QuaternionWide orientationD, in BodyInertiaWide inertiaD, float dt, float inverseDt,
-            ref TPrestepData prestep, ref TAccumulatedImpulse accumulatedImpulses, ref BodyVelocityWide wsvA, ref BodyVelocityWide wsvB, ref BodyVelocityWide wsvC, ref BodyVelocityWide wsvD );
+            in Vector3Wide positionD, in QuaternionWide orientationD, in BodyInertiaWide inertiaD,
+            float dt, float inverseDt,
+            ref TPrestepData prestep, 
+            ref TAccumulatedImpulse accumulatedImpulses, 
+            ref BodyVelocityWide wsvA, 
+            ref BodyVelocityWide wsvB, 
+            ref BodyVelocityWide wsvC, 
+            ref BodyVelocityWide wsvD );
 
         /// <summary>
         /// Gets whether this constraint type requires incremental updates for each substep taken beyond the first.
         /// </summary>
         static abstract bool RequiresIncrementalSubstepUpdates { get; }
-        static abstract void IncrementallyUpdateForSubstep( in Vector<float> dt, in BodyVelocityWide wsvA, in BodyVelocityWide wsvB, in BodyVelocityWide wsvC, in BodyVelocityWide wsvD, ref TPrestepData prestepData );
+        static abstract void IncrementallyUpdateForSubstep( 
+            in Vector<float> dt,
+            in BodyVelocityWide wsvA,
+            in BodyVelocityWide wsvB,
+            in BodyVelocityWide wsvC,
+            in BodyVelocityWide wsvD,
+            ref TPrestepData prestepData );
     }
 
     /// <summary>
     /// Shared implementation across all four body constraints.
     /// </summary>
     public abstract class FourBodyTypeProcessor<TPrestepData, TAccumulatedImpulse, TConstraintFunctions,
-        TWarmStartAccessFilterA, TWarmStartAccessFilterB, TWarmStartAccessFilterC, TWarmStartAccessFilterD, TSolveAccessFilterA, TSolveAccessFilterB, TSolveAccessFilterC, TSolveAccessFilterD>
+        TWarmStartAccessFilterA, TWarmStartAccessFilterB, TWarmStartAccessFilterC, TWarmStartAccessFilterD,
+        TSolveAccessFilterA, TSolveAccessFilterB, TSolveAccessFilterC, TSolveAccessFilterD>
         : TypeProcessor<FourBodyReferences, TPrestepData, TAccumulatedImpulse>
         where TPrestepData : unmanaged where TAccumulatedImpulse : unmanaged
         where TConstraintFunctions : unmanaged, IFourBodyConstraintFunctions<TPrestepData, TAccumulatedImpulse>
@@ -97,13 +116,24 @@ namespace BepuPhysics.Constraints
                 ref firstSortKey, ref firstSourceIndex, ref bodyReferencesCache );
         }
 
-        internal sealed override void VerifySortRegion( ref TypeBatch typeBatch, int bundleStartIndex, int constraintCount, ref Buffer<int> sortedKeys, ref Buffer<int> sortedSourceIndices )
+        internal sealed override void VerifySortRegion( 
+            ref TypeBatch typeBatch,
+            int bundleStartIndex,
+            int constraintCount,
+            ref Buffer<int> sortedKeys,
+            ref Buffer<int> sortedSourceIndices )
         {
-            VerifySortRegion<FourBodySortKeyGenerator>( ref typeBatch, bundleStartIndex, constraintCount, ref sortedKeys, ref sortedSourceIndices );
+            VerifySortRegion<FourBodySortKeyGenerator>( 
+                ref typeBatch,
+                bundleStartIndex,
+                constraintCount, 
+                ref sortedKeys, 
+                ref sortedSourceIndices );
         }
 
         public override void WarmStart<TIntegratorCallbacks, TBatchIntegrationMode, TAllowPoseIntegration>(
-            ref TypeBatch typeBatch, ref Buffer<IndexSet> integrationFlags, Bodies bodies, ref TIntegratorCallbacks integratorCallbacks,
+            ref TypeBatch typeBatch, ref Buffer<IndexSet> integrationFlags,
+            Bodies bodies, ref TIntegratorCallbacks integratorCallbacks,
             float dt, float inverseDt, int startBundle, int exclusiveEndBundle, int workerIndex )
         {
             var prestepBundles = typeBatch.PrestepData.As<TPrestepData>();
@@ -148,7 +178,14 @@ namespace BepuPhysics.Constraints
             }
         }
 
-        public override void Solve( ref TypeBatch typeBatch, Bodies bodies, float dt, float inverseDt, int startBundle, int exclusiveEndBundle )
+        public override void Solve( 
+            ref TypeBatch typeBatch,
+            Bodies bodies,
+            float dt,
+            float inverseDt,
+            int startBundle, 
+            int exclusiveEndBundle 
+        )
         {
             var prestepBundles = typeBatch.PrestepData.As<TPrestepData>();
             var bodyReferencesBundles = typeBatch.BodyReferences.As<FourBodyReferences>();
@@ -158,12 +195,47 @@ namespace BepuPhysics.Constraints
                 ref var prestep = ref prestepBundles[ i ];
                 ref var accumulatedImpulses = ref accumulatedImpulsesBundles[ i ];
                 ref var references = ref bodyReferencesBundles[ i ];
-                bodies.GatherState<TSolveAccessFilterA>( references.IndexA, true, out var positionA, out var orientationA, out var wsvA, out var inertiaA );
-                bodies.GatherState<TSolveAccessFilterB>( references.IndexB, true, out var positionB, out var orientationB, out var wsvB, out var inertiaB );
-                bodies.GatherState<TSolveAccessFilterC>( references.IndexC, true, out var positionC, out var orientationC, out var wsvC, out var inertiaC );
-                bodies.GatherState<TSolveAccessFilterD>( references.IndexD, true, out var positionD, out var orientationD, out var wsvD, out var inertiaD );
+                bodies.GatherState<TSolveAccessFilterA>( 
+                    references.IndexA, true,
+                    out var positionA,
+                    out var orientationA,
+                    out var wsvA,
+                    out var inertiaA 
+                );
 
-                TConstraintFunctions.Solve( positionA, orientationA, inertiaA, positionB, orientationB, inertiaB, positionC, orientationC, inertiaC, positionD, orientationD, inertiaD, dt, inverseDt, ref prestep, ref accumulatedImpulses, ref wsvA, ref wsvB, ref wsvC, ref wsvD );
+                bodies.GatherState<TSolveAccessFilterB>( 
+                    references.IndexB, 
+                    true,
+                    out var positionB, 
+                    out var orientationB, 
+                    out var wsvB, 
+                    out var inertiaB 
+                );
+
+                bodies.GatherState<TSolveAccessFilterC>( 
+                    references.IndexC,
+                    true,
+                    out var positionC,
+                    out var orientationC, 
+                    out var wsvC,
+                    out var inertiaC 
+                );
+
+                bodies.GatherState<TSolveAccessFilterD>( 
+                    references.IndexD,
+                    true, 
+                    out var positionD,
+                    out var orientationD,
+                    out var wsvD, 
+                    out var inertiaD 
+                );
+
+                TConstraintFunctions.Solve( 
+                    positionA, orientationA, inertiaA, positionB, orientationB,
+                    inertiaB, positionC, orientationC, inertiaC, positionD,
+                    orientationD, inertiaD, dt, inverseDt, ref prestep,
+                    ref accumulatedImpulses, ref wsvA, ref wsvB, ref wsvC,
+                    ref wsvD );
 
                 bodies.ScatterVelocities<TSolveAccessFilterA>( ref wsvA, ref references.IndexA );
                 bodies.ScatterVelocities<TSolveAccessFilterB>( ref wsvB, ref references.IndexB );
@@ -173,7 +245,9 @@ namespace BepuPhysics.Constraints
         }
 
         public override bool RequiresIncrementalSubstepUpdates => TConstraintFunctions.RequiresIncrementalSubstepUpdates;
-        public override void IncrementallyUpdateForSubstep( ref TypeBatch typeBatch, Bodies bodies, float dt, float inverseDt, int startBundle, int exclusiveEndBundle )
+        public override void IncrementallyUpdateForSubstep( 
+            ref TypeBatch typeBatch, Bodies bodies, float dt,
+            float inverseDt, int startBundle, int exclusiveEndBundle )
         {
             var prestepBundles = typeBatch.PrestepData.As<TPrestepData>();
             var bodyReferencesBundles = typeBatch.BodyReferences.As<FourBodyReferences>();

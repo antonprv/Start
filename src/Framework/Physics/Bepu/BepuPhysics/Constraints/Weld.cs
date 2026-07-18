@@ -218,7 +218,16 @@ namespace BepuPhysics.Constraints
     /// <summary>
     /// Handles the solve iterations of a bunch of ball socket constraints.
     /// </summary>
-    public class WeldTypeProcessor : TwoBodyTypeProcessor<WeldPrestepData, WeldAccumulatedImpulses, WeldFunctions, AccessNoPosition, AccessNoPose, AccessAll, AccessAll>
+    public class WeldTypeProcessor : TwoBodyTypeProcessor
+        <
+            WeldPrestepData,
+            WeldAccumulatedImpulses,
+            WeldFunctions,
+            AccessNoPosition,
+            AccessNoPose,
+            AccessAll,
+            AccessAll
+        >
     {
         public const int BatchTypeId = 31;
     }

@@ -12,7 +12,16 @@ namespace BepuPhysics.CollisionDetection.CollisionTasks
         public static int BatchSize => 16;
 
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
-        static void ProjectOntoCapA( in Vector<float> capCenterBY, in Vector3Wide capCenterA, in Matrix3x3Wide rA, in Vector<float> inverseNDotAY, in Vector3Wide localNormal, in Vector2Wide point, out Vector2Wide projected )
+        static void ProjectOntoCapA( 
+            in Vector<float> capCenterBY,
+            in Vector3Wide capCenterA,
+            in Matrix3x3Wide rA,
+            in Vector<float> 
+            inverseNDotAY,
+            in Vector3Wide localNormal,
+            in Vector2Wide point, 
+            out Vector2Wide projected
+        )
         {
             Vector3Wide point3D;
             point3D.X = point.X;

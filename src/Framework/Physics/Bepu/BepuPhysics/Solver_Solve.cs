@@ -2,6 +2,7 @@
 using BepuUtilities;
 using BepuUtilities.Collections;
 using BepuUtilities.Memory;
+using Framework.FastMath.Numerics;
 using System.Diagnostics;
 using System.Numerics;
 using System.Runtime.CompilerServices;
@@ -405,14 +406,14 @@ namespace BepuPhysics
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
         int GetPreviousSyncIndexForIncrementalUpdate( int substepIndex, int syncIndex, int syncStagesPerSubstep )
         {
-            return substepIndex == 1 ? 0 : Math.Max( 0, syncIndex - syncStagesPerSubstep );
+            return substepIndex == 1 ? 0 : FMath.Max( 0, syncIndex - syncStagesPerSubstep );
         }
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
         int GetPreviousSyncIndexForIntegrateConstrainedKinematics( int substepIndex, int syncIndex, int syncStagesPerSubstep )
         {
             //If kinematics have their velocities integrated, then the first substep will have executed and left the claims at 1. Otherwise, the first substep will leave them cleared at 0.
             //The second substep and later will always run (since kinematics need their poses integrated regardless) so their sync index isn't weirdly conditional.
-            return substepIndex == 1 ? PoseIntegrator.Callbacks.IntegrateVelocityForKinematics ? 2 : 0 : Math.Max( 0, syncIndex - syncStagesPerSubstep );
+            return substepIndex == 1 ? PoseIntegrator.Callbacks.IntegrateVelocityForKinematics ? 2 : 0 : FMath.Max( 0, syncIndex - syncStagesPerSubstep );
         }
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
         int GetWarmStartLookback( int substepIndex, int synchronizedBatchCount )
@@ -431,12 +432,12 @@ namespace BepuPhysics
         int GetPreviousSyncIndexForWarmStart( int syncIndex, int warmStartLookback )
         {
             //The claims for warmstarts and solves are shared. So we want to look back to the last solve's claims, which would be beyond the incremental update and integrate constrained kinematics.
-            return Math.Max( 0, syncIndex - warmStartLookback );
+            return FMath.Max( 0, syncIndex - warmStartLookback );
         }
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
         int GetPreviousSyncIndexForSolve( int syncIndex, int synchronizedBatchCount )
         {
-            return Math.Max( 0, syncIndex - synchronizedBatchCount );
+            return FMath.Max( 0, syncIndex - synchronizedBatchCount );
         }
 
         protected static int GetUniformlyDistributedStart( int workerIndex, int blockCount, int workerCount, int offset )
@@ -448,7 +449,7 @@ namespace BepuPhysics
             }
             var blocksPerWorker = blockCount / workerCount;
             var remainder = blockCount - blocksPerWorker * workerCount;
-            return offset + blocksPerWorker * workerIndex + Math.Min( remainder, workerIndex );
+            return offset + blocksPerWorker * workerIndex + FMath.Min( remainder, workerIndex );
         }
 
         Action<int> solveWorker;
@@ -716,7 +717,7 @@ namespace BepuPhysics
                     var typeBatchSizeFraction = typeBatch.BundleCount / (float)bundleCount; //note: pre-inverting this doesn't necessarily work well due to numerical issues.
                     var typeBatchMaximumBlockCount = typeBatch.BundleCount * inverseMinimumBlockSizeInBundles;
                     var typeBatchMinimumBlockCount = typeBatch.BundleCount * inverseMaximumBlockSizeInBundles;
-                    var typeBatchBlockCount = Math.Max( 1, (int)Math.Min( typeBatchMaximumBlockCount, Math.Max( typeBatchMinimumBlockCount, targetBlocksPerBatch * typeBatchSizeFraction ) ) );
+                    var typeBatchBlockCount = FMath.Max( 1, (int)FMath.Min( typeBatchMaximumBlockCount, FMath.Max( typeBatchMinimumBlockCount, targetBlocksPerBatch * typeBatchSizeFraction ) ) );
                     int previousEnd = 0;
                     var baseBlockSizeInBundles = typeBatch.BundleCount / typeBatchBlockCount;
                     var remainder = typeBatch.BundleCount - baseBlockSizeInBundles * typeBatchBlockCount;
@@ -730,7 +731,7 @@ namespace BepuPhysics
                         block.End = previousEnd + blockBundleCount;
                         previousEnd = block.End;
                         Debug.Assert( block.StartBundle >= 0 && block.StartBundle < typeBatch.BundleCount );
-                        Debug.Assert( block.End >= block.StartBundle + Math.Min( minimumBlockSizeInBundles, typeBatch.BundleCount ) && block.End <= typeBatch.BundleCount );
+                        Debug.Assert( block.End >= block.StartBundle + FMath.Min( minimumBlockSizeInBundles, typeBatch.BundleCount ) && block.End <= typeBatch.BundleCount );
                     }
                 }
                 batchBoundaries[ batchIndex ] = workBlocks.Count;
@@ -798,7 +799,7 @@ namespace BepuPhysics
             substepContext.HighestVelocityIterationCount = 0;
             for ( int i = 0; i < substepContext.VelocityIterationCounts.Length; ++i )
             {
-                substepContext.HighestVelocityIterationCount = Math.Max( substepContext.VelocityIterationCounts[ i ], substepContext.HighestVelocityIterationCount );
+                substepContext.HighestVelocityIterationCount = FMath.Max( substepContext.VelocityIterationCounts[ i ], substepContext.HighestVelocityIterationCount );
             }
             pool.Take( 2 + stagesPerIteration * ( 1 + substepContext.HighestVelocityIterationCount ), out substepContext.Stages );
             //Claims will be monotonically increasing throughout execution. All should start at zero to match with the initial sync index.
@@ -820,7 +821,7 @@ namespace BepuPhysics
                 var workBlocksInBatch = substepContext.ConstraintBatchBoundaries[ batchIndex ] - batchStart;
                 substepContext.Stages[ stageIndex ] = new( claims.Slice( claimStart, workBlocksInBatch ), batchStart, SolverStageType.WarmStart, batchIndex );
                 claimStart += workBlocksInBatch;
-                highestJobCountInSolve = Math.Max( highestJobCountInSolve, workBlocksInBatch );
+                highestJobCountInSolve = FMath.Max( highestJobCountInSolve, workBlocksInBatch );
             }
             for ( int iterationIndex = 0; iterationIndex < substepContext.HighestVelocityIterationCount; ++iterationIndex )
             {
@@ -833,7 +834,7 @@ namespace BepuPhysics
                     var workBlocksInBatch = substepContext.ConstraintBatchBoundaries[ batchIndex ] - batchStart;
                     substepContext.Stages[ stageIndex ] = new( claims.Slice( claimStart, workBlocksInBatch ), batchStart, SolverStageType.Solve, batchIndex );
                     claimStart += workBlocksInBatch;
-                    highestJobCountInSolve = Math.Max( highestJobCountInSolve, workBlocksInBatch );
+                    highestJobCountInSolve = FMath.Max( highestJobCountInSolve, workBlocksInBatch );
                 }
             }
 
@@ -961,7 +962,7 @@ namespace BepuPhysics
             for ( int bundleIndex = bundleStartIndex; bundleIndex < bundleEndIndex; ++bundleIndex )
             {
                 int bundleStartIndexInConstraints = bundleIndex * Vector<int>.Count;
-                int countInBundle = Math.Min( Vector<float>.Count, typeBatch.ConstraintCount - bundleStartIndexInConstraints );
+                int countInBundle = FMath.Min( Vector<float>.Count, typeBatch.ConstraintCount - bundleStartIndexInConstraints );
                 //Body references are stored in AOSOA layout.
                 var bundleBodyReferencesStart = typeBatchBodyReferences.Memory + bundleIndex * intsPerBundle;
                 for ( int bodyIndexInConstraint = 0; bodyIndexInConstraint < bodiesPerConstraintInTypeBatch; ++bodyIndexInConstraint )
@@ -1125,7 +1126,7 @@ namespace BepuPhysics
                 //Just copy directly from the first batch into the merged to initialize it.
                 //Note "+ 64" instead of "+ 63": the highest possibly claimed id is inclusive!
                 pool.Take( ( bodies.HandlePool.HighestPossiblyClaimedId + 64 ) / 64, out mergedConstrainedBodyHandles.Flags );
-                var copyLength = Math.Min( mergedConstrainedBodyHandles.Flags.Length, batchReferencedHandles[ 0 ].Flags.Length );
+                var copyLength = FMath.Min( mergedConstrainedBodyHandles.Flags.Length, batchReferencedHandles[ 0 ].Flags.Length );
                 batchReferencedHandles[ 0 ].Flags.CopyTo( 0, mergedConstrainedBodyHandles.Flags, 0, copyLength );
                 mergedConstrainedBodyHandles.Flags.Clear( copyLength, mergedConstrainedBodyHandles.Flags.Length - copyLength );
 
@@ -1136,7 +1137,7 @@ namespace BepuPhysics
                 for ( int batchIndex = 1; batchIndex < bodiesFirstObservedInBatches.Length; ++batchIndex )
                 {
                     ref var batchHandles = ref batchReferencedHandles[ batchIndex ];
-                    var bundleCount = Math.Min( mergedConstrainedBodyHandles.Flags.Length, batchHandles.Flags.Length );
+                    var bundleCount = FMath.Min( mergedConstrainedBodyHandles.Flags.Length, batchHandles.Flags.Length );
                     //Note that we bypass the constructor to avoid zeroing unnecessarily. Every bundle will be fully assigned.
                     pool.Take( bundleCount, out bodiesFirstObservedInBatches[ batchIndex ].Flags );
                 }
@@ -1148,7 +1149,7 @@ namespace BepuPhysics
                 {
                     ref var batchHandles = ref batchReferencedHandles[ batchIndex ];
                     ref var firstObservedInBatch = ref bodiesFirstObservedInBatches[ batchIndex ];
-                    var flagBundleCount = Math.Min( mergedConstrainedBodyHandles.Flags.Length, batchHandles.Flags.Length );
+                    var flagBundleCount = FMath.Min( mergedConstrainedBodyHandles.Flags.Length, batchHandles.Flags.Length );
 
                     var scalarLoopStartIndex = 0;
                     ulong horizontalMerge = 0;
@@ -1231,7 +1232,7 @@ namespace BepuPhysics
                             for ( int i = 0; i < jobCountForTypeBatch; ++i )
                             {
                                 var jobStart = i * targetJobSize;
-                                var jobEnd = Math.Min( jobStart + targetJobSize, typeBatch.ConstraintCount );
+                                var jobEnd = FMath.Min( jobStart + targetJobSize, typeBatch.ConstraintCount );
                                 integrationResponsibilityPrepassJobs.Allocate( pool ) = (batchIndex, typeBatchIndex, jobStart, jobEnd);
                             }
                         }

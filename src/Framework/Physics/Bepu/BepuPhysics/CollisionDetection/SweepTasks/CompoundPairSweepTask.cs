@@ -20,7 +20,10 @@ namespace BepuPhysics.CollisionDetection.SweepTasks
             void* shapeDataA, Quaternion orientationA, in BodyVelocity velocityA,
             void* shapeDataB, Vector3 offsetB, Quaternion orientationB, in BodyVelocity velocityB,
             float maximumT, float minimumProgression, float convergenceThreshold, int maximumIterationCount,
-            bool flipRequired, ref TSweepFilter filter, Shapes shapes, SweepTaskRegistry sweepTasks, BufferPool pool, out float t0, out float t1, out Vector3 hitLocation, out Vector3 hitNormal )
+            bool flipRequired, ref TSweepFilter filter, Shapes shapes,
+            SweepTaskRegistry sweepTasks, BufferPool pool,
+            out float t0, out float t1, out Vector3 hitLocation,
+            out Vector3 hitNormal )
         {
             ref var a = ref Unsafe.AsRef<TCompoundA>( shapeDataA );
             ref var b = ref Unsafe.AsRef<TCompoundB>( shapeDataB );
@@ -71,7 +74,14 @@ namespace BepuPhysics.CollisionDetection.SweepTasks
             return t1 < float.MaxValue;
         }
 
-        protected override unsafe bool PreorderedTypeSweep( void* shapeDataA, in RigidPose localPoseA, Quaternion orientationA, in BodyVelocity velocityA, void* shapeDataB, in RigidPose localPoseB, Vector3 offsetB, Quaternion orientationB, in BodyVelocity velocityB, float maximumT, float minimumProgression, float convergenceThreshold, int maximumIterationCount, out float t0, out float t1, out Vector3 hitLocation, out Vector3 hitNormal )
+        protected override unsafe bool PreorderedTypeSweep( 
+            void* shapeDataA, in RigidPose localPoseA,
+            Quaternion orientationA, in BodyVelocity velocityA, 
+            void* shapeDataB, in RigidPose localPoseB, Vector3 offsetB,
+            Quaternion orientationB, in BodyVelocity velocityB, float maximumT,
+            float minimumProgression, float convergenceThreshold,
+            int maximumIterationCount, out float t0, out float t1,
+            out Vector3 hitLocation, out Vector3 hitNormal )
         {
             throw new NotImplementedException( "Compounds cannot be nested; this should never be called." );
         }

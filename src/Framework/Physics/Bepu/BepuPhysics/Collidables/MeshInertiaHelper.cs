@@ -1,4 +1,6 @@
 ﻿using BepuUtilities;
+using Framework.FastMath.Numerics;
+using Framework.FastMath.Numerics.Extensions;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 
@@ -108,7 +110,7 @@ namespace BepuPhysics.Collidables
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
         public static float ComputeTetrahedronVolume( Vector3 a, Vector3 b, Vector3 c )
         {
-            return ( 1f / 6f ) * Vector3.Dot( Vector3.Cross( b, a ), c );
+            return ( 1f / 6f ) * FMath.Dot( FMath.Cross( b, a ), c );
         }
 
         /// <summary>
@@ -253,7 +255,7 @@ namespace BepuPhysics.Collidables
         /// <returns>Area of the triangle.</returns>
         public static float ComputeTriangleArea( Vector3 a, Vector3 b, Vector3 c )
         {
-            return 0.5f * Vector3.Cross( b - a, c - a ).Length(); //Not exactly fast, but again, we're assuming performance is irrelevant for the mesh inertia helper.
+            return 0.5f * FMath.Cross( b - a, c - a ).FastLength(); //Not exactly fast, but again, we're assuming performance is irrelevant for the mesh inertia helper.
         }
 
         /// <summary>

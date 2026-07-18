@@ -4,6 +4,8 @@ using BepuPhysics.Constraints;
 using BepuUtilities;
 using BepuUtilities.Collections;
 using BepuUtilities.Memory;
+using Framework.FastMath.Numerics;
+using Framework.FastMath.Numerics.Extensions;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 
@@ -123,16 +125,16 @@ namespace BepuPhysics
             angularVelocity.Validate();
             //Note that we don't bother with conservation of angular momentum or the gyroscopic term or anything else. All orientation integration assumes a series of piecewise linear integrations
             //That's not entirely correct, but it's a reasonable approximation that means we don't have to worry about conservation of angular momentum or gyroscopic terms when dealing with CCD sweeps.
-            var speed = angularVelocity.Length();
+            var speed = angularVelocity.FastLength();
             if ( speed > 1e-15f )
             {
                 var halfAngle = speed * dt * 0.5f;
                 Unsafe.SkipInit( out Quaternion q );
-                Unsafe.As<Quaternion, Vector3>( ref q ) = angularVelocity * ( MathHelper.Sin( halfAngle ) / speed );
-                q.W = MathHelper.Cos( halfAngle );
+                Unsafe.As<Quaternion, Vector3>( ref q ) = angularVelocity * ( FMath.FastSin( halfAngle ) / speed );
+                q.W = FMath.FastCos( halfAngle );
                 //Note that the input and output may overlap.
                 QuaternionEx.Concatenate( orientation, q, out integratedOrientation );
-                QuaternionEx.Normalize( ref integratedOrientation );
+                integratedOrientation.FastNormalize();
             }
             else
             {
@@ -462,7 +464,7 @@ namespace BepuPhysics
             for ( int bundleIndex = bundleStartIndex; bundleIndex < bundleEndIndex; ++bundleIndex )
             {
                 var bundleBaseIndex = bundleIndex * Vector<float>.Count;
-                var countInBundle = Math.Min( bodyCount - bundleBaseIndex, Vector<float>.Count );
+                var countInBundle = FMath.Min( bodyCount - bundleBaseIndex, Vector<float>.Count );
                 for ( int i = 0; i < countInBundle; ++i )
                 {
                     bodyIndices[ i ] = handleToLocation[ bodyHandles[ bundleBaseIndex + i ] ].Index;
@@ -504,7 +506,7 @@ namespace BepuPhysics
             for ( int bundleIndex = bundleStartIndex; bundleIndex < bundleEndIndex; ++bundleIndex )
             {
                 var bundleBaseIndex = bundleIndex * Vector<float>.Count;
-                var countInBundle = Math.Min( bodyCount - bundleBaseIndex, Vector<float>.Count );
+                var countInBundle = FMath.Min( bodyCount - bundleBaseIndex, Vector<float>.Count );
                 for ( int i = 0; i < countInBundle; ++i )
                 {
                     bodyIndices[ i ] = handleToLocation[ bodyHandles[ bundleBaseIndex + i ] ].Index;
@@ -550,7 +552,7 @@ namespace BepuPhysics
             for ( int i = bundleStartIndex; i < bundleEndIndex; ++i )
             {
                 var bundleBaseIndex = i * Vector<float>.Count;
-                var countInBundle = Math.Min( bodyCount - bundleBaseIndex, Vector<float>.Count );
+                var countInBundle = FMath.Min( bodyCount - bundleBaseIndex, Vector<float>.Count );
                 //This is executed at the end of the frame, after all constraints are complete.
                 //It covers both constrained and unconstrained bodies.
                 //There is no need to write world inertia, since the solver is done.

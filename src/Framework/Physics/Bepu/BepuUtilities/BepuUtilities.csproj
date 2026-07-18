@@ -11,4 +11,9 @@
 		<PublishReadyToRun>true</PublishReadyToRun>
 	</PropertyGroup>
 
+	<ItemGroup>
+	  <ProjectReference Include="..\..\..\Math\Numerics\FastMath.Numerics.csproj" 
+						  SetTargetFramework="TargetFramework=net8.0" />
+	</ItemGroup>
+
 </Project>

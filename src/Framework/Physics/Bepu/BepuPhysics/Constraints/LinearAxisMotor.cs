@@ -80,35 +80,98 @@ namespace BepuPhysics.Constraints
 
     public struct LinearAxisMotorFunctions : ITwoBodyConstraintFunctions<LinearAxisMotorPrestepData, Vector<float>>
     {
-        public static void WarmStart( in Vector3Wide positionA, in QuaternionWide orientationA, in BodyInertiaWide inertiaA, in Vector3Wide positionB, in QuaternionWide orientationB, in BodyInertiaWide inertiaB, ref LinearAxisMotorPrestepData prestep, ref Vector<float> accumulatedImpulses, ref BodyVelocityWide wsvA, ref BodyVelocityWide wsvB )
+        public static void WarmStart( 
+            in Vector3Wide positionA,
+            in QuaternionWide orientationA,
+            in BodyInertiaWide inertiaA,
+            in Vector3Wide positionB,
+            in QuaternionWide orientationB, 
+            in BodyInertiaWide inertiaB, 
+            ref LinearAxisMotorPrestepData prestep,
+            ref Vector<float> accumulatedImpulses, 
+            ref BodyVelocityWide wsvA,
+            ref BodyVelocityWide wsvB 
+        )
         {
-            LinearAxisServoFunctions.ComputeJacobians( positionB - positionA, orientationA, orientationB, prestep.LocalPlaneNormal, prestep.LocalOffsetA, prestep.LocalOffsetB, out _, out var normal, out var angularJA, out var angularJB );
+            LinearAxisServoFunctions.ComputeJacobians(
+                positionB - positionA,
+                orientationA, orientationB,
+                prestep.LocalPlaneNormal, prestep.LocalOffsetA,
+                prestep.LocalOffsetB, out _, out var normal, 
+                out var angularJA, out var angularJB 
+            );
+
             Symmetric3x3Wide.TransformWithoutOverlap( angularJA, inertiaA.InverseInertiaTensor, out var angularImpulseToVelocityA );
             Symmetric3x3Wide.TransformWithoutOverlap( angularJB, inertiaB.InverseInertiaTensor, out var angularImpulseToVelocityB );
-            LinearAxisServoFunctions.ApplyImpulse( normal, angularImpulseToVelocityA, angularImpulseToVelocityB, inertiaA, inertiaB, accumulatedImpulses, ref wsvA, ref wsvB );
+            LinearAxisServoFunctions.ApplyImpulse( 
+                normal, angularImpulseToVelocityA,
+                angularImpulseToVelocityB, inertiaA,
+                inertiaB, accumulatedImpulses,
+                ref wsvA, ref wsvB 
+            );
         }
 
-        public static void Solve( in Vector3Wide positionA, in QuaternionWide orientationA, in BodyInertiaWide inertiaA, in Vector3Wide positionB, in QuaternionWide orientationB, in BodyInertiaWide inertiaB, float dt, float inverseDt, ref LinearAxisMotorPrestepData prestep, ref Vector<float> accumulatedImpulses, ref BodyVelocityWide wsvA, ref BodyVelocityWide wsvB )
+        public static void Solve( 
+            in Vector3Wide positionA, 
+            in QuaternionWide orientationA,
+            in BodyInertiaWide inertiaA, 
+            in Vector3Wide positionB, 
+            in QuaternionWide orientationB, 
+            in BodyInertiaWide inertiaB,
+            float dt, float inverseDt, 
+            ref LinearAxisMotorPrestepData prestep, 
+            ref Vector<float> accumulatedImpulses,
+            ref BodyVelocityWide wsvA,
+            ref BodyVelocityWide wsvB )
         {
-            LinearAxisServoFunctions.ComputeJacobians( positionB - positionA, orientationA, orientationB, prestep.LocalPlaneNormal, prestep.LocalOffsetA, prestep.LocalOffsetB, out _, out var normal, out var angularJA, out var angularJB );
-            MotorSettingsWide.ComputeSoftness( prestep.Settings, dt, out var effectiveMassCFMScale, out var softnessImpulseScale, out var maximumImpulse );
-            LinearAxisServoFunctions.ComputeEffectiveMass( angularJA, angularJB, inertiaA, inertiaB, effectiveMassCFMScale, out var angularImpulseToVelocityA, out var angularImpulseToVelocityB, out var effectiveMass );
+            LinearAxisServoFunctions.ComputeJacobians( 
+                positionB - positionA, orientationA, 
+                orientationB, prestep.LocalPlaneNormal, 
+                prestep.LocalOffsetA, prestep.LocalOffsetB, 
+                out _, out var normal, out var angularJA, 
+                out var angularJB );
+
+            MotorSettingsWide.ComputeSoftness( 
+                prestep.Settings, dt, out var effectiveMassCFMScale, 
+                out var softnessImpulseScale, out var maximumImpulse 
+                );
+
+            LinearAxisServoFunctions.ComputeEffectiveMass( 
+                angularJA, angularJB, inertiaA, inertiaB, 
+                effectiveMassCFMScale, out var angularImpulseToVelocityA, 
+                out var angularImpulseToVelocityB, out var effectiveMass 
+                );
 
             //csi = projection.BiasImpulse - accumulatedImpulse * projection.SoftnessImpulseScale - (csiaLinear + csiaAngular + csibLinear + csibAngular);
-            var csv = Vector3Wide.Dot( wsvA.Linear - wsvB.Linear, normal ) + Vector3Wide.Dot( wsvA.Angular, angularJA ) + Vector3Wide.Dot( wsvB.Angular, angularJB );
+            var csv = Vector3Wide.Dot( wsvA.Linear - wsvB.Linear, normal ) 
+                + Vector3Wide.Dot( wsvA.Angular, angularJA )
+                + Vector3Wide.Dot( wsvB.Angular, angularJB );
 
             var csi = effectiveMass * ( -prestep.TargetVelocity - csv ) - accumulatedImpulses * softnessImpulseScale;
 
             ServoSettingsWide.ClampImpulse( maximumImpulse, ref accumulatedImpulses, ref csi );
-            LinearAxisServoFunctions.ApplyImpulse( normal, angularImpulseToVelocityA, angularImpulseToVelocityB, inertiaA, inertiaB, csi, ref wsvA, ref wsvB );
+
+            LinearAxisServoFunctions.ApplyImpulse( 
+                normal, angularImpulseToVelocityA, 
+                angularImpulseToVelocityB, inertiaA, 
+                inertiaB, csi, ref wsvA, ref wsvB );
         }
 
         public static bool RequiresIncrementalSubstepUpdates => false;
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
-        public static void IncrementallyUpdateForSubstep( in Vector<float> dt, in BodyVelocityWide wsvA, in BodyVelocityWide wsvB, ref LinearAxisMotorPrestepData prestepData ) { }
+        public static void IncrementallyUpdateForSubstep( 
+            in Vector<float> dt, in BodyVelocityWide wsvA,
+            in BodyVelocityWide wsvB,
+            ref LinearAxisMotorPrestepData prestepData ) { }
     }
 
-    public class LinearAxisMotorTypeProcessor : TwoBodyTypeProcessor<LinearAxisMotorPrestepData, Vector<float>, LinearAxisMotorFunctions, AccessAll, AccessAll, AccessAll, AccessAll>
+    public class LinearAxisMotorTypeProcessor :
+        TwoBodyTypeProcessor
+        <
+            LinearAxisMotorPrestepData, Vector<float>,
+            LinearAxisMotorFunctions, AccessAll,
+            AccessAll, AccessAll, AccessAll
+        >
     {
         public const int BatchTypeId = 39;
     }

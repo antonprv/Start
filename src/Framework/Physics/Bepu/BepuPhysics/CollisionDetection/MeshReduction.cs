@@ -2,6 +2,8 @@
 using BepuUtilities;
 using BepuUtilities.Collections;
 using BepuUtilities.Memory;
+using Framework.FastMath.Numerics;
+using Framework.FastMath.Numerics.Extensions;
 using System.Diagnostics;
 using System.Numerics;
 using System.Runtime.CompilerServices;
@@ -122,12 +124,12 @@ namespace BepuPhysics.CollisionDetection
                 var bc = triangle.C - triangle.B;
                 var ca = triangle.A - triangle.C;
                 //TODO: This threshold might result in bumps when dealing with small triangles. May want to include a different source of scale information, like from the original convex test.
-                DistanceThreshold = 1e-3f * (float)Math.Sqrt( MathHelper.Max( triangle.A.LengthSquared() * 1e-4f, MathHelper.Max( ab.LengthSquared(), ca.LengthSquared() ) ) );
-                var n = Vector3.Cross( ab, ca );
+                DistanceThreshold = 1e-3f * (float)FMath.FastSqrt( FMath.Max( triangle.A.LengthSquared() * 1e-4f, FMath.Max( ab.LengthSq(), ca.LengthSq() ) ) );
+                var n = FMath.Cross( ab, ca );
                 //Edge normals point outward.
-                var edgeNormalAB = Vector3.Cross( n, ab );
-                var edgeNormalBC = Vector3.Cross( n, bc );
-                var edgeNormalCA = Vector3.Cross( n, ca );
+                var edgeNormalAB = FMath.Cross( n, ab );
+                var edgeNormalBC = FMath.Cross( n, bc );
+                var edgeNormalCA = FMath.Cross( n, ca );
 
                 NX = new Vector4( n.X, edgeNormalAB.X, edgeNormalBC.X, edgeNormalCA.X );
                 NY = new Vector4( n.Y, edgeNormalAB.Y, edgeNormalBC.Y, edgeNormalCA.Y );
@@ -172,7 +174,7 @@ namespace BepuPhysics.CollisionDetection
             var distanceAlongNormal = offsetX * triangle.NX + offsetY * triangle.NY + offsetZ * triangle.NZ;
             //Note that very very thin triangles can result in questionable acceptance due to not checking for true distance- 
             //a position might be way outside a vertex, but still within edge plane thresholds. We're assuming that the impact of this problem will be minimal.
-            if ( MathF.Abs( distanceAlongNormal.X ) <= triangle.DistanceThreshold &&
+            if ( FMath.Abs( distanceAlongNormal.X ) <= triangle.DistanceThreshold &&
                 distanceAlongNormal.Y <= triangle.DistanceThreshold &&
                 distanceAlongNormal.Z <= triangle.DistanceThreshold &&
                 distanceAlongNormal.W <= triangle.DistanceThreshold )
@@ -420,7 +422,7 @@ namespace BepuPhysics.CollisionDetection
                 QuickDictionary<int, TestTriangle, PrimitiveComparer<int>> testTriangles = new( allocationSize, pool );
                 //For numerical reasons, expand each contact by an epsilon to capture relevant triangles.
                 var span = queryBounds.Max - queryBounds.Min;
-                var maxSpan = MathF.Max( span.X, MathF.Max( span.Y, span.Z ) );
+                var maxSpan = FMath.Max( span.X, FMath.Max( span.Y, span.Z ) );
                 var contactExpansion = new Vector3( maxSpan * 1e-4f );
 
                 //We're guaranteed to encounter all the triangles with contacts that we collected, so go ahead and create their entries.

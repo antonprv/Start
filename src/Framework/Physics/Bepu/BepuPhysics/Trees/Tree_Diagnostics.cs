@@ -1,4 +1,5 @@
 ﻿using BepuUtilities;
+using Framework.FastMath.Numerics;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 
@@ -74,7 +75,7 @@ namespace BepuPhysics.Trees
             var badMaxValue = new Vector3( float.MinValue );
             var mergedMin = badMinValue; //Note- using isolated vectors instead of actual BoundingBox here to avoid a compiler bug: https://github.com/dotnet/coreclr/issues/12950
             var mergedMax = badMaxValue;
-            var childCount = Math.Min( LeafCount, 2 );
+            var childCount = FMath.Min( LeafCount, 2 );
             for ( int i = 0; i < childCount; ++i )
             {
                 ref var child = ref Unsafe.Add( ref children, i );
@@ -186,7 +187,7 @@ namespace BepuPhysics.Trees
             ref var children = ref node.A;
             int maximum = currentDepth;
             int nextDepth = currentDepth + 1;
-            var childCount = Math.Min( LeafCount, 2 );
+            var childCount = FMath.Min( LeafCount, 2 );
             for ( int i = 0; i < childCount; ++i )
             {
                 ref var child = ref Unsafe.Add( ref children, i );
@@ -215,7 +216,7 @@ namespace BepuPhysics.Trees
             int correctlyPositionedImmediateChildren = 0;
             int immediateInternalChildren = 0;
             int expectedChildIndex = nodeIndex + 1;
-            var childCount = Math.Min( LeafCount, 2 );
+            var childCount = FMath.Min( LeafCount, 2 );
             for ( int i = 0; i < childCount; ++i )
             {
                 ref var child = ref Unsafe.Add( ref children, i );

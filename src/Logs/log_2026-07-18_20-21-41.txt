@@ -1,0 +1,13 @@
+[17:21:03] [Info] [PhysicsWorldNode._Ready:63] PhysicsWorld initialized (threads: 19).
+[17:21:14] [Info] [CameraComponent.SetNoclip:126] Got noclip: ON
+[17:21:14] [Info] [MoverComponent.SetNoclip:91] Got noclip: ON
+[17:21:16] [Info] [TriggerVolume.HandleBodyEnter:78] <Node3D#45332039296> entered!
+[17:21:16] [Info] [TriggerVolume.HandleBodyExit:97] <Node3D#45332039296> exited!
+[17:21:19] [Info] [CameraComponent.SetNoclip:126] Got noclip: OFF
+[17:21:19] [Info] [MoverComponent.SetNoclip:91] Got noclip: OFF
+[17:21:31] [Info] [CameraComponent.SetNoclip:126] Got noclip: ON
+[17:21:31] [Info] [MoverComponent.SetNoclip:91] Got noclip: ON
+[17:21:33] [Info] [TriggerVolume.HandleBodyEnter:78] <Node3D#45332039296> entered!
+[17:21:33] [Info] [TriggerVolume.HandleBodyExit:97] <Node3D#45332039296> exited!
+[17:21:35] [Info] [CameraComponent.SetNoclip:126] Got noclip: OFF
+[17:21:35] [Info] [MoverComponent.SetNoclip:91] Got noclip: OFF

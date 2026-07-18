@@ -1,6 +1,8 @@
 ﻿using BepuPhysics.CollisionDetection;
 using BepuUtilities;
 using BepuUtilities.Memory;
+using Framework.FastMath.Numerics;
+using Framework.FastMath.Numerics.Extensions;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 
@@ -51,7 +53,7 @@ namespace BepuPhysics.Collidables
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
         public readonly void ComputeAngularExpansionData( out float maximumRadius, out float maximumAngularExpansion )
         {
-            maximumRadius = (float)Math.Sqrt( MathHelper.Max( A.LengthSquared(), MathHelper.Max( B.LengthSquared(), C.LengthSquared() ) ) );
+            maximumRadius = (float)FMath.FastSqrt( FMath.Max( A.LengthSq(), FMath.Max( B.LengthSq(), C.LengthSq() ) ) );
             maximumAngularExpansion = maximumRadius;
         }
 
@@ -61,8 +63,8 @@ namespace BepuPhysics.Collidables
             //Note that this assumes clockwise-in-right-hand winding. Rays coming from the opposite direction pass through; triangles are one sided.
             var ab = b - a;
             var ac = c - a;
-            normal = Vector3.Cross( ac, ab );
-            var dn = -Vector3.Dot( direction, normal );
+            normal = FMath.Cross( ac, ab );
+            var dn = -FMath.Dot( direction, normal );
             if ( dn <= 0 )
             {
                 t = 0;
@@ -70,27 +72,27 @@ namespace BepuPhysics.Collidables
                 return false;
             }
             var ao = origin - a;
-            t = Vector3.Dot( ao, normal );
+            t = FMath.Dot( ao, normal );
             if ( t < 0 )
             {
                 //Impact occurred before the start of the ray.
                 return false;
             }
-            var aoxd = Vector3.Cross( ao, direction );
-            var v = -Vector3.Dot( ac, aoxd );
+            var aoxd = FMath.Cross( ao, direction );
+            var v = -FMath.Dot( ac, aoxd );
             if ( v < 0 || v > dn )
             {
                 //Invalid barycentric coordinate for b.
                 return false;
             }
-            var w = Vector3.Dot( ab, aoxd );
+            var w = FMath.Dot( ab, aoxd );
             if ( w < 0 || v + w > dn )
             {
                 //Invalid barycentric coordinate for b and/or c.
                 return false;
             }
             t /= dn;
-            normal /= (float)Math.Sqrt( Vector3.Dot( normal, normal ) );
+            normal /= (float)FMath.FastSqrt( FMath.Dot( normal, normal ) );
             return true;
         }
 

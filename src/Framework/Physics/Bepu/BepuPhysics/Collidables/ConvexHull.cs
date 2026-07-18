@@ -60,7 +60,10 @@ namespace BepuPhysics.Collidables
         public ConvexHull( Span<Vector3> points, BufferPool pool, out Vector3 center )
         {
             if ( !ConvexHullHelper.CreateShape( points, pool, out center, out this ) )
-                throw new ArgumentException( "Could not create a convex hull from the point set; is it degenerate? Convex hull shapes must have volume." );
+                throw new ArgumentException( 
+                    "Could not create a convex hull from the point set;" +
+                    " is it degenerate? Convex hull shapes must have volume." 
+                );
         }
 
         [MethodImpl( MethodImplOptions.AggressiveInlining )]

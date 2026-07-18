@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using Framework.FastMath.Numerics;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
 namespace BepuPhysics.Trees;
@@ -135,8 +136,8 @@ partial struct Tree
         if ( nodeOptimizationCount == 0 )
             return;
         ref var node = ref Nodes[ targetNodeIndex ];
-        var lowerNodeCount = int.Min( node.A.LeafCount, node.B.LeafCount ) - 1;
-        var lowerTargetNodeCount = int.Min( lowerNodeCount, ( nodeOptimizationCount + 1 ) / 2 );
+        var lowerNodeCount = FMath.Min( node.A.LeafCount, node.B.LeafCount ) - 1;
+        var lowerTargetNodeCount = FMath.Min( lowerNodeCount, ( nodeOptimizationCount + 1 ) / 2 );
         var higherNodeCount = nodeOptimizationCount - lowerTargetNodeCount;
         var aIsSmaller = node.A.LeafCount < node.B.LeafCount;
         var nodeOptimizationCountA = aIsSmaller ? lowerTargetNodeCount : higherNodeCount;
@@ -159,7 +160,7 @@ partial struct Tree
             return;
         var targetNodeIndex = ComputeCacheOptimalLocation( nodeIndex );
         ref var originalNode = ref Nodes[ nodeIndex ];
-        var effectiveNodeOptimizationCount = int.Min( originalNode.A.LeafCount + originalNode.B.LeafCount - 1, nodeOptimizationCount );
+        var effectiveNodeOptimizationCount = FMath.Min( originalNode.A.LeafCount + originalNode.B.LeafCount - 1, nodeOptimizationCount );
         CacheOptimizedLimitedSubtreeInternal( nodeIndex, targetNodeIndex, effectiveNodeOptimizationCount );
     }
 
@@ -180,7 +181,7 @@ partial struct Tree
 
         ref var startNode = ref Nodes[ targetNodeIndex ];
         //Note minus 2: visiting the parent of the last node is sufficient to put the last node into position.
-        var nodeCount = int.Min( startNode.A.LeafCount + startNode.B.LeafCount - 2, targetCount );
+        var nodeCount = FMath.Min( startNode.A.LeafCount + startNode.B.LeafCount - 2, targetCount );
         for ( int i = 0; i < nodeCount; ++i )
         {
             int parentIndex = targetNodeIndex + i;

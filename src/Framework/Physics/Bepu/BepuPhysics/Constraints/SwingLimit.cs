@@ -1,5 +1,6 @@
 ﻿using BepuUtilities;
 using BepuUtilities.Memory;
+using Framework.FastMath.Numerics;
 using System.Diagnostics;
 using System.Numerics;
 using System.Runtime.CompilerServices;
@@ -31,7 +32,11 @@ namespace BepuPhysics.Constraints
         /// <summary>
         /// Gets or sets the maximum swing angle that the constraint allows between world axis A and B. Based on the MinimumDot field.
         /// </summary>
-        public float MaximumSwingAngle { readonly get { return (float)Math.Acos( MinimumDot ); } set { MinimumDot = (float)Math.Cos( value ); } }
+        public float MaximumSwingAngle
+        {
+            readonly get => (float)FMath.FastAcos( MinimumDot ); 
+            set => MinimumDot = (float)FMath.FastCos( value );
+        }
 
         public static int ConstraintTypeId
         {

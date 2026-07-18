@@ -2,6 +2,8 @@
 using BepuPhysics.CollisionDetection;
 using BepuPhysics.Trees;
 using BepuUtilities.Memory;
+using Framework.FastMath.Numerics;
+using Framework.FastMath.Numerics.Extensions;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 
@@ -310,13 +312,13 @@ namespace BepuPhysics
             //Estimate some reasonable termination conditions for iterative sweeps based on the input shape size.
             shape.ComputeAngularExpansionData( out var maximumRadius, out var maximumAngularExpansion );
             var minimumRadius = maximumRadius - maximumAngularExpansion;
-            var sizeEstimate = Math.Max( minimumRadius, maximumRadius * 0.25f );
+            var sizeEstimate = FMath.Max( minimumRadius, maximumRadius * 0.25f );
             //By default, lean towards precision. This may often trip the maximum iteration count, but that's okay. Performance sensitive users can tune it down with the other overload.
             //It would be far more disconcerting for new users to use a 'fast' default tuning and get visibly incorrect results.
             var minimumProgressionDistance = .1f * sizeEstimate;
             var convergenceThresholdDistance = 1e-5f * sizeEstimate;
-            var tangentVelocity = Math.Min( velocity.Angular.Length() * maximumRadius, maximumAngularExpansion / maximumT );
-            var inverseVelocity = 1f / ( velocity.Linear.Length() + tangentVelocity );
+            var tangentVelocity = FMath.Min( velocity.Angular.FastLength() * maximumRadius, maximumAngularExpansion / maximumT );
+            var inverseVelocity = 1f / ( velocity.Linear.FastLength() + tangentVelocity );
             var minimumProgressionT = minimumProgressionDistance * inverseVelocity;
             var convergenceThresholdT = convergenceThresholdDistance * inverseVelocity;
             var maximumIterationCount = 25;

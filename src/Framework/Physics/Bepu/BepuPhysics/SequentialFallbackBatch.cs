@@ -1,5 +1,6 @@
 ﻿using BepuUtilities.Collections;
 using BepuUtilities.Memory;
+using Framework.FastMath.Numerics;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
@@ -51,7 +52,7 @@ namespace BepuPhysics
             BufferPool pool, TBodyReferenceGetter bodyReferenceGetter, int minimumBodyCapacity )
             where TBodyReferenceGetter : struct, IBodyReferenceGetter
         {
-            EnsureCapacity( Math.Max( dynamicBodyConstraintCounts.Count + dynamicBodyHandles.Length, minimumBodyCapacity ), pool );
+            EnsureCapacity( FMath.Max( dynamicBodyConstraintCounts.Count + dynamicBodyHandles.Length, minimumBodyCapacity ), pool );
             for ( int i = 0; i < dynamicBodyHandles.Length; ++i )
             {
                 var bodyReference = TBodyReferenceGetter.GetBodyReference( bodies, dynamicBodyHandles[ i ] );

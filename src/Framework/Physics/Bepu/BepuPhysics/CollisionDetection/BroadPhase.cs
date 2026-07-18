@@ -4,6 +4,7 @@ using BepuUtilities;
 using BepuUtilities.Collections;
 using BepuUtilities.Memory;
 using BepuUtilities.TaskScheduling;
+using Framework.FastMath.Numerics;
 using System.Diagnostics;
 using System.Numerics;
 using System.Runtime.CompilerServices;
@@ -180,7 +181,7 @@ namespace BepuPhysics.CollisionDetection
         void ExecuteRefine( int workerIndex )
         {
             var threadPool = threadDispatcher.WorkerPools[ workerIndex ];
-            var maximumSubtrees = Math.Max( activeRefineContext.MaximumSubtrees, staticRefineContext.MaximumSubtrees );
+            var maximumSubtrees = FMath.Max( activeRefineContext.MaximumSubtrees, staticRefineContext.MaximumSubtrees );
             var subtreeReferences = new QuickList<int>( maximumSubtrees, threadPool );
             var treeletInternalNodes = new QuickList<int>( maximumSubtrees, threadPool );
             Tree.CreateBinnedResources( threadPool, maximumSubtrees, out var buffer, out var resources );
@@ -275,22 +276,22 @@ namespace BepuPhysics.CollisionDetection
            int frameIndex, in Tree tree, out int rootRefinementSize, out int subtreeRefinementCount, out int subtreeRefinementSize, out bool usePriorityQueue )
         {
             var refineRoot = frameIndex % rootRefinementPeriod == 0;
-            var targetOptimizedLeafCount = (int)float.Ceiling( tree.LeafCount * optimizationFraction );
+            var targetOptimizedLeafCount = (int)FMath.Ceil( tree.LeafCount * optimizationFraction );
             //The square root of the leaf count gets us roughly halfway down the tree. (Each subtree has ~sqrt(LeafCount) leaves, and there are ~sqrt(LeafCount) subtrees.)
             //Root and subtree refinements need to be larger than that: subtrees must be able to exchange nodes, and the root refinement is the intermediary.
             //Another consideration for choosing refinement sizes: larger refinement sizes increase in cost nonlinearly (O(nlogn)).
             //You should choose a size which is large *enough* to get within your quality target and no larger.
-            var sqrtLeafCount = float.Sqrt( tree.LeafCount );
+            var sqrtLeafCount = FMath.FastSqrt( tree.LeafCount );
 
-            var targetRootRefinementSize = (int)float.Ceiling( sqrtLeafCount * rootRefinementSizeScale );
-            subtreeRefinementSize = (int)float.Ceiling( sqrtLeafCount * subtreeRefinementSizeScale );
+            var targetRootRefinementSize = (int)FMath.Ceil( sqrtLeafCount * rootRefinementSizeScale );
+            subtreeRefinementSize = (int)FMath.Ceil( sqrtLeafCount * subtreeRefinementSizeScale );
 
             //Note that we scale up the cost of the root refinement; it uses a sequentialized priority queue to collect subtrees for refinement and costs more.
-            var subtreeRefinementsPerRootRefinementInCost = targetRootRefinementSize * float.Log2( targetRootRefinementSize ) / ( subtreeRefinementSize * float.Log2( subtreeRefinementSize ) );
+            var subtreeRefinementsPerRootRefinementInCost = targetRootRefinementSize * FMath.Log2( targetRootRefinementSize ) / ( subtreeRefinementSize * FMath.Log2( subtreeRefinementSize ) );
             //If we're refining the root, reduce the number of subtree refinements to avoid cost spikes.
-            subtreeRefinementCount = int.Max( 0, (int)float.Round( (float)targetOptimizedLeafCount / subtreeRefinementSize - ( refineRoot ? subtreeRefinementsPerRootRefinementInCost : 0 ) ) );
+            subtreeRefinementCount = FMath.Max( 0, (int)FMath.Round( (float)targetOptimizedLeafCount / subtreeRefinementSize - ( refineRoot ? subtreeRefinementsPerRootRefinementInCost : 0 ) ) );
             if ( !refineRoot )
-                subtreeRefinementCount = int.Max( 1, subtreeRefinementCount );
+                subtreeRefinementCount = FMath.Max( 1, subtreeRefinementCount );
 
             rootRefinementSize = refineRoot ? targetRootRefinementSize : 0;
             usePriorityQueue = ( frameIndex / rootRefinementPeriod ) % nonpriorityPeriod != 0;
@@ -371,11 +372,11 @@ namespace BepuPhysics.CollisionDetection
                 //Distribute tasks for refinement roughly in proportion to their cost.
                 //This doesn't need to be perfect.
                 //Cost of a refinement is roughly n * log2(n), for n = refinement size.
-                var activeCost = float.Log2( activeRootRefinementSize + 1 ) * activeRootRefinementSize + float.Log2( activeSubtreeRefinementSize + 1 ) * activeSubtreeRefinementSize * activeSubtreeRefinementCount;
-                var staticCost = float.Log2( staticRootRefinementSize + 1 ) * staticRootRefinementSize + float.Log2( staticSubtreeRefinementSize + 1 ) * staticSubtreeRefinementSize * staticSubtreeRefinementCount;
+                var activeCost = FMath.Log2( activeRootRefinementSize + 1 ) * activeRootRefinementSize + FMath.Log2( activeSubtreeRefinementSize + 1 ) * activeSubtreeRefinementSize * activeSubtreeRefinementCount;
+                var staticCost = FMath.Log2( staticRootRefinementSize + 1 ) * staticRootRefinementSize + FMath.Log2( staticSubtreeRefinementSize + 1 ) * staticSubtreeRefinementSize * staticSubtreeRefinementCount;
                 var activeTaskFraction = activeCost / ( activeCost + staticCost );
                 var targetTotalTaskCount = threadDispatcher.ThreadCount; //could scale this. Empirically, doesn't matter on the CPUs tested so far.
-                var targetActiveTaskCount = (int)float.Ceiling( activeTaskFraction * targetTotalTaskCount );
+                var targetActiveTaskCount = (int)FMath.Ceil( activeTaskFraction * targetTotalTaskCount );
                 var taskStack = new TaskStack( Pool, threadDispatcher, threadDispatcher.ThreadCount );
                 var activeRefineContext = new RefinementContext
                 {
@@ -457,7 +458,7 @@ namespace BepuPhysics.CollisionDetection
         }
         void ResizeCapacity( ref Tree tree, ref Buffer<CollidableReference> leaves, int capacity )
         {
-            capacity = Math.Max( capacity, tree.LeafCount );
+            capacity = FMath.Max( capacity, tree.LeafCount );
             if ( tree.Leaves.Length != BufferPool.GetCapacityForCount<Leaf>( capacity ) )
                 tree.Resize( Pool, capacity );
             if ( leaves.Length != BufferPool.GetCapacityForCount<CollidableReference>( capacity ) )

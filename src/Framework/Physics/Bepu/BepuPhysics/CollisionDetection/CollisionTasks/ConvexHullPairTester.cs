@@ -1,5 +1,6 @@
 ﻿using BepuPhysics.Collidables;
 using BepuUtilities;
+using Framework.FastMath.Numerics;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 
@@ -105,7 +106,11 @@ namespace BepuPhysics.CollisionDetection.CollisionTasks
                 }
                 //The number of possible edge intersections is no more than two per edge on either shape due to convexity.
                 //Vertex-face contacts could number as high as the number of vertices in either face.
-                var maximumCandidateCount = Math.Max( Math.Max( faceVertexIndicesA.Length, faceVertexIndicesB.Length ), Math.Min( faceVertexIndicesA.Length * 2, faceVertexIndicesB.Length * 2 ) );
+                var maximumCandidateCount = FMath.Max(
+                    FMath.Max( faceVertexIndicesA.Length, faceVertexIndicesB.Length ),
+                    FMath.Min( faceVertexIndicesA.Length * 2, faceVertexIndicesB.Length * 2 ) 
+                );
+
                 var candidates = stackalloc ManifoldCandidateScalar[ maximumCandidateCount ];
                 var candidateCount = 0;
                 var previousIndexB = faceVertexIndicesB[ faceVertexIndicesB.Length - 1 ];
@@ -119,7 +124,7 @@ namespace BepuPhysics.CollisionDetection.CollisionTasks
                     Vector3Wide.ReadSlot( ref bSlot.Points[ indexB.BundleIndex ], indexB.InnerIndex, out var vertexB );
 
                     var edgeOffsetB = vertexB - previousVertexB;
-                    var edgePlaneNormalB = Vector3.Cross( edgeOffsetB, slotLocalNormal );
+                    var edgePlaneNormalB = FMath.Cross( edgeOffsetB, slotLocalNormal );
 
                     var latestEntry = float.MinValue;
                     var earliestExit = float.MaxValue;
@@ -129,15 +134,15 @@ namespace BepuPhysics.CollisionDetection.CollisionTasks
 
                         //Check containment in this B edge.
                         var edgeBToEdgeA = edgeA.Vertex - previousVertexB;
-                        var containmentDot = Vector3.Dot( edgeBToEdgeA, edgePlaneNormalB );
+                        var containmentDot = FMath.Dot( edgeBToEdgeA, edgePlaneNormalB );
                         if ( edgeA.MaximumContainmentDot < containmentDot )
                             edgeA.MaximumContainmentDot = containmentDot;
 
                         //t = dot(pointOnEdgeA - pointOnEdgeB, edgePlaneNormalA) / dot(edgePlaneNormalA, edgeOffsetB)
                         //Note that we can defer the division; we don't need to compute the exact t value of *all* planes.
 
-                        var numerator = Vector3.Dot( edgeBToEdgeA, edgeA.EdgePlaneNormal );
-                        var denominator = Vector3.Dot( edgeA.EdgePlaneNormal, edgeOffsetB );
+                        var numerator = FMath.Dot( edgeBToEdgeA, edgeA.EdgePlaneNormal );
+                        var denominator = FMath.Dot( edgeA.EdgePlaneNormal, edgeOffsetB );
 
                         //A plane is being 'entered' if the ray direction opposes the face normal.
                         //Entry denominators are always negative, exit denominators are always positive. Don't have to worry about comparison sign flips.
@@ -177,8 +182,8 @@ namespace BepuPhysics.CollisionDetection.CollisionTasks
                             var point = edgeOffsetB * earliestExit + previousVertexB - bFaceOrigin;
                             var newContactIndex = candidateCount++;
                             ref var candidate = ref candidates[ newContactIndex ];
-                            candidate.X = Vector3.Dot( point, bFaceX );
-                            candidate.Y = Vector3.Dot( point, bFaceY );
+                            candidate.X = FMath.Dot( point, bFaceX );
+                            candidate.Y = FMath.Dot( point, bFaceY );
                             candidate.FeatureId = baseFeatureId + endId;
                         }
                         if ( latestEntry < earliestExit && latestEntry > 0 && candidateCount < maximumCandidateCount )
@@ -187,8 +192,8 @@ namespace BepuPhysics.CollisionDetection.CollisionTasks
                             var point = edgeOffsetB * latestEntry + previousVertexB - bFaceOrigin;
                             var newContactIndex = candidateCount++;
                             ref var candidate = ref candidates[ newContactIndex ];
-                            candidate.X = Vector3.Dot( point, bFaceX );
-                            candidate.Y = Vector3.Dot( point, bFaceY );
+                            candidate.X = FMath.Dot( point, bFaceX );
+                            candidate.Y = FMath.Dot( point, bFaceY );
                             candidate.FeatureId = baseFeatureId + startId;
                         }
                     }
@@ -196,7 +201,7 @@ namespace BepuPhysics.CollisionDetection.CollisionTasks
                     previousVertexB = vertexB;
                 }
                 //We've now analyzed every edge of B. Check for vertices from A to add.
-                var inverseLocalNormalADotFaceNormalB = 1f / Vector3.Dot( slotLocalNormal, slotFaceNormalB );
+                var inverseLocalNormalADotFaceNormalB = 1f / FMath.Dot( slotLocalNormal, slotFaceNormalB );
                 for ( int i = 0; i < faceVertexIndicesA.Length && candidateCount < maximumCandidateCount; ++i )
                 {
                     ref var edge = ref cachedEdges[ i ];
@@ -206,19 +211,19 @@ namespace BepuPhysics.CollisionDetection.CollisionTasks
                         //Project it onto B's surface:
                         //vertexA - localNormal * dot(vertexA - faceOriginB, faceNormalB) / dot(localNormal, faceNormalB); 
                         var bFaceToVertexA = edge.Vertex - bFaceOrigin;
-                        var distance = Vector3.Dot( bFaceToVertexA, slotFaceNormalB ) * inverseLocalNormalADotFaceNormalB;
+                        var distance = FMath.Dot( bFaceToVertexA, slotFaceNormalB ) * inverseLocalNormalADotFaceNormalB;
                         var bFaceToProjectedVertexA = bFaceToVertexA - slotLocalNormal * distance;
 
                         var newContactIndex = candidateCount++;
                         ref var candidate = ref candidates[ newContactIndex ];
-                        candidate.X = Vector3.Dot( bFaceX, bFaceToProjectedVertexA );
-                        candidate.Y = Vector3.Dot( bFaceY, bFaceToProjectedVertexA );
+                        candidate.X = FMath.Dot( bFaceX, bFaceToProjectedVertexA );
+                        candidate.Y = FMath.Dot( bFaceY, bFaceToProjectedVertexA );
                         candidate.FeatureId = i;
                     }
                 }
                 Matrix3x3Wide.ReadSlot( ref rB, slotIndex, out var slotOrientationB );
                 Vector3Wide.ReadSlot( ref offsetB, slotIndex, out var slotOffsetB );
-                ManifoldCandidateHelper.Reduce( candidates, candidateCount, slotFaceNormalA, 1f / Vector3.Dot( slotFaceNormalA, slotLocalNormal ), cachedEdges[ 0 ].Vertex, bFaceOrigin, bFaceX, bFaceY, epsilonScale[ slotIndex ], depthThreshold[ slotIndex ], slotOrientationB, slotOffsetB, slotIndex, ref manifold );
+                ManifoldCandidateHelper.Reduce( candidates, candidateCount, slotFaceNormalA, 1f / FMath.Dot( slotFaceNormalA, slotLocalNormal ), cachedEdges[ 0 ].Vertex, bFaceOrigin, bFaceX, bFaceY, epsilonScale[ slotIndex ], depthThreshold[ slotIndex ], slotOrientationB, slotOffsetB, slotIndex, ref manifold );
             }
             Matrix3x3Wide.TransformWithoutOverlap( localNormal, rB, out manifold.Normal );
         }

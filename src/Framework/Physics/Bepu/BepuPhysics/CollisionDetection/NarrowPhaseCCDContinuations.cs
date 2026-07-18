@@ -1,4 +1,5 @@
 ﻿using BepuUtilities.Memory;
+using Framework.FastMath.Numerics;
 using System.Diagnostics;
 using System.Numerics;
 using System.Runtime.CompilerServices;
@@ -156,9 +157,9 @@ namespace BepuPhysics.CollisionDetection
                                 for ( int i = 0; i < manifold.Count; ++i )
                                 {
                                     ref var contact = ref Unsafe.Add( ref manifold.Contact0, i );
-                                    var angularContributionA = Vector3.Cross( continuation.AngularA, contact.Offset );
-                                    var angularContributionB = Vector3.Cross( continuation.AngularB, contact.Offset - manifold.OffsetB );
-                                    var velocityAtContact = Vector3.Dot( angularContributionB - angularContributionA + continuation.RelativeLinearVelocity, manifold.Normal );
+                                    var angularContributionA = FMath.Cross( continuation.AngularA, contact.Offset );
+                                    var angularContributionB = FMath.Cross( continuation.AngularB, contact.Offset - manifold.OffsetB );
+                                    var velocityAtContact = FMath.Dot( angularContributionB - angularContributionA + continuation.RelativeLinearVelocity, manifold.Normal );
                                     contact.Depth -= velocityAtContact * continuation.T;
                                 }
                             }
@@ -169,9 +170,9 @@ namespace BepuPhysics.CollisionDetection
                                 for ( int i = 0; i < manifold.Count; ++i )
                                 {
                                     ref var contact = ref Unsafe.Add( ref manifold.Contact0, i );
-                                    var angularContributionA = Vector3.Cross( continuation.AngularA, contact.Offset );
-                                    var angularContributionB = Vector3.Cross( continuation.AngularB, contact.Offset - manifold.OffsetB );
-                                    var velocityAtContact = Vector3.Dot( angularContributionB - angularContributionA + continuation.RelativeLinearVelocity, contact.Normal );
+                                    var angularContributionA = FMath.Cross( continuation.AngularA, contact.Offset );
+                                    var angularContributionB = FMath.Cross( continuation.AngularB, contact.Offset - manifold.OffsetB );
+                                    var velocityAtContact = FMath.Dot( angularContributionB - angularContributionA + continuation.RelativeLinearVelocity, contact.Normal );
                                     contact.Depth -= velocityAtContact * continuation.T;
                                 }
                             }

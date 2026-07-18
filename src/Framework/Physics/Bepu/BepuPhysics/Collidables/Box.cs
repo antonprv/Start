@@ -1,6 +1,7 @@
 ﻿using BepuPhysics.CollisionDetection;
 using BepuUtilities;
 using BepuUtilities.Memory;
+using Framework.FastMath.Numerics;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 
@@ -64,7 +65,7 @@ namespace BepuPhysics.Collidables
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
         public readonly void ComputeAngularExpansionData( out float maximumRadius, out float maximumAngularExpansion )
         {
-            maximumRadius = (float)Math.Sqrt( HalfWidth * HalfWidth + HalfHeight * HalfHeight + HalfLength * HalfLength );
+            maximumRadius = (float)FMath.FastSqrt( HalfWidth * HalfWidth + HalfHeight * HalfHeight + HalfLength * HalfLength );
             maximumAngularExpansion = maximumRadius - Vector4.Min( new Vector4( HalfLength ), Vector4.Min( new Vector4( HalfHeight ), new Vector4( HalfLength ) ) ).X;
         }
 
@@ -138,7 +139,7 @@ namespace BepuPhysics.Collidables
             }
             t = latestEntry < 0 ? 0 : latestEntry;
             //The normal should point away from the center of the box.
-            if ( Vector3.Dot( normal, offset ) < 0 )
+            if ( FMath.Dot( normal, offset ) < 0 )
             {
                 normal = -normal;
             }

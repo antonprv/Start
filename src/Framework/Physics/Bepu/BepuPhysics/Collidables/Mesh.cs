@@ -2,6 +2,7 @@
 using BepuPhysics.Trees;
 using BepuUtilities;
 using BepuUtilities.Memory;
+using Framework.FastMath.Numerics;
 using System.Diagnostics;
 using System.Numerics;
 using System.Runtime.CompilerServices;
@@ -104,7 +105,7 @@ namespace BepuPhysics.Collidables
                 //so we can go ahead and set the node/leaf counts.
                 //(This is in contrast to creating a tree with a certain capacity, but then relying on incremental adds/removes later.)
                 //Note that the tree still has a root node even if there's one leaf; it's a partial node and requires special handling.
-                NodeCount = int.Max( 1, triangles.Length - 1 ),
+                NodeCount = FMath.Max( 1, triangles.Length - 1 ),
                 LeafCount = triangles.Length
             };
             mesh.Scale = scale;

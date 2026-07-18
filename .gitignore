@@ -1,49 +1,32 @@
-# Godot 4+ specific ignores
-src/*/.godot/
+# Build
+**/bin/
+**/obj/
+**/build/
+**/builds/
 
-# Godot-specific ignores
-src/*/.import/
-src/*/export.cfg
-src/*/export_presets.cfg
+# Visual Studio
+**/.vs/
 
-# Imported translations (automatically generated from CSV files)
-src/*/*.translation
+# VSCode
+**/.vscode/
 
-# Mono-specific ignores
-src/*/.mono/
-src/*/data_*/
-src/*/mono_crash.*.json
+# Godot
+**/.godot/
+**/.import/
+**/.mono/
 
-# VSCode-Specific ignores
-src/*/.vscode/
+*.translation
+export.cfg
+export_presets.cfg
+mono_crash.*.json
 
-#Visual Studio specific ignores
-src/*/.vs/
-
-# Other
-src/*/build/
-src/Framework/*/build
-src/Framework/*/obj
-src/Framework/*/bin
-src/*/*/builds/
-src/Framework/*/builds/
-
-# Devops builds
-src/Builds/
-
-# All binary files from libraries
-
-src/*/obj/
-src/*/*/obj/
-src/*/*/*/obj/
-src/*/*/*/*/obj/
-src/*/bin/
-src/*/*bin/
-src/*/*/*/*/bin/
-
-*.pdb
+# Binaries
 *.dll
+*.pdb
 *.cache
+
+# Devops
+src/Builds/
 
 # External addons
 src/*/addons/func_godot/

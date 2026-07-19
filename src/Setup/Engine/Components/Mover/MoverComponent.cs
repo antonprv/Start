@@ -138,6 +138,14 @@ namespace Engine.Components.Mover
 
 			MoveAndSlide( delta );
 
+			// MoveAndSlide() may have clipped Velocity against a wall/corner this tick (see
+			// BepuCharacterBody3D). The motor owns its own persistent velocity for the accel/
+			// friction traits, so that correction has to be mirrored back into it - otherwise
+			// the motor keeps accelerating a stale, uncorrected vector and a corner hit stops
+			// the character's position without ever stopping its stored velocity.
+			if ( !_noclip )
+				_motor.Velocity = Velocity.Value;
+
 			ShowDebugOverlay();
 		}
 
@@ -285,6 +293,7 @@ namespace Engine.Components.Mover
 				MovementMode.Quake => QuakePreset.Build(),
 				MovementMode.Realistic => RealisticPreset.Build(),
 				MovementMode.Hybrid => HybridPreset.Build(),
+				MovementMode.Doom3 => Doom3Preset.Build(),
 				_ => QuakePreset.Build()
 			};
 

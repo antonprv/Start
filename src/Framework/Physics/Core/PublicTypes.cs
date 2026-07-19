@@ -119,11 +119,25 @@ namespace Framework.Physics
         public readonly bool IsOnFloor;
         public readonly Vector3 FloorNormal;
 
-        public CharacterMoveResult( Vector3 position, bool isOnFloor, Vector3 floorNormal )
+        /// <summary>
+        /// The input velocity after being resolved against every plane touched during the
+        /// sweep (zeroed on a genuine multi-plane pocket, unchanged if nothing was hit).
+        /// Callers must feed this back into whatever persists velocity across ticks - in
+        /// idPhysics_Player::SlideMove, current.velocity is both the input and the output of
+        /// the clip loop, so a wall/corner hit that kills the move also kills the stored
+        /// velocity. If the caller instead keeps accelerating a velocity value that never
+        /// gets corrected by this result, a corner hit stops the *position* but leaves the
+        /// *velocity* pointing full-speed into the corner, so a new input direction has to
+        /// fight that stale vector down instead of starting clean.
+        /// </summary>
+        public readonly Vector3 Velocity;
+
+        public CharacterMoveResult( Vector3 position, bool isOnFloor, Vector3 floorNormal, Vector3 velocity )
         {
             Position = position;
             IsOnFloor = isOnFloor;
             FloorNormal = floorNormal;
+            Velocity = velocity;
         }
     }
 

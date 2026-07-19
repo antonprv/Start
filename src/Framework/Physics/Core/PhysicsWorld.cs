@@ -432,16 +432,16 @@ namespace Framework.Physics
         /// or write the body's solver state; the caller owns Velocity and calls this once per tick.
         /// </summary>
         public CharacterMoveResult MoveCharacter(
-            BodyHandle self,
-            Vector3 position,
-            Vector3 velocity,
-            float dt,
-            float radius,
-            float cylinderLength,
-            uint layer,
-            uint mask,
-            CharacterMoveOptions options
-        )
+    BodyHandle self,
+    Vector3 position,
+    Vector3 velocity,
+    float dt,
+    float radius,
+    float cylinderLength,
+    uint layer,
+    uint mask,
+    CharacterMoveOptions options
+)
         {
             Capsule shape = new Capsule( radius, cylinderLength );
             float maxFloorDot = FMath.FastCos( options.MaxFloorAngleDegrees * FMath.PI / 180f );
@@ -450,12 +450,28 @@ namespace Framework.Physics
             bool grounded = false;
             Vector3 groundNormal = Vector3.UnitY;
 
+            Vector3 finalVelocity = velocity;
+
+            const int maxClipPlanes = 5;
+            Span<Vector3> planes = stackalloc Vector3[ maxClipPlanes ];
+            int numPlanes = 0;
+
+            if ( displacement.LengthSq() > 1e-10f )
+                planes[ numPlanes++ ] = displacement.FastNormalized();
+
             for ( int iteration = 0; iteration < options.MaxSlideIterations; iteration++ )
             {
                 if ( displacement.LengthSq() < 1e-10f )
                     break;
 
-                SweepHitHandler hit = SweepOnce( shape, position, displacement, layer, mask, self );
+                SweepHitHandler hit = SweepOnce(
+                    shape,
+                    position,
+                    displacement,
+                    layer,
+                    mask,
+                    self
+                );
 
                 if ( !hit.Hit )
                 {
@@ -466,18 +482,68 @@ namespace Framework.Physics
 
                 float distance = displacement.FastLength();
 
-                float travelFraction = distance > 0f ? FMath.Max( 0f, hit.T - options.SkinWidth / distance ) : 0f;
+                float travelFraction =
+                    distance > 0f
+                    ? FMath.Max( 0f, hit.T - options.SkinWidth / distance )
+                    : 0f;
 
                 position += displacement * travelFraction;
+
+                // Prevent starting the next sweep already intersecting the same surface.
+                position += hit.Normal * options.SkinWidth;
+
                 Vector3 remaining = displacement - displacement * travelFraction;
-                remaining -= hit.Normal * remaining.FastDot( hit.Normal );
-                displacement = remaining;
 
                 if ( hit.Normal.FastDot( Vector3.UnitY ) >= maxFloorDot )
                 {
                     grounded = true;
                     groundNormal = hit.Normal;
                 }
+
+                if ( numPlanes >= maxClipPlanes )
+                {
+                    displacement = Vector3.Zero;
+                    finalVelocity = Vector3.Zero;
+                    break;
+                }
+
+                bool samePlane = false;
+
+                for ( int i = 0; i < numPlanes; i++ )
+                {
+                    if ( hit.Normal.FastDot( planes[ i ] ) > 0.995f )
+                    {
+                        remaining += hit.Normal * ( options.SkinWidth * 2f );
+                        samePlane = true;
+                        break;
+                    }
+                }
+
+                if ( samePlane )
+                {
+                    displacement = remaining;
+                    finalVelocity = ClipToPlanes(
+                        finalVelocity,
+                        planes,
+                        numPlanes
+                    );
+
+                    continue;
+                }
+
+                planes[ numPlanes++ ] = hit.Normal;
+
+                displacement = ClipToPlanes(
+                    remaining,
+                    planes,
+                    numPlanes
+                );
+
+                finalVelocity = ClipToPlanes(
+                    finalVelocity,
+                    planes,
+                    numPlanes
+                );
             }
 
             if ( !grounded )
@@ -491,14 +557,90 @@ namespace Framework.Physics
                     self
                 );
 
-                if ( probe.Hit && probe.Normal.FastDot( Vector3.UnitY ) >= maxFloorDot )
+                if ( probe.Hit &&
+                     probe.Normal.FastDot( Vector3.UnitY ) >= maxFloorDot )
                 {
                     grounded = true;
                     groundNormal = probe.Normal;
                 }
             }
 
-            return new CharacterMoveResult( position, grounded, groundNormal );
+            return new CharacterMoveResult(
+                position,
+                grounded,
+                groundNormal,
+                finalVelocity
+            );
+        }
+
+        /// <summary>
+        /// Resolves <paramref name="velocity"/> against every plane touched so far this move.
+        /// Direct port of the plane-clipping loop in idPhysics_Player::SlideMove
+        /// (Physics_Player.cpp lines 337-404): find a plane the move still runs into, project
+        /// onto it, and if a second already-touched plane objects to the result, slide along
+        /// the crease line where the two planes meet instead (the fix for corner-catching).
+        /// If a third plane also objects to the crease direction, it's a genuine pocket -
+        /// stop dead rather than oscillate.
+        /// </summary>
+        private static Vector3 ClipToPlanes( Vector3 velocity, Span<Vector3> planes, int numPlanes )
+        {
+            const float overclip = 1.001f; // OVERCLIP in the original
+            const float epsilon = 1e-4f;   // stand-in for the original's 0.1 units/sec threshold
+
+            for ( int i = 0; i < numPlanes; i++ )
+            {
+                float into = velocity.FastDot( planes[ i ] );
+                if ( into >= epsilon )
+                    continue; // move doesn't interact with this plane
+
+                Vector3 clipped = velocity - planes[ i ] * ( into * overclip );
+
+                for ( int j = 0; j < numPlanes; j++ )
+                {
+                    if ( j == i )
+                        continue;
+
+                    float intoJ = clipped.FastDot( planes[ j ] );
+                    if ( intoJ >= epsilon )
+                        continue; // doesn't also interact with plane j
+
+                    clipped -= planes[ j ] * ( intoJ * overclip );
+
+                    if ( clipped.FastDot( planes[ i ] ) >= 0f )
+                        continue; // fixed without needing the crease
+
+                    // two planes both object - slide along the line where they meet
+                    Vector3 dir = planes[ i ].FastCross( planes[ j ] );
+                    if ( dir.LengthSq() < 1e-10f )
+                        return Vector3.Zero; // near-parallel planes, no clean crease - bail
+
+                    dir = dir.FastNormalized();
+                    clipped = dir * dir.FastDot( velocity );
+
+                    for ( int k = 0; k < numPlanes; k++ )
+                    {
+                        if ( k == i || k == j )
+                            continue;
+
+                        if ( clipped.FastDot( planes[ k ] ) >= epsilon )
+                            continue;
+
+                        // a third plane also objects to the crease direction: dead stop
+                        // (Physics_Player.cpp lines 394-396)
+                        return Vector3.Zero;
+                    }
+                }
+
+                if ( clipped.LengthSq() < 1e-6f )
+                    return Vector3.Zero;
+
+                return clipped;
+            }
+
+            if ( velocity.LengthSq() < 1e-6f )
+                return Vector3.Zero;
+
+            return velocity;
         }
 
         private SweepHitHandler SweepOnce(

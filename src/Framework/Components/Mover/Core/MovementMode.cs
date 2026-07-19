@@ -7,6 +7,7 @@ namespace Framework.Components.Mover.Core
     {
         Quake,
         Realistic,
-        Hybrid
+        Hybrid,
+        Doom3
     }
 }

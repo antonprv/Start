@@ -114,6 +114,13 @@ namespace Physics
 			SVec3 actualDisplacement = result.Position - GodotShapeConverter.ToNumerics( GlobalPosition );
 			GlobalPosition = GodotShapeConverter.ToGodot( result.Position );
 
+			// Feed the plane-clipped velocity back, same as id's current.velocity = clipVelocity
+			// and same as Godot's own CharacterBody3D.MoveAndSlide(). Without this, a wall/corner
+			// hit stops the position but leaves Velocity pointing full-speed into the obstacle,
+			// so the next tick's acceleration has to fight that stale vector down instead of
+			// starting clean - the corner-stuck bug.
+			Velocity.Value = GodotShapeConverter.ToGodot( result.Velocity );
+
 			World.Core.SetBodyPose(
 				Handle,
 				PhysicsTransform

@@ -5,7 +5,6 @@
 [ext_resource type="PackedScene" uid="uid://crvrwpolm8bgu" path="res://Assets/Engine/Prefabs/Dynamic/Debug/DebugUI.tscn" id="2_056jx"]
 [ext_resource type="PackedScene" uid="uid://bkj0tnt11xvlx" path="res://Assets/Engine/Prefabs/Dynamic/Player/Player.tscn" id="2_57bvl"]
 [ext_resource type="PackedScene" uid="uid://g877e3ebix4n" path="res://Assets/Engine/Prefabs/Static/Sky.tscn" id="4_4wal6"]
-[ext_resource type="Texture2D" uid="uid://cjwca3iwwt2ki" path="res://Assets/Engine/Raw/PrefabModels/Sky/Tex_Noise.png" id="5_7j0ct"]
 [ext_resource type="Script" uid="uid://cwu5cf7a0awcd" path="res://addons/func_godot/src/map/func_godot_map.gd" id="5_jg8jc"]
 [ext_resource type="Resource" uid="uid://hb8s5tfwa4qj" path="res://Broom/map.tres" id="6_603ce"]
 [ext_resource type="PackedScene" uid="uid://dws6xjgehhcec" path="res://Assets/Engine/Prefabs/Dynamic/Utils/TriggerVolume.tscn" id="7_ta0pl"]
@@ -254,7 +253,6 @@ _moverComponent = NodePath("../../Player")
 
 [node name="Player" parent="Godot" unique_id=1218174859 instance=ExtResource("2_57bvl")]
 transform = Transform3D(-0.99999976, 0.00026906416, 0.00027375369, 0.00026884276, 0.9999995, -0.00086077803, -0.00027397118, -0.0008607088, -0.99999964, 0.16621947, 1.1249998, -9.624439)
-InitialMode = 5
 
 [node name="LocalServiceInitializer" type="Node" parent="Godot" unique_id=1314008614 node_paths=PackedStringArray("_rootNode")]
 script = ExtResource("1_clu36")
@@ -264,28 +262,6 @@ _rootNode = NodePath("../..")
 
 [node name="Sky" parent="Godot/Lights" unique_id=1541735372 node_paths=PackedStringArray("_followTarget") instance=ExtResource("4_4wal6")]
 _followTarget = NodePath("../../Player")
-TimeOfDay = 0.0
-HorizonBlur = 0.23
-SkyCurve = 2.9540002
-GroundCurve = 2.5010002
-MoonTint = Color(0.85, 0.9, 1, 1)
-NoiseTexture = ExtResource("5_7j0ct")
-CloudColorDay = Color(0.88, 0.92, 1, 1)
-CloudDensity = 32.0
-CloudThreshold = 0.32200003
-CloudHeight = 4.6150002
-CloudTiling = Vector2(0.78, 0.135)
-CloudsHorizonFade = 0.61300004
-CloudsLayer2Enabled = true
-CloudTiling2 = Vector2(0.225, 0.1)
-CloudWindSpeed2 = Vector2(0.25, 0.25)
-CloudDensity2 = 11.942
-CloudThreshold2 = 0.279
-StarDensity = 0.20700002
-StarBrightness = 0.53400004
-StarsHorizonFade = 0.81600004
-StarTwinkleEnabled = true
-StarTwinkleSpeed = 3.0
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="Godot/Lights" unique_id=1912362598]
 transform = Transform3D(-0.27433497, 0.8395454, -0.4689389, -0.25265524, 0.40758926, 0.87751716, 0.92785007, 0.35921347, 0.10029963, 0, 4.1431065, -5.451669)

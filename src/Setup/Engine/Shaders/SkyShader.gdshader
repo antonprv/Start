@@ -38,10 +38,15 @@ uniform float sun_halo_size    : hint_range(0.0, 2.0)   = 0.3;
 // Moon
 // ---------------------------------------------------------------------------
 uniform bool      moon_enabled   = true;
-uniform sampler2D moon_texture   : source_color, hint_default_white, filter_linear;
+uniform sampler2D moon_texture   : source_color, hint_default_white, filter_nearest;
 uniform vec3      moon_direction = vec3(0.0, -1.0, 0.0);
 uniform float     moon_size      : hint_range(0.001, 0.5) = 0.05;
 uniform vec4      moon_tint      : source_color = vec4(1.0, 1.0, 1.0, 1.0);
+uniform vec4      moon_halo_color : source_color = vec4(0.8, 0.85, 1.0, 0.5);
+uniform float     moon_halo_radius : hint_range(0.0, 2.0) = 0.15; // насколько ореол простирается от луны, прежде чем начать затухать
+uniform float     moon_halo_size   : hint_range(0.0, 2.0) = 0.3;  // ширина затухания/размытия на краю ореола
+uniform bool      moon_halo_in_front = false; // true = ореол рисуется поверх диска луны, false = ореол за диском
+uniform float     moon_cloud_dimming : hint_range(0.0, 1.0) = 0.5; // насколько снижать непрозрачность облаков там, где они закрывают луну
 
 // ---------------------------------------------------------------------------
 // Clouds - two samples per layer, rotated + scaled to hide tiling. No full fBm.
@@ -241,35 +246,25 @@ void fragment() {
         }
     }
 
-    // --- clouds ---
-    if (clouds_enabled) {
-        vec3 sun_rgb = mix(sun_color.rgb * 2.0, sun_color.rgb * 8.0, df);
-        vec3 cloud_rgb = mix(cloud_color_night.rgb, cloud_color_day.rgb, df);
-        // horizon fog color = sky horizon color, where clouds fade out
-        vec3 fog_rgb = mix(sky_horizon_color_night.rgb, sky_horizon_color_day.rgb, df);
-
-        vec4 l1 = cloud_layer(
-            cloud_height, cloud_tiling, cloud_wind_speed,
-            cloud_density, cloud_threshold,
-            world_dir, sun_rgb, cloud_rgb, fog_rgb, clouds_horizon_fade
-        );
-        result = mix(result, l1.rgb, l1.a);
-
-        if (clouds_layer2_enabled) {
-            vec4 l2 = cloud_layer(
-                cloud_height_2, cloud_tiling_2, cloud_wind_speed_2,
-                cloud_density_2, cloud_threshold_2,
-                world_dir, sun_rgb, cloud_rgb, fog_rgb, clouds_horizon_fade
-            );
-            result = mix(result, l2.rgb, l2.a);
-        }
-    }
-
-    // --- moon ---
+    // --- moon (rendered BEFORE clouds so clouds can occlude/dim it) ---
+    // moon_mask tracks how much of this pixel is "moon glow" (disc + halo),
+    // used afterwards to soften cloud opacity in front of the moon.
+    float moon_mask = 0.0;
     if (moon_enabled) {
         vec3 md = normalize(moon_direction);
         float ctm = dot(world_dir, md);
+
+        // halo - radius controls how far the solid glow extends,
+        // halo_size is purely the width of the fade/blur at its edge.
+        float halo_inner = 1.0 - moon_halo_radius;
+        float halo_outer = halo_inner - moon_halo_size;
+        float halo = smoothstep(halo_outer, halo_inner, ctm);
+        vec3 halo_contribution = moon_halo_color.rgb * halo * moon_halo_color.a;
+
+        // disc - textured, own UV projection
         float mcr = cos(moon_size);
+        float disc_mask = 0.0;
+        vec3 disc_color = vec3(0.0);
         if (ctm > mcr) {
             vec3 up  = abs(md.y) < 0.999 ? vec3(0.0, 1.0, 0.0) : vec3(1.0, 0.0, 0.0);
             vec3 tan = normalize(cross(up, md));
@@ -278,7 +273,48 @@ void fragment() {
             float u  = dot(prj, tan) / sin(moon_size);
             float v  = dot(prj, bit) / sin(moon_size);
             vec4 ms  = texture(moon_texture, vec2(u, v) * 0.5 + 0.5);
-            result   = mix(result, ms.rgb * moon_tint.rgb, ms.a * step(length(vec2(u, v)), 1.0));
+            disc_mask = ms.a * step(length(vec2(u, v)), 1.0);
+            disc_color = ms.rgb * moon_tint.rgb;
+        }
+
+        if (moon_halo_in_front) {
+            // disc first, halo blended on top as a glow layer over the surface
+            result = mix(result, disc_color, disc_mask);
+            result += halo_contribution;
+        } else {
+            // halo behind: add halo, then disc replaces it where opaque
+            result += halo_contribution;
+            result = mix(result, disc_color, disc_mask);
+        }
+
+        moon_mask = max(disc_mask, halo * moon_halo_color.a);
+    }
+
+    // --- clouds (drawn after the moon, so they visually sit in front of it) ---
+    if (clouds_enabled) {
+        vec3 sun_rgb = mix(sun_color.rgb * 2.0, sun_color.rgb * 8.0, df);
+        vec3 cloud_rgb = mix(cloud_color_night.rgb, cloud_color_day.rgb, df);
+        // horizon fog color = sky horizon color, where clouds fade out
+        vec3 fog_rgb = mix(sky_horizon_color_night.rgb, sky_horizon_color_day.rgb, df);
+
+        // reduce cloud opacity where they pass in front of the moon, so its glow
+        // still bleeds through instead of being fully blotted out
+        float cloud_moon_falloff = 1.0 - moon_mask * moon_cloud_dimming;
+
+        vec4 l1 = cloud_layer(
+            cloud_height, cloud_tiling, cloud_wind_speed,
+            cloud_density, cloud_threshold,
+            world_dir, sun_rgb, cloud_rgb, fog_rgb, clouds_horizon_fade
+        );
+        result = mix(result, l1.rgb, l1.a * cloud_moon_falloff);
+
+        if (clouds_layer2_enabled) {
+            vec4 l2 = cloud_layer(
+                cloud_height_2, cloud_tiling_2, cloud_wind_speed_2,
+                cloud_density_2, cloud_threshold_2,
+                world_dir, sun_rgb, cloud_rgb, fog_rgb, clouds_horizon_fade
+            );
+            result = mix(result, l2.rgb, l2.a * cloud_moon_falloff);
         }
     }
 

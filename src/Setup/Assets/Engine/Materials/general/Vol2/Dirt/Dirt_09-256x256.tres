@@ -11,3 +11,4 @@ shader_parameter/albedo_texture = ExtResource("2_6kiob")
 shader_parameter/vertex_color_enabled = true
 shader_parameter/vertex_snap_enabled = false
 shader_parameter/snap_resolution = 128.0
+shader_parameter/alpha_scissor_threshold = 0.5

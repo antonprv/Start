@@ -63,6 +63,8 @@ namespace Engine.Components.Camera
 		private float _currentYaw;
 		private float _currentPitch;
 		private bool _noclip;
+
+		private CollisionLayer _savedCollisionLayer;
 		private CollisionLayer _savedCollisionMask;
 
 		#endregion
@@ -115,11 +117,15 @@ namespace Engine.Components.Camera
 
 			if ( _noclip )
 			{
+				_savedCollisionLayer = _springArm.Layer;
 				_savedCollisionMask = _springArm.Mask;
-				_springArm.Layer = 0;
+
+				_springArm.Layer = CollisionLayer.None;
+				_springArm.Mask = CollisionLayer.None;
 			}
 			else
 			{
+				_springArm.Layer = _savedCollisionLayer;
 				_springArm.Mask = _savedCollisionMask;
 			}
 

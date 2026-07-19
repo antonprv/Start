@@ -8,6 +8,7 @@
 
 using Framework.Components.Mover.Core;
 using Framework.Components.Mover.Core.Resources;
+using Framework.FastMath.Godot;
 using Framework.FastMath.Godot.Extensions;
 using Godot;
 
@@ -31,7 +32,7 @@ namespace Framework.Components.Mover.Traits.Doom3
             if ( speed < 1.0f * Core.Doom3Constants.InchesToMeters )
             {
                 // remove all movement orthogonal to gravity (lets the player sink)
-                if ( Mathf.Abs( velocity.Y ) < 1e-5f )
+                if ( FMath.Abs( velocity.Y ) < 1e-5f )
                     velocity = Vector3.Zero;
                 else
                     velocity = new Vector3( 0f, velocity.Y, 0f );
@@ -50,7 +51,7 @@ namespace Framework.Components.Mover.Traits.Doom3
             }
             else
             {
-                // air friction is 0.0f in the original — kept explicit for parity
+                // air friction is 0.0f in the original - kept explicit for parity
                 drop += speed * Core.Doom3Constants.PM_AIRFRICTION * delta;
             }
 

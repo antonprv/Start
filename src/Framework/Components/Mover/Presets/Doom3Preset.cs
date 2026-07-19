@@ -50,7 +50,7 @@ namespace Framework.Components.Mover.Presets
             AirAcceleration = 0f,    // unused — Doom3AccelerateTrait owns this
             AirMaxSpeed = 0f,        // unused
             AirControl = 0f,         // unused
-            JumpSpeed = 0f,          // unused — Doom3JumpTrait computes from height
+            JumpHeight = 0f,          // unused — Doom3JumpTrait computes from height
             JumpBufferTime = 0f,     // unused — no buffering in the original
             CoyoteTime = 0f          // unused — no coyote time in the original
         };

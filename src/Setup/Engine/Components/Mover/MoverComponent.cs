@@ -4,16 +4,21 @@
 using Engine.Components.Camera;
 using Engine.Components.Mover.Resources;
 using Engine.Services.Input;
+using Framework.Common.Extensions;
 using Framework.Components.Mover.Core;
 using Framework.Components.Mover.Core.Interfaces;
 using Framework.Components.Mover.Debug;
 using Framework.Components.Mover.Presets;
+using Framework.Components.Mover.Traits.Common;
+using Framework.Components.Mover.Traits.Doom3;
+using Framework.Components.Mover.Traits.Quake;
 using Framework.FastMath.Godot;
 using Framework.FastMath.Godot.Extensions;
 using Framework.Logger;
 
 using Godot;
 using Physics;
+using System;
 using System.Collections.Generic;
 using Zenjex;
 
@@ -28,7 +33,10 @@ namespace Engine.Components.Mover
 
 		[ExportGroup( "Data Objects" )]
 		[Export] public MProfile Profile { get; set; }
-		[Export] public MovementMode InitialMode { get; set; } = MovementMode.Quake;
+		[Export] public MovementMode InitialMode { get; set; } = 
+			MovementMode.QuakeStrafeDoom2016;
+
+		[Export] private float Doom3JumpTraitHeight { get; set; } = 90f;
 
 		[ExportGroup( "References" )]
 		[Export] private MeshInstance3D _playerMesh;
@@ -287,15 +295,53 @@ namespace Engine.Components.Mover
 
 		#region Preset Wiring
 
-		private static List<IMovementTrait> BuildTraitsForMode( MovementMode mode ) =>
-			mode switch
+		private List<IMovementTrait> BuildTraitsForMode( MovementMode mode )
+		{
+			switch ( mode )
 			{
-				MovementMode.Quake => QuakePreset.Build(),
-				MovementMode.Realistic => RealisticPreset.Build(),
-				MovementMode.Hybrid => HybridPreset.Build(),
-				MovementMode.Doom3 => Doom3Preset.Build(),
-				_ => QuakePreset.Build()
+			case MovementMode.Custom:
+				return GetCustomTraits();
+			case MovementMode.Quake:
+				return QuakePreset.Build();
+			case MovementMode.Realistic:
+				return RealisticPreset.Build();
+			case MovementMode.Hybrid:
+				return HybridPreset.Build();
+			case MovementMode.Doom3:
+				return BuildDoom3Traits();
+			case MovementMode.QuakeStrafeDoom2016:
+				return QuakeStrafeDoom2016Preset.Build();
+			default:
+				return QuakePreset.Build();
+			}
+		}
+
+		private List<IMovementTrait> GetCustomTraits()
+		{
+			return new()
+			{
+				new Doom3JumpTrait()
+				{
+					MaxJumpHeightInches = Doom3JumpTraitHeight
+				},
+				new Doom3FrictionTrait(),
+				new Doom3AccelerateTrait(),
+				new GravityTrait(),
+				new QuakeAirStrafeTrait()
 			};
+		}
+
+		private List<IMovementTrait> BuildDoom3Traits()
+		{
+			var traits = Doom3Preset.Build();
+			var jumpTrait = traits
+				.Find( x => x.GetType() == typeof( Doom3JumpTrait ) )
+				.As<Doom3JumpTrait>();
+
+			jumpTrait.MaxJumpHeightInches = Doom3JumpTraitHeight;
+
+			return traits;
+		}
 
 		#endregion
 	}

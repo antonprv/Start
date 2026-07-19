@@ -3,18 +3,18 @@
     public interface IMovementProfile
     {
         // ── Ground ──────────────────────────────────────────────────
-        public float GroundAcceleration { get; set; }
-        public float MaxSpeed { get; set; }
-        public float GroundFriction { get; set; }
+        float GroundAcceleration { get; set; }
+        float MaxSpeed { get; set; }
+        float GroundFriction { get; set; }
 
         // ── Air ─────────────────────────────────────────────────────
-        public float AirAcceleration { get; set; }
-        public float AirMaxSpeed { get; set; }
-        public float AirControl { get; set; }
+        float AirAcceleration { get; set; }
+        float AirMaxSpeed { get; set; }
+        float AirControl { get; set; }
 
         // ── Jump ─────────────────────────────────────────────────────
-        public float JumpSpeed { get; set; }
-        public float JumpBufferTime { get; set; }
-        public float CoyoteTime { get; set; }
+        float JumpHeight { get; set; }
+        float JumpBufferTime { get; set; }
+        float CoyoteTime { get; set; }
     }
 }

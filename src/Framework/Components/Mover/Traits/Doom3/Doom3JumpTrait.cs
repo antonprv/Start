@@ -31,7 +31,7 @@ namespace Framework.Components.Mover.Traits.Doom3
     public partial class Doom3JumpTrait : MovementTraitResource
     {
         /// <summary>Mirrors pm_jumpheight — Doom units (inches). Default matches the original's "48".</summary>
-        [Export] public float MaxJumpHeightInches { get; set; } = 48f;
+        public float MaxJumpHeightInches { get; set; } = 48f;
 
         public override void PreProcess( ref MovementContext ctx ) { }
 

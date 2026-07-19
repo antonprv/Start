@@ -39,7 +39,7 @@ namespace Framework.Components.Mover.Presets
             AirAcceleration = 10f,
             AirMaxSpeed = 0.7f,  // low cap = strafe-jump physics
             AirControl = 0f,    // unused in this preset
-            JumpSpeed = 6f,
+            JumpHeight = 1.5f,
             JumpBufferTime = 0.12f,
             CoyoteTime = 0.12f
         };

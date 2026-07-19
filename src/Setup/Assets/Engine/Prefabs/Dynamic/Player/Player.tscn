@@ -17,7 +17,6 @@ material = ExtResource("3_aibj7")
 [node name="Player" type="Node3D" unique_id=472418512 node_paths=PackedStringArray("_playerMesh", "_cameraComponent", "_capsuleBearer")]
 script = ExtResource("1_tcdex")
 Profile = ExtResource("2_rw73q")
-InitialMode = 3
 _playerMesh = NodePath("PlayerMesh")
 _cameraComponent = NodePath("CameraRoot")
 _capsuleBearer = NodePath("Area3D/CollisionShape3D")

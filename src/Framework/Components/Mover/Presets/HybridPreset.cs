@@ -37,7 +37,7 @@ namespace Framework.Components.Mover.Presets
             AirAcceleration = 0f,    // unused in this preset
             AirMaxSpeed = 5f,
             AirControl = 5f,    // lerp speed in air
-            JumpSpeed = 5.5f,
+            JumpHeight = 1.2f,
             JumpBufferTime = 0.15f,
             CoyoteTime = 0.15f
         };

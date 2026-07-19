@@ -29,7 +29,7 @@ namespace Engine.Components.Mover.Resources
 		[Export] public float AirControl { get; set; } = 3f;
 
 		// ── Jump ─────────────────────────────────────────────────────
-		[Export] public float JumpSpeed { get; set; } = 6f;
+		[Export] public float JumpHeight { get; set; } = 1.8f;
 
 		/// <summary>Time window after pressing jump before landing where jump still fires.</summary>
 		[Export] public float JumpBufferTime { get; set; } = 0.15f;

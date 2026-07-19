@@ -15,7 +15,7 @@ namespace Engine.Components.Mover.Resources
 			AirAcceleration = profile.AirAcceleration,
 			AirMaxSpeed = profile.AirMaxSpeed,
 			AirControl = profile.AirControl,
-			JumpSpeed = profile.JumpSpeed,
+			JumpHeight = profile.JumpHeight,
 			JumpBufferTime = profile.JumpBufferTime,
 			CoyoteTime = profile.CoyoteTime
 		};

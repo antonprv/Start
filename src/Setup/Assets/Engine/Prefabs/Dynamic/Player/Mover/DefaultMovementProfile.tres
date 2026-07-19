@@ -4,4 +4,5 @@
 
 [resource]
 script = ExtResource("1_a4hpl")
+JumpHeight = 1.8
 metadata/_custom_type_script = "uid://cuxx311uatps4"

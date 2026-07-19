@@ -34,7 +34,8 @@ namespace Framework.Components.Mover.Core.Resources
         [Export] public float AirControl { get; set; } = 3f;
 
         // ── Jump ─────────────────────────────────────────────────────
-        [Export] public float JumpSpeed { get; set; } = 6f;
+        /// <summary>Maximum jump height in meters.</summary>
+        [Export] public float JumpHeight { get; set; } = 1.5f;
 
         /// <summary>Time window after pressing jump before landing where jump still fires.</summary>
         [Export] public float JumpBufferTime { get; set; } = 0.15f;

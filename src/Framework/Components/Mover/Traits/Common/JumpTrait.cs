@@ -1,6 +1,7 @@
 // Created by Anton Piruev in 2026.
 // Any direct commercial use of derivative work is strictly prohibited.
 
+using System;
 using Framework.Components.Mover.Core;
 using Framework.Components.Mover.Core.Resources;
 
@@ -34,7 +35,11 @@ namespace Framework.Components.Mover.Traits.Common
             // Fire the jump if both windows are still open
             if ( _jumpBuffer > 0f && _coyote > 0f )
             {
-                velocity.Y = ctx.Profile.JumpSpeed;
+                // Compute launch speed from the current gravity so the
+                // configured jump height stays constant even if gravity changes.
+                float gravity = MathF.Max( 0.0001f, -ctx.Gravity.Y );
+                float jumpSpeed = MathF.Sqrt( 2f * gravity * ctx.Profile.JumpHeight );
+                velocity.Y = jumpSpeed;
 
                 _jumpBuffer = 0f;
                 _coyote = 0f;

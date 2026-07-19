@@ -39,7 +39,7 @@ namespace Framework.Components.Mover.Presets
             AirAcceleration = 4f,
             AirMaxSpeed = 4f,
             AirControl = 1.5f,
-            JumpSpeed = 5f,
+            JumpHeight = 1.2f,
             JumpBufferTime = 0.10f,
             CoyoteTime = 0.10f
         };

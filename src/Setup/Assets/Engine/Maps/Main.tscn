@@ -254,6 +254,7 @@ _moverComponent = NodePath("../../Player")
 
 [node name="Player" parent="Godot" unique_id=1218174859 instance=ExtResource("2_57bvl")]
 transform = Transform3D(-0.99999976, 0.00026906416, 0.00027375369, 0.00026884276, 0.9999995, -0.00086077803, -0.00027397118, -0.0008607088, -0.99999964, 0.16621947, 1.1249998, -9.624439)
+InitialMode = 5
 
 [node name="LocalServiceInitializer" type="Node" parent="Godot" unique_id=1314008614 node_paths=PackedStringArray("_rootNode")]
 script = ExtResource("1_clu36")

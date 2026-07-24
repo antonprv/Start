@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>disable</ImplicitUsings>
+		<Nullable>annotations</Nullable>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<RootNamespace>Framework.Streaming</RootNamespace>
+		<AssemblyName>Streaming.Integration</AssemblyName>
+		<EnableDynamicLoading>false</EnableDynamicLoading>
+		<PublishTrimmed>true</PublishTrimmed>
+		<PublishReadyToRun>true</PublishReadyToRun>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\Math\Numerics\FastMath.Numerics.csproj"
+						  SetTargetFramework="TargetFramework=net8.0" />
+	</ItemGroup>
+
+</Project>

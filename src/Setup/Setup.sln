@@ -39,6 +39,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FastMath.Godot", "..\Framew
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FastMath.Numerics", "..\Framework\Math\Numerics\FastMath.Numerics.csproj", "{C724DF5C-DC92-442D-8401-3D9079BE7858}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Streaming", "Streaming", "{B7A91A01-67CF-4BFE-AD5C-5D6EF681B517}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Streaming.Integration", "..\Framework\Streaming\Core\Streaming.Integration.csproj", "{5A8D0C2C-2F9E-C6F1-D7FF-96CA2667D6F0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextureBaker", "..\Framework\Streaming\TextureBaker\TextureBaker.csproj", "{A5F6A398-81A0-13B0-E058-0A1E7B598238}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -118,6 +124,18 @@ Global
 		{C724DF5C-DC92-442D-8401-3D9079BE7858}.ExportDebug|Any CPU.Build.0 = Release|Any CPU
 		{C724DF5C-DC92-442D-8401-3D9079BE7858}.ExportRelease|Any CPU.ActiveCfg = Release|Any CPU
 		{C724DF5C-DC92-442D-8401-3D9079BE7858}.ExportRelease|Any CPU.Build.0 = Release|Any CPU
+		{5A8D0C2C-2F9E-C6F1-D7FF-96CA2667D6F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A8D0C2C-2F9E-C6F1-D7FF-96CA2667D6F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A8D0C2C-2F9E-C6F1-D7FF-96CA2667D6F0}.ExportDebug|Any CPU.ActiveCfg = Release|Any CPU
+		{5A8D0C2C-2F9E-C6F1-D7FF-96CA2667D6F0}.ExportDebug|Any CPU.Build.0 = Release|Any CPU
+		{5A8D0C2C-2F9E-C6F1-D7FF-96CA2667D6F0}.ExportRelease|Any CPU.ActiveCfg = Release|Any CPU
+		{5A8D0C2C-2F9E-C6F1-D7FF-96CA2667D6F0}.ExportRelease|Any CPU.Build.0 = Release|Any CPU
+		{A5F6A398-81A0-13B0-E058-0A1E7B598238}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A5F6A398-81A0-13B0-E058-0A1E7B598238}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A5F6A398-81A0-13B0-E058-0A1E7B598238}.ExportDebug|Any CPU.ActiveCfg = Release|Any CPU
+		{A5F6A398-81A0-13B0-E058-0A1E7B598238}.ExportDebug|Any CPU.Build.0 = Release|Any CPU
+		{A5F6A398-81A0-13B0-E058-0A1E7B598238}.ExportRelease|Any CPU.ActiveCfg = Release|Any CPU
+		{A5F6A398-81A0-13B0-E058-0A1E7B598238}.ExportRelease|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -139,6 +157,9 @@ Global
 		{A64FE841-5CDA-4591-88DF-23C925536D59} = {1824C7F2-0E4C-4855-95D2-DD23F385F9BA}
 		{EAF816C5-B4D2-4806-B0FE-E8041E4B2407} = {1824C7F2-0E4C-4855-95D2-DD23F385F9BA}
 		{C724DF5C-DC92-442D-8401-3D9079BE7858} = {1824C7F2-0E4C-4855-95D2-DD23F385F9BA}
+		{B7A91A01-67CF-4BFE-AD5C-5D6EF681B517} = {27C98E73-4A72-4B5D-94D7-06FD197DE703}
+		{5A8D0C2C-2F9E-C6F1-D7FF-96CA2667D6F0} = {B7A91A01-67CF-4BFE-AD5C-5D6EF681B517}
+		{A5F6A398-81A0-13B0-E058-0A1E7B598238} = {B7A91A01-67CF-4BFE-AD5C-5D6EF681B517}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {94A0A957-8192-414D-8EC9-CEE1DB704A8D}

@@ -37,7 +37,7 @@
           }
         }
       },
-      "Microsoft.NET.ILLink.Tasks/8.0.28": {
+      "Microsoft.NET.ILLink.Tasks/8.0.29": {
         "type": "package",
         "build": {
           "build/Microsoft.NET.ILLink.Tasks.props": {}
@@ -141,10 +141,10 @@
         "lib/net8.0/GodotSharp.xml"
       ]
     },
-    "Microsoft.NET.ILLink.Tasks/8.0.28": {
-      "sha512": "XMqgVjlLxLqWmEh3c49haXLQwsMNtvo6YscUaqfvEGfg1iA8hnYgkUVq3i9Zu9gKeNKMWiiZKVwZExc/qyEAsQ==",
+    "Microsoft.NET.ILLink.Tasks/8.0.29": {
+      "sha512": "HSBTfrkIZijz8z3ybLRKB7E8rHk4QQufFwpHa9fc5CMIgRhRzdn4mBGmlyXZqaueiMPtuJcnjresGvSTfaW8Mg==",
       "type": "package",
-      "path": "microsoft.net.illink.tasks/8.0.28",
+      "path": "microsoft.net.illink.tasks/8.0.29",
       "hasTools": true,
       "files": [
         ".nupkg.metadata",
@@ -158,7 +158,7 @@
         "build/Microsoft.NET.ILLink.Analyzers.props",
         "build/Microsoft.NET.ILLink.Tasks.props",
         "build/Microsoft.NET.ILLink.targets",
-        "microsoft.net.illink.tasks.8.0.28.nupkg.sha512",
+        "microsoft.net.illink.tasks.8.0.29.nupkg.sha512",
         "microsoft.net.illink.tasks.nuspec",
         "tools/net472/ILLink.Tasks.dll",
         "tools/net472/ILLink.Tasks.dll.config",
@@ -262,7 +262,7 @@
     "net8.0": [
       "Godot.SourceGenerators >= 4.7.0",
       "GodotSharp >= 4.7.0",
-      "Microsoft.NET.ILLink.Tasks >= 8.0.28",
+      "Microsoft.NET.ILLink.Tasks >= 8.0.29",
       "NSubstitute >= 6.0.0",
       "NSubstitute.Analyzers.CSharp >= 1.0.17"
     ]
@@ -330,7 +330,7 @@
           "Microsoft.NET.ILLink.Tasks": {
             "suppressParent": "All",
             "target": "Package",
-            "version": "[8.0.28, )",
+            "version": "[8.0.29, )",
             "autoReferenced": true
           },
           "NSubstitute": {
@@ -358,7 +358,7 @@
         "downloadDependencies": [
           {
             "name": "Microsoft.NETCore.App.Crossgen2.win-x64",
-            "version": "[8.0.28, 8.0.28]"
+            "version": "[8.0.29, 8.0.29]"
           }
         ],
         "frameworkReferences": {
@@ -366,7 +366,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.301/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.302/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

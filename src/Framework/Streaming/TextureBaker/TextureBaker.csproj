@@ -1,0 +1,47 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<!-- Exe (console subsystem), not WinExe: CLI/CI invocations need a real attached
+			 console. GUI mode (launched as "TextureBaker.exe app") detaches its own console
+			 right before showing the form - see Program.cs for why. -->
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net8.0-windows</TargetFramework>
+		<UseWindowsForms>true</UseWindowsForms>
+		<ImplicitUsings>disable</ImplicitUsings>
+		<Nullable>annotations</Nullable>
+		<RootNamespace>TextureBaker</RootNamespace>
+		<AssemblyName>TextureBaker</AssemblyName>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="SixLabors.ImageSharp" Version="4.0.0" />
+		<PackageReference Include="BCnEncoder.Net" Version="2.3.0" />
+		<PackageReference Include="BCnEncoder.Net.ImageSharp" Version="1.1.3" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<!-- Same project that defines ChunkStorage.Pack for the runtime side - baking through
+			 the identical, single-sourced writer is what guarantees the container this tool
+			 produces is exactly what GodotChunkDataSource expects to read back. -->
+		<ProjectReference Include="..\Core\Streaming.Integration.csproj" />
+	</ItemGroup>
+
+	<!-- Every build lands straight in the Godot project's tools folder - rebuild here, the
+		 refreshed exe is immediately usable both from the editor (GUI mode) and from a CI
+		 pipeline that shells out to it. Restrict with a Condition to Release-only if you'd
+		 rather Debug builds stay local while iterating.
+
+		 Path is relative to this .csproj's own folder (src/Framework/Streaming/TextureBaker),
+		 anchored on $(MSBuildProjectDirectory) so it resolves correctly no matter where `dotnet
+		 build`/CI is invoked from: three levels up gets back to src/, then down into
+		 Setup/tools/TextureBaker - i.e. src/Setup/tools/TextureBaker, next to src/Setup/addons.
+		 Adjust the ..\..\..\ hop count here if your checkout doesn't keep Framework/ and Setup/
+		 as siblings under the same src/ root. -->
+	<Target Name="CopyToGodotTools" AfterTargets="Build">
+		<ItemGroup>
+			<ToolOutputFiles Include="$(TargetDir)**\*.*" />
+		</ItemGroup>
+		<Copy SourceFiles="@(ToolOutputFiles)" DestinationFolder="$(MSBuildProjectDirectory)\..\..\..\Setup\tools\TextureBaker\%(RecursiveDir)" SkipUnchangedFiles="true" />
+	</Target>
+
+</Project>

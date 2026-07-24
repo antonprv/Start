@@ -20,28 +20,14 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<!-- Same project that defines ChunkStorage.Pack for the runtime side - baking through
-			 the identical, single-sourced writer is what guarantees the container this tool
-			 produces is exactly what GodotChunkDataSource expects to read back. -->
 		<ProjectReference Include="..\Core\Streaming.Integration.csproj" />
 	</ItemGroup>
 
-	<!-- Every build lands straight in the Godot project's tools folder - rebuild here, the
-		 refreshed exe is immediately usable both from the editor (GUI mode) and from a CI
-		 pipeline that shells out to it. Restrict with a Condition to Release-only if you'd
-		 rather Debug builds stay local while iterating.
-
-		 Path is relative to this .csproj's own folder (src/Framework/Streaming/TextureBaker),
-		 anchored on $(MSBuildProjectDirectory) so it resolves correctly no matter where `dotnet
-		 build`/CI is invoked from: three levels up gets back to src/, then down into
-		 Setup/tools/TextureBaker - i.e. src/Setup/tools/TextureBaker, next to src/Setup/addons.
-		 Adjust the ..\..\..\ hop count here if your checkout doesn't keep Framework/ and Setup/
-		 as siblings under the same src/ root. -->
 	<Target Name="CopyToGodotTools" AfterTargets="Build">
 		<ItemGroup>
 			<ToolOutputFiles Include="$(TargetDir)**\*.*" />
 		</ItemGroup>
-		<Copy SourceFiles="@(ToolOutputFiles)" DestinationFolder="$(MSBuildProjectDirectory)\..\..\..\Setup\tools\TextureBaker\%(RecursiveDir)" SkipUnchangedFiles="true" />
+		<Copy SourceFiles="@(ToolOutputFiles)" DestinationFolder="$(MSBuildProjectDirectory)\..\..\..\..\tools\TextureBaker\%(RecursiveDir)" SkipUnchangedFiles="true" />
 	</Target>
 
 </Project>

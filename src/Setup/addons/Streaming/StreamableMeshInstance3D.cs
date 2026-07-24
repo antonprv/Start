@@ -1,13 +1,15 @@
 // Created by Anton Piruev in 2026.
 // Any direct commercial use of derivative work is strictly prohibited.
 
-using System;
 using Framework.Logger;
 using Framework.Streaming;
-using Godot;
-using Godot.Collections;
+
 using Zenjex;
 
+using System;
+using Godot;
+
+using GArray = Godot.Collections.Array;
 namespace Streaming
 {
     /// <summary>
@@ -128,7 +130,7 @@ namespace Streaming
             if ( prepared is not DecodedMeshLevel decoded )
                 return;
 
-            var arrays = new Array();
+            var arrays = new GArray();
             arrays.Resize( (int)Mesh.ArrayType.Max );
             arrays[ (int)Mesh.ArrayType.Vertex ] = decoded.Positions;
             arrays[ (int)Mesh.ArrayType.Normal ] = decoded.Normals;

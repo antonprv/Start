@@ -5,8 +5,8 @@ using System.Collections.Generic;
 using System.IO;
 using Framework.Logger;
 using Framework.Streaming;
-using Godot;
 
+using GFile = Godot.FileAccess;
 namespace Streaming
 {
     /// <summary>
@@ -43,10 +43,10 @@ namespace Streaming
             if ( _entries != null )
                 return;
 
-            using FileAccess file = FileAccess.Open( _manifestPath, FileAccess.ModeFlags.Read );
+            using GFile file = GFile.Open( _manifestPath, GFile.ModeFlags.Read );
             if ( file == null )
             {
-                GameLogger.LogError( $"AssetManifest: couldn't open '{_manifestPath}' ({FileAccess.GetOpenError()}) - no streamable asset names will resolve until this exists." );
+                GameLogger.LogError( $"AssetManifest: couldn't open '{_manifestPath}' ({GFile.GetOpenError()}) - no streamable asset names will resolve until this exists." );
                 _entries = new Dictionary<string, string>();
                 return;
             }

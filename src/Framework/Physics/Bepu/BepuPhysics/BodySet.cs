@@ -114,7 +114,7 @@ namespace BepuPhysics
         internal void ApplyDescriptionByIndex( int index, in BodyDescription description )
         {
             Debug.Assert( !MathChecker.IsInvalid( description.Pose.Position.LengthSq() ), $"Invalid body position: {description.Pose.Position}" );
-            Debug.Assert( FMath.Abs( 1 - description.Pose.Orientation.LengthSq() ) < 1e-3f, $"Body orientation not unit length: {description.Pose.Orientation}" );
+            Debug.Assert( FMath.AbsBranchless( 1 - description.Pose.Orientation.LengthSq() ) < 1e-3f, $"Body orientation not unit length: {description.Pose.Orientation}" );
             Debug.Assert( !MathChecker.IsInvalid( description.Velocity.Linear.LengthSq() ), $"Invalid body linear velocity: {description.Velocity.Linear}" );
             Debug.Assert( !MathChecker.IsInvalid( description.Velocity.Angular.LengthSq() ), $"Invalid body angular velocity: {description.Velocity.Angular}" );
             Debug.Assert( !MathChecker.IsInvalid(

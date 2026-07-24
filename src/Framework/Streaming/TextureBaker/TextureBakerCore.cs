@@ -1,5 +1,5 @@
 // Created by Anton Piruev in 2026.
-// Any direct commercial use of derivative work is strictly prohibited.
+// Texture Baker is a sandalone utility released under MIT license
 
 using System;
 using System.Collections.Generic;

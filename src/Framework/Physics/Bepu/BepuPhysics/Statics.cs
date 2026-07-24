@@ -411,7 +411,7 @@ namespace BepuPhysics
             //1e-6f tolerance assumed exact Length() and was failing on perfectly valid unit
             //quaternions. FMath.KINDA_SMALL_NUMBER (1e-3f) gives a comfortable margin over that
             //error while still catching genuinely non-normalized input.
-            Debug.Assert( FMath.Abs( description.Pose.Orientation.FastLength() - 1 ) < FMath.KINDA_SMALL_NUMBER, "Orientation should be initialized to a unit length quaternion." );
+            Debug.Assert( FMath.AbsBranchless( description.Pose.Orientation.FastLength() - 1 ) < FMath.KINDA_SMALL_NUMBER, "Orientation should be initialized to a unit length quaternion." );
             var handle = new StaticHandle( HandlePool.Take() );
             var index = Count++;
             HandleToIndex[ handle.Value ] = index;

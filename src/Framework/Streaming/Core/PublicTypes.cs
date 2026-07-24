@@ -78,9 +78,12 @@ namespace Framework.Streaming
         public readonly float FullDetailDistance;
         /// <summary>Distance beyond which a resource is dropped to its lowest residency level.</summary>
         public readonly float MinDetailDistance;
-        /// <summary>How long an already-loaded chunk is kept around after it stops being requested, before Core reclaims it.</summary>
+        /// <summary>How long an already-loaded chunk is kept around after it stops being requested,
+        /// before Core reclaims it.</summary>
         public readonly TimeSpan UnusedChunkLifetime;
-        /// <summary>Total resident bytes allowed across every registered resource before Core starts forcing distant resources down a level early, regardless of their distance-computed target. long.MaxValue effectively disables the cap.</summary>
+        /// <summary>Total resident bytes allowed across every registered resource 
+        /// before Core starts forcing distant resources down a level early,
+        /// regardless of their distance-computed target. long.MaxValue effectively disables the cap.</summary>
         public readonly long MemoryBudgetBytes;
 
         public StreamingBudget(

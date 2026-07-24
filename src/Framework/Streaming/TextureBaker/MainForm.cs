@@ -1,13 +1,9 @@
-﻿using Microsoft.VisualBasic.Logging;
+﻿// Created by Anton Piruev in 2026.
+// Texture Baker is a sandalone utility released under MIT license
+
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace TextureBaker

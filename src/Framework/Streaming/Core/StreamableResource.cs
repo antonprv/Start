@@ -1,6 +1,7 @@
 // Created by Anton Piruev in 2026.
 // Any direct commercial use of derivative work is strictly prohibited.
 
+using Framework.FastMath.Numerics;
 using System;
 using System.Collections.Concurrent;
 using System.Numerics;
@@ -50,13 +51,17 @@ namespace Framework.Streaming
         /// <summary>Highest level whose chunk is currently loaded and applied.</summary>
         public int CurrentResidency { get; private set; } = -1;
 
-        /// <summary>Level the scheduler wants this resource at, given the last known viewer distance.</summary>
+        /// <summary>Level the scheduler wants this resource at,
+        /// given the last known viewer distance.</summary>
         public int TargetResidency { get; internal set; }
 
-        /// <summary>Declared byte size of every chunk from 0 up to <see cref="CurrentResidency"/> - used by <see cref="StreamingWorld"/> for memory-budget accounting.</summary>
+        /// <summary>Declared byte size of every chunk from 0 up to <see cref="CurrentResidency"/>
+        /// - used by <see cref="StreamingWorld"/> for memory-budget accounting.</summary>
         public long ResidentBytes => CurrentResidency < 0 ? 0 : _storage.GetSizeUpTo( CurrentResidency );
 
-        /// <summary>Declared byte size of every chunk from 0 up to an arbitrary (not necessarily current) level - used to project cost before committing to a target.</summary>
+        /// <summary>Declared byte size of every chunk from 0
+        /// up to an arbitrary (not necessarily current) 
+        /// level - used to project cost before committing to a target.</summary>
         internal long EstimateBytesAtLevel( int level ) => level < 0 ? 0 : _storage.GetSizeUpTo( level );
 
         internal bool IsStreamingTaskActive => _streamingTask != null && !_streamingTask.IsCompleted;
@@ -78,13 +83,15 @@ namespace Framework.Streaming
         /// </summary>
         protected abstract void ApplyPreparedChunk( int level, object? prepared );
 
-        /// <summary>Called once, the first time this resource streams in at all, before any ApplyChunk. Good place to create the placeholder engine object.</summary>
+        /// <summary>Called once, the first time this resource streams in at all,
+        /// before any ApplyChunk. Good place to create the placeholder engine object.</summary>
         protected virtual void OnFirstResidency() { }
 
         internal async Task LoadHeaderAsync( CancellationToken cancellationToken ) =>
             await _storage.LoadHeaderAsync( cancellationToken ).ConfigureAwait( false );
 
-        /// <summary>Kicks off a background load of every chunk between the current and target residency, then applies them on the calling (main) thread.</summary>
+        /// <summary>Kicks off a background load of every chunk between the current and target residency,
+        /// then applies them on the calling (main) thread.</summary>
         internal Task StreamToTargetAsync()
         {
             _streamingCts?.Dispose();
@@ -96,7 +103,7 @@ namespace Framework.Streaming
         private async Task RunAsync( CancellationToken cancellationToken )
         {
             bool firstResidency = CurrentResidency < 0;
-            int from = Math.Max( CurrentResidency + 1, 0 );
+            int from = FMath.Max( CurrentResidency + 1, 0 );
             int to = TargetResidency;
             bool ascending = to >= from;
             int step = ascending ? 1 : -1;
@@ -142,7 +149,8 @@ namespace Framework.Streaming
             }
         }
 
-        internal void ReleaseStaleChunks( TimeSpan lifetime ) => _storage.ReleaseStaleChunks( lifetime, CurrentResidency );
+        internal void ReleaseStaleChunks( TimeSpan lifetime ) => 
+            _storage.ReleaseStaleChunks( lifetime, CurrentResidency );
 
         public void Unregister() => World.UnregisterResource( this );
     }

@@ -1,6 +1,7 @@
 // Created by Anton Piruev in 2026.
 // Any direct commercial use of derivative work is strictly prohibited.
 
+using Framework.FastMath.Numerics;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
@@ -134,18 +135,20 @@ namespace Framework.Streaming
             if ( resource.MaxResidency <= 0 )
                 return 0;
 
-            float distance = MathF.Sqrt( DistanceSqr( resource.WorldPosition ) );
-            float t = ( distance - Budget.FullDetailDistance ) / MathF.Max( 1f, Budget.MinDetailDistance - Budget.FullDetailDistance );
-            t = Math.Clamp( 1f - t, 0f, 1f );
+            float distance = FMath.FastSqrt( DistanceSqr( resource.WorldPosition ) );
+            float t = ( distance - Budget.FullDetailDistance ) /
+                FMath.Max( 1f, Budget.MinDetailDistance - Budget.FullDetailDistance );
 
-            return (int)MathF.Round( t * resource.MaxResidency );
+            t = FMath.Clamp( 1f - t, 0f, 1f );
+
+            return (int)FMath.Round( t * resource.MaxResidency );
         }
 
         private static long EstimateStepCost( StreamableResource resource )
         {
             long from = resource.EstimateBytesAtLevel( resource.CurrentResidency );
             long to = resource.EstimateBytesAtLevel( resource.TargetResidency );
-            return Math.Abs( to - from );
+            return FMath.AbsBranchless( to - from );
         }
 
         /// <summary>

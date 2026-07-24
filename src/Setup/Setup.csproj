@@ -21,5 +21,6 @@
     <ProjectReference Include="..\Framework\Math\Godot\FastMath.Godot.csproj" />
     <ProjectReference Include="..\Framework\Math\Numerics\FastMath.Numerics.csproj" />
     <ProjectReference Include="..\Framework\Physics\Core\Physics.Integration.csproj" />
+    <ProjectReference Include="..\Framework\Streaming\Core\Streaming.Integration.csproj" />
   </ItemGroup>
 </Project>

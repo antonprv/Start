@@ -225,6 +225,12 @@ namespace Framework.FastMath.Core
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
         public static float Abs( float value ) => value >= 0f ? value : -value;
 
+        [MethodImpl( MethodImplOptions.AggressiveInlining )]
+        public static long Abs( long value ) => value >= 0f ? value : -value;
+
+        [MethodImpl( MethodImplOptions.AggressiveInlining )]
+        public static int Abs( int value ) => value >= 0f ? value : -value;
+
         /// <summary>
         /// Branchless absolute value via IEEE-754 sign-bit clear.
         ///
@@ -239,6 +245,20 @@ namespace Framework.FastMath.Core
         {
             int bits = FloatToInt32Bits( value ) & ABS_MASK;
             return Int32BitsToFloat( bits );
+        }
+
+        [MethodImpl( MethodImplOptions.AggressiveInlining )]
+        public static int AbsBranchless( int value )
+        {
+            int mask = value >> 31;
+            return ( value ^ mask ) - mask;
+        }
+
+        [MethodImpl( MethodImplOptions.AggressiveInlining )]
+        public static long AbsBranchless( long value )
+        {
+            long mask = value >> 63;
+            return ( value ^ mask ) - mask;
         }
 
         [MethodImpl( MethodImplOptions.AggressiveInlining )]

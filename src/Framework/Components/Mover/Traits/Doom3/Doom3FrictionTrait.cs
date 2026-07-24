@@ -32,7 +32,7 @@ namespace Framework.Components.Mover.Traits.Doom3
             if ( speed < 1.0f * Core.Doom3Constants.InchesToMeters )
             {
                 // remove all movement orthogonal to gravity (lets the player sink)
-                if ( FMath.Abs( velocity.Y ) < 1e-5f )
+                if ( FMath.AbsBranchless( velocity.Y ) < 1e-5f )
                     velocity = Vector3.Zero;
                 else
                     velocity = new Vector3( 0f, velocity.Y, 0f );

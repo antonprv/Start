@@ -104,9 +104,9 @@ namespace Physics
 			{
 			case BoxShape3D box:
 				Vector3 half = box.Size * 0.5f;
-				return FMath.Abs( local.X ) <= half.X &&
-					FMath.Abs( local.Y ) <= half.Y &&
-					FMath.Abs( local.Z ) <= half.Z;
+				return FMath.AbsBranchless( local.X ) <= half.X &&
+					FMath.AbsBranchless( local.Y ) <= half.Y &&
+					FMath.AbsBranchless( local.Z ) <= half.Z;
 
 			case SphereShape3D sphere:
 				return local.LengthSquared() <= sphere.Radius * sphere.Radius;
@@ -163,7 +163,7 @@ namespace Physics
 		{
 			const float epsilon = 1e-8f;
 
-			if ( FMath.Abs( direction ) < epsilon )
+			if ( FMath.AbsBranchless( direction ) < epsilon )
 				return origin >= -halfExtent && origin <= halfExtent;
 
 			float invDirection = 1f / direction;

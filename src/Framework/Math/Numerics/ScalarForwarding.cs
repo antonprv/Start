@@ -170,7 +170,19 @@ namespace Framework.FastMath.Numerics
         public static float Abs( float value ) => CoreMath.Abs( value );
 
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
+        public static int Abs( int value ) => CoreMath.Abs( value );
+
+        [MethodImpl( MethodImplOptions.AggressiveInlining )]
+        public static long Abs( long value ) => CoreMath.Abs( value );
+
+        [MethodImpl( MethodImplOptions.AggressiveInlining )]
         public static float AbsBranchless( float value ) => CoreMath.AbsBranchless( value );
+
+        [MethodImpl( MethodImplOptions.AggressiveInlining )]
+        public static int AbsBranchless( int value ) => CoreMath.AbsBranchless( value );
+
+        [MethodImpl( MethodImplOptions.AggressiveInlining )]
+        public static long AbsBranchless( long value ) => CoreMath.AbsBranchless( value );
 
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
         public static float Sign( float value ) => CoreMath.Sign( value );

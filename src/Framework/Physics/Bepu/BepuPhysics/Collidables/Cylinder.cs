@@ -143,7 +143,7 @@ namespace BepuPhysics.Collidables
 
             //Intersect the ray with the plane anchored at discY with normal equal to (0,1,0).
             //t = dot(rayOrigin - (0,discY,0), (0,1,0)) / dot(rayDirection, (0,1,0)
-            if ( FMath.Abs( o.Y ) > HalfLength && o.Y * d.Y >= 0 )
+            if ( FMath.AbsBranchless( o.Y ) > HalfLength && o.Y * d.Y >= 0 )
             {
                 //The ray can only hit the disc if the ray is inside the cylinder or the direction points toward the cylinder.
                 t = 0;

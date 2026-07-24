@@ -174,7 +174,7 @@ namespace BepuPhysics.CollisionDetection
             var distanceAlongNormal = offsetX * triangle.NX + offsetY * triangle.NY + offsetZ * triangle.NZ;
             //Note that very very thin triangles can result in questionable acceptance due to not checking for true distance- 
             //a position might be way outside a vertex, but still within edge plane thresholds. We're assuming that the impact of this problem will be minimal.
-            if ( FMath.Abs( distanceAlongNormal.X ) <= triangle.DistanceThreshold &&
+            if ( FMath.AbsBranchless( distanceAlongNormal.X ) <= triangle.DistanceThreshold &&
                 distanceAlongNormal.Y <= triangle.DistanceThreshold &&
                 distanceAlongNormal.Z <= triangle.DistanceThreshold &&
                 distanceAlongNormal.W <= triangle.DistanceThreshold )

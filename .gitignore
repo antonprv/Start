@@ -80,3 +80,9 @@ src/Builds/
 src/*/addons/func_godot/
 src/*/addons/script-ide/
 src/*/addons/nexus_vertex_painter/
+
+# --------------------------------------------------
+# License files
+# --------------------------------------------------
+
+*.lic

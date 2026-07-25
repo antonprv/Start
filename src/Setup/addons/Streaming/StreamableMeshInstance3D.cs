@@ -10,6 +10,7 @@ using System;
 using Godot;
 
 using GArray = Godot.Collections.Array;
+using Setup.addons.Streaming;
 namespace Streaming
 {
     /// <summary>

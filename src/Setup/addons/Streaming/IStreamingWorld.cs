@@ -3,10 +3,10 @@
 
 using Framework.Streaming;
 
-namespace Streaming
+namespace Setup.addons.Streaming
 {
     /// <summary>
-    /// The Godot-facing streaming service. Wraps a <see cref="Framework.Streaming.StreamingWorld"/>
+    /// The Godot-facing streaming service. Wraps a <see cref="StreamingWorld"/>
     /// (exposed directly via <see cref="Core"/> for components to call) plus the one thing Core
     /// deliberately knows nothing about: which camera/viewer position drives distance-based
     /// residency this frame.

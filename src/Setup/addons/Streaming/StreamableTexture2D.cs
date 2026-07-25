@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using Framework.Logger;
 using Framework.Streaming;
 using Godot;
+using Setup.addons.Streaming;
 using Zenjex;
 
 namespace Streaming

@@ -1,7 +1,7 @@
 // Created by Anton Piruev in 2026.
 // Any direct commercial use of derivative work is strictly prohibited.
 
-namespace Streaming
+namespace Setup.addons.Streaming
 {
     /// <summary>
     /// Resolves a baked asset's bare name (e.g. "wall_albedo") to its full Godot path (e.g.

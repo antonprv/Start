@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Framework.Streaming;
 using Godot;
 
-namespace Streaming
+namespace Setup.addons.Streaming
 {
     /// <summary>
     /// Reads packed chunk containers baked by the offline packer (see ChunkStorage.Pack) via

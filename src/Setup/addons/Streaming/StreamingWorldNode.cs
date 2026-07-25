@@ -4,6 +4,7 @@
 using Framework.Logger;
 using Framework.Streaming;
 using Godot;
+using Setup.addons.Streaming;
 
 namespace Streaming.Autoload
 {

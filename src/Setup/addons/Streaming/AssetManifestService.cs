@@ -7,7 +7,7 @@ using Framework.Logger;
 using Framework.Streaming;
 
 using GFile = Godot.FileAccess;
-namespace Streaming
+namespace Setup.addons.Streaming
 {
     /// <summary>
     /// Reads Cook/manifest.bin through Godot's FileAccess - not System.IO - the very first time

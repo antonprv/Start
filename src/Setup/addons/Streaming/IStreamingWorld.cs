@@ -3,7 +3,7 @@
 
 using Framework.Streaming;
 
-namespace Setup.addons.Streaming
+namespace Streaming
 {
     /// <summary>
     /// The Godot-facing streaming service. Wraps a <see cref="StreamingWorld"/>

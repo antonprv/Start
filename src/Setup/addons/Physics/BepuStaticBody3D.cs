@@ -25,9 +25,14 @@ namespace Physics
 
 		public StaticHandle Handle { get; private set; }
 
+		protected bool IsValid =>
+			_convexShape != null || _meshShape != null;
+
 		protected override void OnRegister()
 		{
 			BuiltShape built;
+
+			GetReferences();
 
 			if ( _convexShape != null )
 			{
@@ -51,6 +56,21 @@ namespace Physics
 
 			Handle = World.Core
 				.AddStatic( pose, built.Handle, (uint)Layer, (uint)Mask, PhysicsId );
+		}
+
+		private void GetReferences()
+		{
+			if ( IsValid )
+				return;
+
+			foreach ( var item in GetChildren() )
+			{
+				if ( item is CollisionShape3D )
+					_convexShape = (CollisionShape3D)item;
+
+				if ( item is MeshInstance3D )
+					_meshShape = (MeshInstance3D)item;
+			}
 		}
 
 		protected override void OnUnregister() => World.Core.RemoveStatic( Handle );

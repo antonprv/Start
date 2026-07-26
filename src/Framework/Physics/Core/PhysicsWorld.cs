@@ -407,6 +407,21 @@ namespace Framework.Physics
             reference.Velocity.Linear = velocity;
         }
 
+        public Vector3 GetAngularVelocity( BodyHandle handle ) =>
+            _simulation
+            .Bodies
+            .GetBodyReference( new BepuPhysics.BodyHandle( handle.Value ) )
+            .Velocity.Angular;
+
+        public void SetAngularVelocity( BodyHandle handle, Vector3 angularVelocity )
+        {
+            BodyReference reference = _simulation
+                .Bodies
+                .GetBodyReference( new BepuPhysics.BodyHandle( handle.Value ) );
+
+            reference.Velocity.Angular = angularVelocity;
+        }
+
         public void ApplyImpulse(
             BodyHandle handle,
             Vector3 impulse,
@@ -449,6 +464,7 @@ namespace Framework.Physics
             Vector3 displacement = velocity * dt;
             bool grounded = false;
             Vector3 groundNormal = Vector3.UnitY;
+            int groundOwnerId = 0;
 
             Vector3 finalVelocity = velocity;
 
@@ -498,6 +514,7 @@ namespace Framework.Physics
                 {
                     grounded = true;
                     groundNormal = hit.Normal;
+                    groundOwnerId = hit.HitOwnerId;
                 }
 
                 if ( numPlanes >= maxClipPlanes )
@@ -562,6 +579,7 @@ namespace Framework.Physics
                 {
                     grounded = true;
                     groundNormal = probe.Normal;
+                    groundOwnerId = probe.HitOwnerId;
                 }
             }
 
@@ -569,6 +587,7 @@ namespace Framework.Physics
                 position,
                 grounded,
                 groundNormal,
+                groundOwnerId,
                 finalVelocity
             );
         }

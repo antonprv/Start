@@ -4,6 +4,8 @@
 using Godot;
 using Zenjex;
 
+using Ex = Framework.Common.Extensions.NodeExtensions;
+using Dictionary = Godot.Collections.Dictionary;
 namespace Physics
 {
 	/// <summary>
@@ -24,26 +26,76 @@ namespace Physics
 		protected IPhysicsWorld World => _physicsWorld;
 
 		[Inject]
-		private void Construct( IPhysicsWorld world ) => _physicsWorld = world;
+		private void Construct( IPhysicsWorld world ) => Ex.EditorSafe( () =>
+		{
+			_physicsWorld = world;
+		} );
 
-		public override void _EnterTree() => DiContainer.Instance.Inject( this );
+		public override void _EnterTree() => Ex.EditorSafe( () =>
+		{
+			DiContainer.Instance.Inject( this );
+		} );
 
-		public override void _Ready()
+		public override void _Ready() => Ex.EditorSafe( () =>
 		{
 			PhysicsId = _physicsWorld.RegisterOwner( this );
 			OnRegister();
-		}
+		} );
 
-		public override void _ExitTree()
+		public override void _ExitTree() => Ex.EditorSafe( () =>
 		{
 			OnUnregister();
 			World.UnregisterOwner( PhysicsId );
-		}
+		} );
 
 		/// <summary>Register this component's body/static with <see cref="World"/>.<see cref="IPhysicsWorld.Core"/> here.</summary>
 		protected abstract void OnRegister();
 
 		/// <summary>Remove this component's body/static from <see cref="World"/>.<see cref="IPhysicsWorld.Core"/> here.</summary>
 		protected abstract void OnUnregister();
+
+		#region Godot Callbacks
+
+		public override void _Process( double delta ) => Ex.EditorSafe( () =>
+		{
+			base._Process( delta );
+		} );
+
+		public override void _PhysicsProcess( double delta ) => Ex.EditorSafe( () =>
+		{
+			base._PhysicsProcess( delta );
+		} );
+
+		public override void _Input( InputEvent @event ) => Ex.EditorSafe( () =>
+		{
+			base._Input( @event );
+		} );
+
+		public override void _ShortcutInput( InputEvent @event ) => Ex.EditorSafe( () =>
+		{
+			base._ShortcutInput( @event );
+		} );
+
+		public override void _UnhandledInput( InputEvent @event ) => Ex.EditorSafe( () =>
+		{
+			base._UnhandledInput( @event );
+		} );
+
+		public override void _UnhandledKeyInput( InputEvent @event ) => Ex.EditorSafe( () =>
+		{
+			base._UnhandledKeyInput( @event );
+		} );
+
+		public override void _Notification( int what ) => Ex.EditorSafe( () =>
+		{
+			base._Notification( what );
+		} );
+
+		public override void _ValidateProperty( Dictionary property ) => Ex.EditorSafe(() =>
+		{
+			base._ValidateProperty( property );
+		});
+
+		#endregion
 	}
 }

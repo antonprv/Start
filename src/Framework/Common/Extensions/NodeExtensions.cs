@@ -21,5 +21,11 @@ namespace Framework.Common.Extensions
             else if ( node is Control control )
                 control.Visible = value;
         }
+
+        public static void EditorSafe( Action editorSafe )
+        {
+            if ( !Engine.IsEditorHint() )
+                editorSafe.Invoke();
+        }
     }
 }

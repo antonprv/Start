@@ -16,5 +16,5 @@ class_properties = Dictionary[String, Variant]({
 "move_distance": 2.0,
 "move_time": 2.0
 })
-node_class = "AnimatableBody3D"
+node_class = "BepuAnimatableBody3D"
 metadata/_custom_type_script = "uid://5cow84q03m6a"

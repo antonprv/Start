@@ -76,6 +76,7 @@ CallConsole={
 [physics]
 
 3d/physics_engine="Dummy"
+3d/physics_engine.editor="Jolt Physics"
 
 [rendering]
 

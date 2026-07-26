@@ -1,0 +1,14 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://c1fk7ol7xca4s"]
+
+[ext_resource type="Shader" uid="uid://bkntipcbr62al" path="res://Engine/Shaders/BaseShader.gdshader" id="1_ejyoh"]
+[ext_resource type="Texture2D" uid="uid://dwytbjeytn8ei" path="res://Broom/textures/torment/str_metalpan6.bmp" id="2_kavwv"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_ejyoh")
+shader_parameter/albedo = Color(1, 1, 1, 1)
+shader_parameter/albedo_texture = ExtResource("2_kavwv")
+shader_parameter/vertex_color_enabled = true
+shader_parameter/vertex_snap_enabled = false
+shader_parameter/snap_resolution = 128.0
+shader_parameter/alpha_scissor_threshold = 0.5

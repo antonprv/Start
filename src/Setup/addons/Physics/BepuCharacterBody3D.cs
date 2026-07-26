@@ -40,6 +40,12 @@ namespace Physics
 
 		public Vector3Packed Gravity { get; private set; }
 
+		// Which owner (if any) we were standing on as of the *previous* MoveAndSlide call.
+		// MoveCharacter itself is a pure sweep query against wherever things are right now -
+		// it has no concept of "the floor moved since last tick, bring me with it" - so that
+		// carry has to happen explicitly, one tick behind, before the next sweep.
+		private int _groundOwnerId;
+
 		private CapsuleShape3D _capsule;
 		private float _radius;
 		private float _height;
@@ -91,6 +97,20 @@ namespace Physics
 		/// </summary>
 		public void MoveAndSlide( double delta )
 		{
+			float dt = (float)delta;
+
+			// Carry: MoveCharacter is a pure sweep query against wherever things are *right
+			// now* - it has no notion of "the floor moved since last tick, bring me with it."
+			// So if we were standing on something last tick, ride along with its motion since
+			// then before sweeping this tick's own input velocity. One tick behind is fine
+			// (same as Godot's own get_platform_velocity() timing) - what matters is this runs
+			// every tick the character is grounded, not just the ones where input changes.
+			if ( IsOnFloor.Value && _groundOwnerId != 0 )
+			{
+				SVec3 platformVelocity = GetPlatformVelocity( World.GetOwner( _groundOwnerId ) );
+				GlobalPosition += GodotShapeConverter.ToGodot( platformVelocity ) * dt;
+			}
+
 			CharacterMoveOptions options = new CharacterMoveOptions(
 				_maxSlideIterations,
 				_skinWidth,
@@ -102,7 +122,7 @@ namespace Physics
 				Handle,
 				GodotShapeConverter.ToNumerics( GlobalPosition ),
 				GodotShapeConverter.ToNumerics( Velocity.Value ),
-				(float)delta,
+				dt,
 				_radius,
 				_cylinderLength,
 				(uint)Layer,
@@ -111,7 +131,7 @@ namespace Physics
 
 			IsOnFloor.Value = result.IsOnFloor;
 			FloorNormal = GodotShapeConverter.ToGodot( result.FloorNormal );
-			SVec3 actualDisplacement = result.Position - GodotShapeConverter.ToNumerics( GlobalPosition );
+			_groundOwnerId = result.GroundOwnerId;
 			GlobalPosition = GodotShapeConverter.ToGodot( result.Position );
 
 			// Feed the plane-clipped velocity back, same as id's current.velocity = clipVelocity
@@ -133,6 +153,18 @@ namespace Physics
 			);
 
 		}
+
+		/// <summary>
+		/// Linear velocity of whatever <paramref name="groundNode"/> is, if it's a body type
+		/// that can actually move (kinematic platforms, pushable rigid props). Statics never
+		/// move so they're not checked; anything else (null, a trigger, etc.) contributes zero.
+		/// </summary>
+		private SVec3 GetPlatformVelocity( BepuBody3D? groundNode ) => groundNode switch
+		{
+			BepuAnimatableBody3D platform => World.Core.GetLinearVelocity( platform.Handle ),
+			BepuRigidBody3D rigid => World.Core.GetLinearVelocity( rigid.Handle ),
+			_ => SVec3.Zero
+		};
 
 		/// <summary>Teleport without sliding (e.g. respawn, cutscenes). Keeps the Core body in sync.</summary>
 		public void Teleport( Vector3 worldPosition )

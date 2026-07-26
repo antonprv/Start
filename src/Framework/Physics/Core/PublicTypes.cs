@@ -120,6 +120,17 @@ namespace Framework.Physics
         public readonly Vector3 FloorNormal;
 
         /// <summary>
+        /// OwnerId of whatever the character is standing on this tick (0 if not grounded, or
+        /// grounded against something that never called RegisterOwner - shouldn't normally
+        /// happen). Feed this into <see cref="PhysicsWorld.GetLinearVelocity"/> /
+        /// <see cref="PhysicsWorld.GetAngularVelocity"/> (via that owner's own BodyHandle) to
+        /// carry the character along with a moving platform - MoveCharacter itself only
+        /// resolves collide-and-slide against wherever things are *right now*, it has no
+        /// notion of "this floor moved since last tick, bring me with it."
+        /// </summary>
+        public readonly int GroundOwnerId;
+
+        /// <summary>
         /// The input velocity after being resolved against every plane touched during the
         /// sweep (zeroed on a genuine multi-plane pocket, unchanged if nothing was hit).
         /// Callers must feed this back into whatever persists velocity across ticks - in
@@ -132,11 +143,12 @@ namespace Framework.Physics
         /// </summary>
         public readonly Vector3 Velocity;
 
-        public CharacterMoveResult( Vector3 position, bool isOnFloor, Vector3 floorNormal, Vector3 velocity )
+        public CharacterMoveResult( Vector3 position, bool isOnFloor, Vector3 floorNormal, int groundOwnerId, Vector3 velocity )
         {
             Position = position;
             IsOnFloor = isOnFloor;
             FloorNormal = floorNormal;
+            GroundOwnerId = groundOwnerId;
             Velocity = velocity;
         }
     }

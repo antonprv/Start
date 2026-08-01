@@ -3,13 +3,13 @@
 
 namespace Framework.Console.Types
 {
-    public enum ConsoleMessageType
-    {
-        Info,
-        Warning,
-        Error,
-        Command,
-        Success,
-        All
-    }
+	public enum ConsoleMessageType
+	{
+		Info,
+		Warning,
+		Error,
+		Command,
+		Success,
+		All
+	}
 }

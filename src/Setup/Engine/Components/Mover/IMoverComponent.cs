@@ -2,7 +2,7 @@
 // Any direct commercial use of derivative work is strictly prohibited.
 
 using Engine.Components.Mover.Resources;
-using Framework.Components.Mover.Core;
+using Framework.Components.Mover.Core.Types;
 using Physics;
 using Physics.Types;
 
@@ -10,8 +10,8 @@ namespace Engine.Components.Mover
 {
 	public interface IMoverComponent
 	{
-		MovementMode CurrentMode { get; }
-		MovementMode InitialMode { get; set; }
+		MovementPreset CurrentMode { get; }
+		MovementPreset InitialMode { get; set; }
 		bool IsNoclip { get; }
 		MProfile Profile { get; set; }
 		CollisionLayer Layer { get; set; }
@@ -19,7 +19,7 @@ namespace Engine.Components.Mover
 		Vector3Packed Velocity { get; set; }
 		BoolPacked IsOnFloor { get; }
 
-		void SetMovementMode( MovementMode mode );
+		void SetMovementMode( MovementPreset mode );
 		void SetNoclip( bool enabled );
 	}
 }

@@ -39,7 +39,7 @@ namespace Engine.Gameplay.Entities
 
 		protected override void OnRegister()
 		{
-			if (!GEngine.IsEditorHint())
+			if ( !GEngine.IsEditorHint() )
 			{
 				base.OnRegister();
 				_startPosition = GlobalPosition;

@@ -47,6 +47,7 @@ mesh = SubResource("BoxMesh_s3j7c")
 [node name="CameraRoot" type="Node3D" parent="." unique_id=697449312 node_paths=PackedStringArray("_camera", "_springArm", "_followTarget")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
 script = ExtResource("3_pqobs")
+EdgeScrollEnabled = false
 _camera = NodePath("BepuSpringArm3D/Camera")
 _springArm = NodePath("BepuSpringArm3D")
 _followTarget = NodePath("../PlayerMesh")

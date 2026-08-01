@@ -7,25 +7,25 @@ using System.Windows.Forms;
 
 namespace TextureBaker
 {
-    internal static class Program
-    {
-        [DllImport( "kernel32.dll" )]
-        private static extern bool FreeConsole();
+	internal static class Program
+	{
+		[DllImport( "kernel32.dll" )]
+		private static extern bool FreeConsole();
 
-        [STAThread]
-        private static int Main( string[] args )
-        {
-            bool appMode = args.Length > 0 && 
-                string.Equals( args[ 0 ], "app", StringComparison.OrdinalIgnoreCase );
+		[STAThread]
+		private static int Main( string[] args )
+		{
+			bool appMode = args.Length > 0 &&
+				string.Equals( args[ 0 ], "app", StringComparison.OrdinalIgnoreCase );
 
-            if ( !appMode )
-                return CliBaker.Run( args );
-            
-            FreeConsole();
+			if ( !appMode )
+				return CliBaker.Run( args );
 
-            ApplicationConfiguration.Initialize();
-            Application.Run( new MainForm() );
-            return 0;
-        }
-    }
+			FreeConsole();
+
+			ApplicationConfiguration.Initialize();
+			Application.Run( new MainForm() );
+			return 0;
+		}
+	}
 }

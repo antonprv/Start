@@ -5,12 +5,12 @@
 /// </summary>
 public struct TaskContinuation
 {
-    /// <summary>
-    /// Task to run upon completion of the associated task.
-    /// </summary>
-    public Task OnCompleted;
-    /// <summary>
-    /// Number of tasks not yet reported as complete in the continuation.
-    /// </summary>
-    public int RemainingTaskCounter;
+	/// <summary>
+	/// Task to run upon completion of the associated task.
+	/// </summary>
+	public Task OnCompleted;
+	/// <summary>
+	/// Number of tasks not yet reported as complete in the continuation.
+	/// </summary>
+	public int RemainingTaskCounter;
 }

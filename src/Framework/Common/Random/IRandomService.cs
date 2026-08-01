@@ -3,16 +3,16 @@
 
 namespace Framework.Common.Random
 {
-    public interface IRandomService
-    {
-        float Range(
-          float inclusiveMin,
-          float inclusiveMax,
-          bool nonRepeating = false );
+	public interface IRandomService
+	{
+		float Range(
+		  float inclusiveMin,
+		  float inclusiveMax,
+		  bool nonRepeating = false );
 
-        int Range(
-          int inclusiveMin,
-          int exclusiveMax,
-          bool nonRepeating = false );
-    }
+		int Range(
+		  int inclusiveMin,
+		  int exclusiveMax,
+		  bool nonRepeating = false );
+	}
 }

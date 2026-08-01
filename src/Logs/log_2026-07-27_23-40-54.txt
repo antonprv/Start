@@ -1,0 +1,7 @@
+[20:38:07] [Info] [PhysicsWorldNode._Ready:63] PhysicsWorld initialized (threads: 19).
+[20:39:06] [Info] [TriggerVolume.HandleBodyEnter:78] <Node3D#46825211536> entered!
+[20:39:07] [Info] [TriggerVolume.HandleBodyExit:97] <Node3D#46825211536> exited!
+[20:39:09] [Info] [TriggerVolume.HandleBodyEnter:78] <Node3D#46825211536> entered!
+[20:39:10] [Info] [TriggerVolume.HandleBodyExit:97] <Node3D#46825211536> exited!
+[20:40:21] [Info] [TriggerVolume.HandleBodyEnter:78] <Node3D#46825211536> entered!
+[20:40:22] [Info] [TriggerVolume.HandleBodyExit:97] <Node3D#46825211536> exited!

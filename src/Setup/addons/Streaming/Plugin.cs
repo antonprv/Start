@@ -2,8 +2,8 @@
 // Any direct commercial use of derivative work is strictly prohibited.
 
 #if TOOLS
-using Godot;
 using Framework.Logger;
+using Godot;
 
 [Tool]
 public partial class Plugin : EditorPlugin

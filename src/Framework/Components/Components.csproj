@@ -15,32 +15,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<None Remove="Mover\Core\IMovementMotor.cs.uid" />
-		<None Remove="Mover\Core\IMovementTrait.cs.uid" />
-		<None Remove="Mover\Core\MovementContext.cs.uid" />
-		<None Remove="Mover\Core\MovementMode.cs.uid" />
-		<None Remove="Mover\Core\MovementMotor.cs.uid" />
-		<None Remove="Mover\Core\MovementPreset.cs.uid" />
-		<None Remove="Mover\Core\MovementProfile.cs.uid" />
-		<None Remove="Mover\Core\MovementTraitResource.cs.uid" />
-		<None Remove="Mover\Debug\MovementDebugOverlay.cs.uid" />
-		<None Remove="Mover\Presets\HybridPreset.cs.uid" />
-		<None Remove="Mover\Presets\QuakePreset.cs.uid" />
-		<None Remove="Mover\Presets\RealisticPreset.cs.uid" />
-		<None Remove="Mover\Traits\Common\GravityTrait.cs.uid" />
-		<None Remove="Mover\Traits\Common\JumpTrait.cs.uid" />
-		<None Remove="Mover\Traits\Hybrid\HybridAirControlTrait.cs.uid" />
-		<None Remove="Mover\Traits\Hybrid\HybridGroundTrait.cs.uid" />
-		<None Remove="Mover\Traits\Quake\GroundAccelerationTrait.cs.uid" />
-		<None Remove="Mover\Traits\Quake\NoFrictionTrait.cs.uid" />
-		<None Remove="Mover\Traits\Quake\QuakeAirStrafeTrait.cs.uid" />
-		<None Remove="Mover\Traits\Realistic\ClampedAirControlTrait.cs.uid" />
-		<None Remove="Mover\Traits\Realistic\GroundFrictionTrait.cs.uid" />
-		<None Remove="Mover\Traits\Realistic\RealisticGroundAccelTrait.cs.uid" />
-		<None Remove="Mover\Traits\Realistic\SmoothStopTrait.cs.uid" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<PackageReference Include="Godot.SourceGenerators" Version="4.7.0" />
 		<PackageReference Include="GodotSharp" Version="4.7.0" />
 		<PackageReference Include="NSubstitute" Version="6.0.0" />

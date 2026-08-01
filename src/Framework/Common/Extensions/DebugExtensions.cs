@@ -5,18 +5,18 @@ using Godot;
 
 namespace Framework.Common.Extensions
 {
-    public static class DebugExtensions
-    {
-        public static void DestroyIfNotDebug( this Node node )
-        {
-            if ( !OS.IsDebugBuild() )
-                node.QueueFree();
-        }
+	public static class DebugExtensions
+	{
+		public static void DestroyIfNotDebug( this Node node )
+		{
+			if ( !OS.IsDebugBuild() )
+				node.QueueFree();
+		}
 
-        public static void DestroyIfNotDebugDeferred( this Node node )
-        {
-            if ( !OS.IsDebugBuild() )
-                node.CallDeferred( nameof( node.QueueFree ) );
-        }
-    }
+		public static void DestroyIfNotDebugDeferred( this Node node )
+		{
+			if ( !OS.IsDebugBuild() )
+				node.CallDeferred( nameof( node.QueueFree ) );
+		}
+	}
 }

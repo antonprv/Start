@@ -7,34 +7,34 @@ using Godot;
 
 namespace Framework.Console.Commands
 {
-    public class ShowDebugUIMessages : IConsoleCommand
-    {
-        private readonly IDevConsole _console;
-        private readonly Node _debugUINode;
-        private bool _debugUIState;
+	public class ShowDebugUIMessages : IConsoleCommand
+	{
+		private readonly IDevConsole _console;
+		private readonly Node _debugUINode;
+		private bool _debugUIState;
 
-        private string _usage;
+		private string _usage;
 
-        public string CommandName => "show_debug_ui_msg";
-        public string Description => $"Show Debug UIMessages {_usage}";
+		public string CommandName => "show_debug_ui_msg";
+		public string Description => $"Show Debug UIMessages {_usage}";
 
-        public ShowDebugUIMessages( IDevConsole console, Node debugUINode )
-        {
-            _console = console;
-            _debugUINode = debugUINode;
-        }
+		public ShowDebugUIMessages( IDevConsole console, Node debugUINode )
+		{
+			_console = console;
+			_debugUINode = debugUINode;
+		}
 
-        public void Execute( string[] args )
-        {
-            if ( args.Length > 0 )
-            {
-                _console.AddMessage( $"Command error. {_usage}", Types.ConsoleMessageType.Warning );
-                return;
-            }
+		public void Execute( string[] args )
+		{
+			if ( args.Length > 0 )
+			{
+				_console.AddMessage( $"Command error. {_usage}", Types.ConsoleMessageType.Warning );
+				return;
+			}
 
-            _debugUINode.SetEnabled( _debugUIState );
-            _debugUIState = !_debugUIState;
-            _console.AddMessage( $"Set debug UI messages disbplay to {_debugUIState}" );
-        }
-    }
+			_debugUINode.SetEnabled( _debugUIState );
+			_debugUIState = !_debugUIState;
+			_console.AddMessage( $"Set debug UI messages disbplay to {_debugUIState}" );
+		}
+	}
 }

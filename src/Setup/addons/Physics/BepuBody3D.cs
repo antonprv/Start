@@ -3,9 +3,8 @@
 
 using Godot;
 using Zenjex;
-
-using Ex = Framework.Common.Extensions.NodeExtensions;
 using Dictionary = Godot.Collections.Dictionary;
+using Ex = Framework.Common.Extensions.NodeExtensions;
 namespace Physics
 {
 	/// <summary>
@@ -91,10 +90,10 @@ namespace Physics
 			base._Notification( what );
 		} );
 
-		public override void _ValidateProperty( Dictionary property ) => Ex.EditorSafe(() =>
+		public override void _ValidateProperty( Dictionary property ) => Ex.EditorSafe( () =>
 		{
 			base._ValidateProperty( property );
-		});
+		} );
 
 		#endregion
 	}

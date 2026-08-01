@@ -2,46 +2,34 @@
 // Any direct commercial use of derivative work is strictly prohibited.
 
 using Framework.Components.Mover.Core.Interfaces;
-using Framework.Components.Mover.Core.Resources;
 using Framework.Components.Mover.Traits.Common;
 using Framework.Components.Mover.Traits.Realistic;
 
 namespace Framework.Components.Mover.Presets
 {
-    /// <summary>
-    /// Realistic / Source-engine inspired preset.
-    ///
-    /// Characteristics:
-    ///   • Ground: friction-based deceleration + impulse acceleration (CS:GO feel)
-    ///   • Stop: smooth lerp to zero when no input
-    ///   • Air: limited directional nudging, speed capped
-    ///
-    /// Note: RealisticGroundAccelTrait is included because without it the character
-    /// cannot accelerate on the ground — GroundFriction alone only decelerates.
-    /// </summary>
-    public static class RealisticPreset
-    {
-        public static List<IMovementTrait> Build() => new()
-        {
-            new GravityTrait(),
-            new JumpTrait(),
-            new GroundFrictionTrait(),
-            new RealisticGroundAccelTrait(),
-            new SmoothStopTrait(),
-            new ClampedAirControlTrait()
-        };
+	internal class RealisticPreset : IMovementPreset
+	{
+		public List<IMovementTrait> Build() => new List<IMovementTrait>()
+		{
+			new GravityTrait(),
+			new JumpTrait(),
+			new GroundFrictionTrait(),
+			new RealisticGroundAccelTrait(),
+			new SmoothStopTrait(),
+			new ClampedAirControlTrait()
+		};
 
-        public static MovementProfile DefaultProfile() => new()
-        {
-            GroundAcceleration = 20f,
-            MaxSpeed = 5f,
-            GroundFriction = 10f,
-            AirAcceleration = 4f,
-            AirMaxSpeed = 4f,
-            AirControl = 1.5f,
-            JumpHeight = 1.2f,
-            JumpBufferTime = 0.10f,
-            CoyoteTime = 0.10f
-        };
-    }
+		public void SetDefaultProfile( IMovementProfile profile )
+		{
+			profile.GroundAcceleration = 20f;
+			profile.MaxSpeed = 5f;
+			profile.GroundFriction = 10f;
+			profile.AirAcceleration = 4f;
+			profile.AirMaxSpeed = 4f;
+			profile.AirControl = 1.5f;
+			profile.JumpHeight = 1.2f;
+			profile.JumpBufferTime = 0.10f;
+			profile.CoyoteTime = 0.10f;
+		}
+	}
 }

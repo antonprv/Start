@@ -14,6 +14,7 @@ This is the source code for my general-purpose retro game framework. It features
 Detailed docs, split out so this file stays a quick overview:
 - [`docs/FRAMEWORK.md`](docs/FRAMEWORK.md) - Dev Console, Mover Component, FastMath, Physics.
 - [`docs/STREAMING.md`](docs/STREAMING.md) - texture/mesh streaming, the asset manifest, TextureBaker.
+- [`docs/CAMERA.md`](docs/CAMERA.md) - All about the Camera Component.
 
 ### TrenchBroom
 This framework uses TrenchBroom as an external map editor.

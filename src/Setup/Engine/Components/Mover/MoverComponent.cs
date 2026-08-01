@@ -7,6 +7,7 @@ using Engine.Services.Input;
 using Framework.Common.Extensions;
 using Framework.Components.Mover.Core;
 using Framework.Components.Mover.Core.Interfaces;
+using Framework.Components.Mover.Core.Types;
 using Framework.Components.Mover.Debug;
 using Framework.Components.Mover.Presets;
 using Framework.Components.Mover.Traits.Common;
@@ -18,7 +19,6 @@ using Framework.Logger;
 
 using Godot;
 using Physics;
-using System;
 using System.Collections.Generic;
 using Zenjex;
 
@@ -33,8 +33,7 @@ namespace Engine.Components.Mover
 
 		[ExportGroup( "Data Objects" )]
 		[Export] public MProfile Profile { get; set; }
-		[Export] public MovementMode InitialMode { get; set; } = 
-			MovementMode.QuakeStrafeDoom2016;
+		[Export] public MovementPreset InitialMode { get; set; } = MovementPreset.QuakeStrafeDoom2016;
 
 		[Export] private float Doom3JumpTraitHeight { get; set; } = 90f;
 
@@ -53,7 +52,7 @@ namespace Engine.Components.Mover
 		private IMovementMotor _motor;
 		private MovementContext _context;
 		private MovementDebugOverlay _debugOverlay;
-		private MovementMode _currentMode;
+		private MovementPreset _currentMode;
 
 		#endregion
 
@@ -121,10 +120,14 @@ namespace Engine.Components.Mover
 			base.OnRegister();
 
 			if ( Profile == null )
-				Profile = QuakePreset.DefaultProfile().Convert();
+			{
+				Profile = new MProfile();
+				var quake = MovementPresetFactory.Create( MovementPreset.Quake );
+				quake.SetDefaultProfile( Profile );
+			}
 
 			_currentMode = InitialMode;
-			_motor = new MovementMotor( BuildTraitsForMode( _currentMode ) );
+			_motor = new MovementMotor( BuildTraitsForPreset( _currentMode ) );
 
 			if ( _showDebug )
 			{
@@ -146,11 +149,6 @@ namespace Engine.Components.Mover
 
 			MoveAndSlide( delta );
 
-			// MoveAndSlide() may have clipped Velocity against a wall/corner this tick (see
-			// BepuCharacterBody3D). The motor owns its own persistent velocity for the accel/
-			// friction traits, so that correction has to be mirrored back into it - otherwise
-			// the motor keeps accelerating a stale, uncorrected vector and a corner hit stops
-			// the character's position without ever stopping its stored velocity.
 			if ( !_noclip )
 				_motor.Velocity = Velocity.Value;
 
@@ -272,48 +270,34 @@ namespace Engine.Components.Mover
 
 		#region Runtime mode switching
 
-		/// <summary>
-		/// Hot-swap movement behavior at runtime.
-		/// Current velocity is fully preserved - only the trait list changes.
-		/// Equivalent to UE's SetMovementMode(EMovementMode).
-		/// </summary>
-		public void SetMovementMode( MovementMode mode )
+		public void SetMovementMode( MovementPreset mode )
 		{
 			if ( _currentMode == mode )
 				return;
 
 			_currentMode = mode;
-			_motor.SetTraits( BuildTraitsForMode( mode ) );
+			_motor.SetTraits( BuildTraitsForPreset( mode ) );
 
 			GameLogger.LogInfo( $"Mode -> {mode}" );
 		}
 
 		/// <summary>Current active movement mode.</summary>
-		public MovementMode CurrentMode => _currentMode;
+		public MovementPreset CurrentMode => _currentMode;
 
 		#endregion
 
 		#region Preset Wiring
 
-		private List<IMovementTrait> BuildTraitsForMode( MovementMode mode )
+		private List<IMovementTrait> BuildTraitsForPreset( MovementPreset mode )
 		{
-			switch ( mode )
-			{
-			case MovementMode.Custom:
+			if ( mode == MovementPreset.Custom )
 				return GetCustomTraits();
-			case MovementMode.Quake:
-				return QuakePreset.Build();
-			case MovementMode.Realistic:
-				return RealisticPreset.Build();
-			case MovementMode.Hybrid:
-				return HybridPreset.Build();
-			case MovementMode.Doom3:
-				return BuildDoom3Traits();
-			case MovementMode.QuakeStrafeDoom2016:
-				return QuakeStrafeDoom2016Preset.Build();
-			default:
-				return QuakePreset.Build();
-			}
+
+			var profile = MovementPresetFactory.Create( mode );
+			if ( mode == MovementPreset.Doom3 )
+				return BuildDoom3Traits( profile );
+
+			return profile.Build();
 		}
 
 		private List<IMovementTrait> GetCustomTraits()
@@ -331,9 +315,9 @@ namespace Engine.Components.Mover
 			};
 		}
 
-		private List<IMovementTrait> BuildDoom3Traits()
+		private List<IMovementTrait> BuildDoom3Traits( IMovementPreset preset )
 		{
-			var traits = Doom3Preset.Build();
+			var traits = preset.Build();
 			var jumpTrait = traits
 				.Find( x => x.GetType() == typeof( Doom3JumpTrait ) )
 				.As<Doom3JumpTrait>();

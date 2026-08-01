@@ -6,41 +6,41 @@ using Framework.Console.Types;
 
 namespace Framework.Console.Commands
 {
-    public class FilterCommand : IConsoleCommand
-    {
-        private readonly IDevConsole _console;
+	public class FilterCommand : IConsoleCommand
+	{
+		private readonly IDevConsole _console;
 
-        public string CommandName => "filter";
-        public string Description => "Filter output. Usage: filter <log|warning|error|success|all>";
+		public string CommandName => "filter";
+		public string Description => "Filter output. Usage: filter <log|warning|error|success|all>";
 
-        public FilterCommand( IDevConsole console ) => _console = console;
+		public FilterCommand( IDevConsole console ) => _console = console;
 
-        public void Execute( string[] args )
-        {
-            if ( args.Length < 1 )
-            {
-                _console.AddMessage( Description, ConsoleMessageType.Warning );
-                _console.AddMessage( $"Current: {_console.GetFilter()}" );
-                return;
-            }
+		public void Execute( string[] args )
+		{
+			if ( args.Length < 1 )
+			{
+				_console.AddMessage( Description, ConsoleMessageType.Warning );
+				_console.AddMessage( $"Current: {_console.GetFilter()}" );
+				return;
+			}
 
-            var filter = args[ 0 ].ToLowerInvariant() switch
-            {
-                "log" => ConsoleMessageType.Info,
-                "warning" => ConsoleMessageType.Warning,
-                "error" => ConsoleMessageType.Error,
-                "success" => ConsoleMessageType.Success,
-                "all" => ConsoleMessageType.All,
-                _ => (ConsoleMessageType)( -1 )
-            };
+			var filter = args[ 0 ].ToLowerInvariant() switch
+			{
+				"log" => ConsoleMessageType.Info,
+				"warning" => ConsoleMessageType.Warning,
+				"error" => ConsoleMessageType.Error,
+				"success" => ConsoleMessageType.Success,
+				"all" => ConsoleMessageType.All,
+				_ => (ConsoleMessageType)( -1 )
+			};
 
-            if ( (int)filter == -1 )
-            {
-                _console.AddMessage( $"Unknown filter: '{args[ 0 ]}'", ConsoleMessageType.Error );
-                return;
-            }
+			if ( (int)filter == -1 )
+			{
+				_console.AddMessage( $"Unknown filter: '{args[ 0 ]}'", ConsoleMessageType.Error );
+				return;
+			}
 
-            _console.SetFilter( filter );
-        }
-    }
+			_console.SetFilter( filter );
+		}
+	}
 }

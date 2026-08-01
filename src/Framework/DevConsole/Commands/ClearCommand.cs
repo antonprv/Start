@@ -5,15 +5,15 @@ using Framework.Console.Interfaces;
 
 namespace Framework.Console.Commands
 {
-    public class ClearCommand : IConsoleCommand
-    {
-        private readonly IDevConsole _console;
+	public class ClearCommand : IConsoleCommand
+	{
+		private readonly IDevConsole _console;
 
-        public string CommandName => "clear";
-        public string Description => "Clear console output. Usage: clear";
+		public string CommandName => "clear";
+		public string Description => "Clear console output. Usage: clear";
 
-        public ClearCommand( IDevConsole console ) => _console = console;
+		public ClearCommand( IDevConsole console ) => _console = console;
 
-        public void Execute( string[] args ) => _console.ClearMessages();
-    }
+		public void Execute( string[] args ) => _console.ClearMessages();
+	}
 }

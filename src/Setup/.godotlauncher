@@ -5,10 +5,10 @@ version=1
 version=1.10.1
 
 [project]
-last_opened=2026-07-28T03:53:18.637Z
+last_opened=2026-08-09T16:30:23.068Z
 
 [editor]
 channel=official
 flavor=dotnet
 base_version=4.7
-version=4.7-stable
+version=4.7.1-stable
